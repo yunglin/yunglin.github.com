@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>如何在Mac OSX上，讀取台北市政府放出來的地圖資料 - 碎碎唸</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="台北市政府把一些地圖資訊，用shapefile的格式放出來了，玩了兩天，總算把這檔案開了起來。為了造福後人，就把過程寫下來了1. 安裝QGIS2. 下載里界圖，並解壓縮開起QGIS，從選單上選 Layer -&gt; Add Vector Layer -&gt; Encoding = BIG5 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://yunglin.github.com/blog/2011/09/07/-mac-osx">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="碎碎唸" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">碎碎唸</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:yunglin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">如何在Mac OSX上，讀取台北市政府放出來的地圖資料</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-07T14:39:00+08:00" pubdate data-updated="true">Sep 7<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+台北市政府把一些地圖資訊，用<a href="http://en.wikipedia.org/wiki/Shapefile">shapefile</a>的格式放出來了，玩了兩天，總算把這檔案開了起來。為了造福後人，就把過程寫下來了<br /><br />1. 安裝<a href="http://www.qgis.org/wiki/Download#MacOS_X">QGIS</a><br />2. 下載<a href="http://data.taipei.gov.tw/ct.asp?xItem=3448999&amp;ctNode=45112&amp;mp=datataipei">里界圖</a>，並解壓縮<br /><br />開起QGIS，從選單上選 Layer -&gt; Add Vector Layer -&gt; Encoding = BIG5, Dataset = 解開的檔案<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s1600/no-label.png" imageanchor="1" style=""><img border="0" src="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s400/no-label.png" /></a></div><br /><br />一開始開啟的檔案，並沒有把文字資料一起顯示出來，所以，接著我們要把這資料打開來。從Layers中點選『台北市里界圖』並選Labels，Display labels勾起來，然後Field選PTVAME，然後按OK<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s1600/layer_properties.png" imageanchor="1" style=""><img border="0" src="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s400/layer_properties.png" /></a></div><br />這樣，文字資料就跑出來了<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s1600/with_label.png" imageanchor="1" style=""><img border="0" src="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s400/with_label.png" /></a></div><br /><br />接下來的兩週，我會把Geometric search的功能，加到我公司的<a href="http://www.searchcloudapp.com">產品</a>中，讓你直接能後匯入多邊型的地理資料，並且能夠做一些簡單的搜尋功能</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-07T14:39:00+08:00" pubdate data-updated="true">Sep 7<span>th</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yunglin.github.com/blog/2011/09/07/-mac-osx/" data-via="yunglinho" data-counturl="http://yunglin.github.com/blog/2011/09/07/-mac-osx/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/09/05/" title="Previous Post: 關於北市府開放資料授權方式的一些想法">&laquo; 關於北市府開放資料授權方式的一些想法</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/10/06/" title="Next Post: 轉換台北市政府公開資料的格式">轉換台北市政府公開資料的格式 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb's java and scala driver.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/dependency-injection-in-scala/">Dependency Injection in Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/migrate-to-octopress/">搬家到 Octopress </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/">Lesson Learned form Developing Locadz SDK</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/18/">成本降就該降售價嗎？</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("yunglinho", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/yunglinho" class="twitter-follow-button" data-show-count="false">Follow @yunglinho</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101164690243066571931?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 -  -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

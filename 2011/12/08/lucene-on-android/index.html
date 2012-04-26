@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Lucene On Android - 碎碎唸</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://yunglin.github.com/blog/2011/12/08/lucene-on-android">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="碎碎唸" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">碎碎唸</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:yunglin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Lucene on Android</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-08T18:20:00+08:00" pubdate data-updated="true">Dec 8<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。<br /><br />Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說，無法把 index files 放在 apk 中直接讀取，一定要存放在 device or external storage 上，才能夠使用；或者是自己弄個虛擬目錄出來，不過，這會耗用過多的計憶體空間。<br /><br />我是選用把 index 放在 &#8216;src/res/raw&#8217; 底下，讓他變成 apk 的一部份，省去在網路上找個空間來放置 index 的問題，當要更新 index 時，就重編個 apk 叫使用者更新就好。<br /><br />在放 lucene index 時，如果你想用 compound format 的話，可以用底下的指令，把多個 index files 包裹成單一檔案 .cfs <br /><br /><pre class="brush: scala;">// run REPL with 'scala -cp luke-3.4.0_1-all.jar'<br /><br />import org.apache.lucene.store.FSDirectory<br />import org.apache.lucene.index._<br />import org.apache.lucene.analysis.standard._<br /><br />val source = FSDirectory.open(new java.io.File("source"))<br />val dest = FSDirectory.open(new java.io.File("dest"))<br /><br />// open source index<br />val reader = IndexReader.open(source)<br /><br />// create writer for compound index.<br />val analyzer = new StandardAnalyzer(org.apache.lucene.util.Version.LUCENE_34)<br />val writer = new org.apache.lucene.index.IndexWriter(dir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED)<br /><br />// force writer always use compound index format.<br />writer.getMergePolicy.asInstanceOf[LogByteSizeMergePolicy].setNoCFSRatio(1.0)<br /><br /><br />// add source index to dest index.<br />writer.addIndexes(reader)<br />writer.optimized<br />writer.close<br /><br />reader.close<br /></pre><br />接著，是把產生的 segment, segments_1, _0.cfs 拷到 src/res/raw 底下，讓這些檔案變成 .apk 的一部份。<br /><br /><br />接著，是要在第一次執行時，把這些 index 從 apk 中覆製到 SD 卡上或是機子上，這邊，我寫了個小工具來做這件事<br /><br /><pre class="brush: scala;">import android.content.Context<br />import android.os.Environment<br />import android.util.Log<br /><br />import com.bluetangstudio.android.disastermap.TaipeiDisasterApp.LogTag<br /><br />import org.apache.commons.io.FileUtils<br />import org.apache.lucene.store.{FSDirectory, Directory}<br /><br />import scala.collection.JavaConversions._<br />import java.io.File<br /><br />/**<br /> *  Helper class that search for lucene index directories on the device. The search order is<br /> *  external storage first then local storage. If lucene index does not exist on device, this<br /> *  class will copy the index from the apk to the device storage.<br /> *<br /> * @param context  the application context<br /> * @param path     the root folder name of the index directory to use and to look for.<br /> * @param source   the source of index resource to copy if index does not exist on the device.<br /> *                 format: Seq[(filename, resourceId)]<br /> */<br />case class LuceneOpenHelper(context: Context, path: String, source: Seq[Tuple2[String, Int]]) {<br /><br />    /**<br />     * create or open an Directory.<br />     */<br />    def open(): Option[Directory] = {<br />        val candidates = Seq(externalFolder, internalFolder).flatten<br /><br />        // find the folder with index in it.<br />        val folder = candidates.filter(f => f.exists() && f.list().length > 0).headOption<br />        val withIndex = folder.orElse(<br />            candidates.find(<br />                f => {<br />                    // ensure folder is available.<br />                    f.exists() || f.mkdirs() match {<br />                        // folder is not accessible<br />                        case false => false<br /><br />                        case _ => {<br />                            Log.d(LogTag, "Duplicating index from apk to %s...".format(f))<br />                            source.foreach(<br />                                s => {<br />                                    val is = context.getResources.openRawResource(s._2)<br />                                    try {<br />                                        FileUtils.copyInputStreamToFile(is, new File(f, s._1))<br />                                    } finally {<br />                                        is.close()<br />                                    }<br />                                }<br />                            )<br />                            true<br />                        }<br />                    }<br />                }<br />            )<br />        )<br /><br />        return withIndex.map(FSDirectory.open(_))<br />    }<br /><br />    private def externalFolder: Option[File] = {<br />        Environment.getExternalStorageState match {<br />            case Environment.MEDIA_MOUNTED => Option(context.getExternalFilesDir(path))<br />            case _ => None<br />        }<br />    }<br /><br />    private def internalFolder: Option[File] = {<br />        return Option(new File(context.getFilesDir, path))<br />    }<br /><br />}<br /></pre><br />最後，是在 *App 上加上這段<br /><br /><pre class="brush: scala;">object MyApp {<br />    private val INDEX_DIRECTORY = "idx"<br /><br />    private val INDEX_FILES = Seq(<br />        ("_0.cfs", R.raw.idx_0), <br />        ("segments", R.raw.segments), <br />        ("segments_1", R.raw.segments_1)<br />    )<br />}<br />class MyApp extends android.app.Application {<br /><br />    import MyApp._<br /><br />    private var _luceneSearcher: Option[IndexSearcher] = None<br /><br />    def luceneSearcher: Option[IndexSearcher] = {<br />        if (_luceneSearcher.isEmpty) {<br />            Log.d(LogTag, "Initializing new IndexSearcher...")<br />            _luceneSearcher = LuceneOpenHelper(this, INDEX_DIRECTORY, INDEX_FILES).open().map(new IndexSearcher(_))<br />        }<br />        _luceneSearcher<br />    }<br />   <br />    override def onLowMemory() {<br />        _luceneSearcher.foreach(s => s.close())<br />        _luceneSearcher = None<br />    }<br />}<br /></pre><br />這樣一來，就能在 Android 上面跑 lucene-core 了.</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-08T18:20:00+08:00" pubdate data-updated="true">Dec 8<span>th</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yunglin.github.com/blog/2011/12/08/lucene-on-android/" data-via="yunglinho" data-counturl="http://yunglin.github.com/blog/2011/12/08/lucene-on-android/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/11/24/analytics-hadoop-v-s-dbms/" title="Previous Post: Analytics: Hadoop V.S. DBMS">&laquo; Analytics: Hadoop V.S. DBMS</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/01/03/how-to-protect-a-webservice/" title="Next Post: How to Protect A WebService.">How to Protect A WebService. &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb's java and scala driver.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/dependency-injection-in-scala/">Dependency Injection in Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/migrate-to-octopress/">搬家到 Octopress </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/">Lesson Learned form Developing Locadz SDK</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/18/">成本降就該降售價嗎？</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("yunglinho", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/yunglinho" class="twitter-follow-button" data-show-count="false">Follow @yunglinho</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101164690243066571931?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 -  -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

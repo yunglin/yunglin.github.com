@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>台北市政府公開資料（三）- 台北積水地圖 - 碎碎唸</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="花了三個禮拜，學習怎麼開發Android程式，在沒買開發機的狀況下，在模擬器上完成了我的第一個Android App - 台北積水地圖資料來源一樣是從台北市政府所來，原始資料檔可從『臺北市歷年積水紀錄圖』下載。我把資料檔的座標系轉換(TW67 -> WSG84)後， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://yunglin.github.com/blog/2011/11/15">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="碎碎唸" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">碎碎唸</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:yunglin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">台北市政府公開資料（三）- 台北積水地圖</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-15T17:49:00+08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+花了三個禮拜，學習怎麼開發Android程式，在沒買開發機的狀況下，在模擬器上完成了我的第一個Android App - <a href="https://market.android.com/details?id=com.bluetangstudio.android.disastermap">台北積水地圖</a><br /><br /><br /><img align="left" border="0" height="400" src="https://g1.gstatic.com/android/market/com.bluetangstudio.android.disastermap/ss-480-0-0" /><img border="0" height="400" src="https://ssl.gstatic.com/android/market/com.bluetangstudio.android.disastermap/ss-480-1-0" /><br /><br /><br/><br /><br />資料來源一樣是從台北市政府所來，原始資料檔可從<a href="http://data.taipei.gov.tw/ct.asp?xItem=3928148&ctNode=45190&mp=datataipei">『臺北市歷年積水紀錄圖』</a>下載。我把資料檔的座標系轉換(TW67 -> WSG84)後，就塞到跟前一回一樣的後端去做處理，剩下的就都是前端的工作了。<br /><br />在前端UI開發上，依以前開發的習慣，先把wireframe（假UI）畫好才動工，找了找一些畫UI的工具，最後買了<a href="http://keynotopia.com/android-prototyping-templates/">keynotopia</a>出的工具，這傢伙也是個奇人，開start-up不到<a href="http://blog.amirkhella.com/2010/09/21/the-story-of-keynotopia-how-i-launched-a-profitable-product-in-3-hours/">三小時就開始獲利</a>；在畫假UI時就發現，傳統上我們用點來代表一個物件，在畫地圖（羞～）時，並不能合理的表現許多地理圖型。<br /><br />然而，若是我們要把地理圖型直接畫在地圖上讓使用者直接點開，那麼，我們又要處理重疊的狀況，這在淹水地圖上就特別麻煩，因為常淹水的區塊會互相重疊多次，或像納利颱風，一次淹掉了一大塊的區塊，在處理點選時，我們要怎麼知道使用者點選的是那一層的資料？<br /><br />而在顯示上，要怎麼處理重疊的區塊，讓使用者知道，某個地點曾淹水多次？一個選項是用顏色來做，重疊的部份用加深的顏色來顯式；最後，我們還是回歸傳統的點座標的方式，來表示淹水的區域，等使用者點開後，才用色塊畫出實際淹水的地區。等下次改版時，等我對Android 2D再熟一些時，或許會嘗試用顏色的方式來做呈現。<br /><br /><br />接下來，我會在有空的時候，再開發一個程式，把台北市的土地分區（住一、住二、商用&#8230;）資料，跟土地的地號資料，做成個台北都更地圖，若各位有類似的需求，請<a href="mailto:yho at bluetangstudio dot com">與我聯絡</a></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-15T17:49:00+08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yunglin.github.com/blog/2011/11/15/" data-via="yunglinho" data-counturl="http://yunglin.github.com/blog/2011/11/15/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/10/18/" title="Previous Post: 台北市政府公開資料（二）- 按地理位址搜尋資料">&laquo; 台北市政府公開資料（二）- 按地理位址搜尋資料</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/" title="Next Post: Data Modeling With Jackson Json and Scala">Data Modeling With Jackson Json and Scala &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb's java and scala driver.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/dependency-injection-in-scala/">Dependency Injection in Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/migrate-to-octopress/">搬家到 Octopress </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/">Lesson Learned form Developing Locadz SDK</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/18/">成本降就該降售價嗎？</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("yunglinho", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/yunglinho" class="twitter-follow-button" data-show-count="false">Follow @yunglinho</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101164690243066571931?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 -  -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

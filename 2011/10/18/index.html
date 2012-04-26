@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>台北市政府公開資料（二）- 按地理位址搜尋資料 - 碎碎唸</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="多數的搜尋技術，在處理地理位址時，只處理地點的資料，例如餐廳、百貨公司等小地理區塊等，但是這些地點搜詢技術，並不適合用在處理大區塊範圍的資料，如行政區及學區等。如多數外國網站用的坐標轉行政區的GeoNames，他在搜尋某個座標目前所屬的行政區時，是計算座標點與附近行政區中心的距離來猜測， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://yunglin.github.com/blog/2011/10/18">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="碎碎唸" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">碎碎唸</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:yunglin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">台北市政府公開資料（二）- 按地理位址搜尋資料</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-18T11:29:00+08:00" pubdate data-updated="true">Oct 18<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+多數的搜尋技術，在處理地理位址時，只處理地點的資料，例如餐廳、百貨公司等小地理區塊等，但是這些地點搜詢技術，並不適合用在處理大區塊範圍的資料，如行政區及學區等。<br /><div><br /></div><div>如多數外國網站用的坐標轉行政區的GeoNames，他在搜尋某個座標目前所屬的行政區時，是計算座標點與附近行政區中心的距離來猜測，但是行政區往往不是正圓型的，行政區的劃分多是依自然環境（如河川）來切割的，所以，既始某個座標離行政區甲較近，但是，在實務上則是被劃分到乙行政區去的；類似的例子還有學區等</div><div><br /></div><div>另一類無法用點去描述 的，是線型的資料，如登山步道、腳踏車道，當我們登山時，我們不一定要從起點開始爬，而是可以從中間點開始加入，因此，當我們在找附近所有的登山步道時，該是計算所有線型資料與目前座標點的最短距離，而非是算起點與目前座標點的距離。</div><div><br /></div><div>依據了這套需求，我在我公司的產品上增加了對地理區塊搜尋的功能，讓用戶能對點(Point)、線(LineString)，多邊型(Polygon)等資料，做搜尋。</div><div><br /></div><div>底下的連結，是搜詢台北101大樓所在的行政區，大家可以玩玩看</div><div><br /></div><div><a href="http://api.test.sccld.com/rest/1.0/model/bluetang_taipeidistricts/search/?f=geometry:25.033611,121.565,1m&amp;key=feec379d0f91408b84b2f6f08ecdd384&amp;count=1&amp;fl=properties">http://api.test.sccld.com/rest/1.0/model/bluetang_taipeidistricts/search/?f=geometry:25.033611,121.565,1m&amp;key=feec379d0f91408b84b2f6f08ecdd384&amp;count=1&amp;fl=properties</a></div><div><br /></div><div><span class="Apple-style-span" style="color: #444444; font-family: monospace, mono, consolas; font-size: 13px; line-height: 18px;"><span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">results</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">[</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span><span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">id</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">302</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">properties</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">AREA</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">522872.00372</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">NEW</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">6300200001</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">FULL</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;臺北市信義區西村里&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">PERF_ID</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">63002</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">COUN_ID</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;6300200&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">CPID</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;63002&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">CPTID</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;6300200&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">CPTVID</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;6300200001&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">NPID</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">63002</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">NPTID</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">6300200</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">NPTVID</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">6300200001</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">PNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;臺北市&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;信義區&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">VNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;西村里&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">PTVNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;臺北市信義區西村里&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">PTNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;臺北市信義區&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TVNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;信義區西村里&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TM2_MAX_X</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">306528.415</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TM2_MAX_Y</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">2770435.21</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TM2_MIN_X</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">305428.311</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TM2_MIN_Y</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">2769739.57</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">MAX_X</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">MAX_Y</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">MIN_X</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">MIN_Y</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">]</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">metadata</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">searchQuery</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">queries</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">[</span><span class="b" style="font-weight: bold;">]</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">constraints</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">[</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span><span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">@type</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;location&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">field</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;geometry&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">location</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;25.033611,121.565&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">radius</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">1</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">]</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">pagination</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">start</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">count</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">1</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">}</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">start</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">count</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">1</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">total</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">1</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">}</span></span></div></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-18T11:29:00+08:00" pubdate data-updated="true">Oct 18<span>th</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yunglin.github.com/blog/2011/10/18/" data-via="yunglinho" data-counturl="http://yunglin.github.com/blog/2011/10/18/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/10/06/" title="Previous Post: 轉換台北市政府公開資料的格式">&laquo; 轉換台北市政府公開資料的格式</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/11/15/" title="Next Post: 台北市政府公開資料（三）- 台北積水地圖">台北市政府公開資料（三）- 台北積水地圖 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb's java and scala driver.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/dependency-injection-in-scala/">Dependency Injection in Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/migrate-to-octopress/">搬家到 Octopress </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/">Lesson Learned form Developing Locadz SDK</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/18/">成本降就該降售價嗎？</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("yunglinho", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/yunglinho" class="twitter-follow-button" data-show-count="false">Follow @yunglinho</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101164690243066571931?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 -  -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

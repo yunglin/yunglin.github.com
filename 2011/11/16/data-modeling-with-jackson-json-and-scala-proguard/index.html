@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Data Modeling With Jackson Json and Scala - Proguard - 碎碎唸</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="關於Proguard，官方的網頁是這麼自述的：ProGuard is a free Java class file shrinker, optimizer, obfuscator, and preverifier. It detects and removes unused classes, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://yunglin.github.com/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="碎碎唸" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">碎碎唸</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:yunglin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Data Modeling With Jackson Json and Scala - Proguard</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T11:32:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+關於Proguard，官方的網頁是這麼自述的：<br /><blockquote>ProGuard is a free Java class file shrinker, optimizer, obfuscator, and preverifier. It detects and removes unused classes, fields, methods, and attributes. It optimizes bytecode and removes unused instructions. It renames the remaining classes, fields, and methods using short meaningless names. Finally, it preverifies the processed code for Java 6 or for Java Micro Edition.<br /></blockquote><br />在Mobile App開發的時候，多會用proguard把沒有用到的程式碼濾除，並把變數名稱跟函式名稱用更精簡的字串來取代，這樣編出來的程式會更小，以我用Scala開發的Android程式，使用的的函式庫大小超過10MB，但是用proguard編出來的class.min.jar只有1.7MB，8.xMB的scala-runtime.jar一大票沒用到的功能都被移掉了。<br /><br />這麼好的功具當然也有他的問題存在，proguard是使用靜態分析的方式，去追縱看有那些程式碼會被執行到，有那些程式碼是不會被碰到的可以被移除的；但由於Jackson是使用Reflection的方式去取得物件的屬性及是用reflection的方式去生成物件，因此，這些行為並不會被proguard偵測到，反而是被認為是dead code而被移除掉。<br /><br />另外proguard會把變數名稱改寫，這也是跟jackson不相容的地方，當getXxxx被改寫成gY，jackson自然無法知道這是Xxxx的getter，因此若是要在proguard的環境下使用jackson，obfuscator是要被關掉的。<br /><br />底下這邊，是我在<a href="https://market.android.com/details?id=com.bluetangstudio.android.disastermap">台北積水地圖</a>內，用的proguard設定檔<br /><br /><pre class="brush: scala">proguardOption in Android :=<br />      ("-dontoptimize -dontpreverify -dontobfuscate"  // shrinking only<br />          :: "-dontskipnonpubliclibraryclassmembers"  // keep Jackson's internal classes<br />          :: "-dontskipnonpubliclibraryclasses"       // keep Jackson's internal classes<br />          :: "-keepattributes *Annotation*."          // keep Jackson Json Annotations.<br />          :: "-keep class org.codehaus.jackson.**"<br />          :: "-keep class com.bluetangstudio.android.model.**"<br />          :: "-keep class com.bluetangstudio.searchcloud.client.**"<br />          :: """-keep class com.bluetangstudio.searchcloud.client.** {<br />                 <init>(...);<br />                 public static ** valueOf(...);<br />             }"""<br />          :: """-keep class com.bluetangstudio.** {<br />                 void set*(***);<br />                 void set*(int, ***);<br /><br />                 boolean is*();<br />                 boolean is*(int);<br /><br />                 *** get*();<br />                 *** get*(int);<br />             }"""<br />          :: """-keep class * implements android.os.Parcelable {<br />                 public static final android.os.Parcelable$Creator *;<br />             }"""<br />          :: """-keepclassmembers class * {<br />                 ** MODULE$;<br />             }"""<br />          :: "-keep public class org.xml.sax.EntityResolver"<br />          :: "-keep public class scala.Either"<br />          :: "-keep public class scala.Function1"<br />          :: "-keep public class scala.Function2"<br />          :: "-keep public class scala.Tuple2"<br />          :: "-keep public class scala.collection.Iterable"<br />          :: "-keep public class scala.PartialFunction"<br />          :: "-keep public class scala.collection.Seq"<br />          :: "-keep public class scala.collection.TraversableOnce"<br />          :: "-keep public class scala.collection.generic.CanBuildFrom"<br />          :: "-keep public class scala.collection.immutable.Map"<br />          :: "-keep public class scala.collection.immutable.List"<br />          :: "-keep public class scala.collection.mutable.StringBuilder"<br />          :: "-keep public class scala.Predef$$less$colon$less"<br />          :: "-keep public class scala.math.Numeric"<br />          :: "-keep public class scala.math.Ordering"<br />          :: "-keep public class scala.reflect.ClassManifest"<br />          :: "-keep public class scala.runtime.IntRef"<br />          :: "-keep public class scala.runtime.BooleanRef"<br />          :: "-keep public class scala.runtime.AbstractFunction1"<br />          :: "-keep public class * extends android.app.Activity"<br />          :: "-keep public class * extends android.app.Application"<br />          :: "-keep public class * extends android.app.Service"<br />          :: "-keep public class * extends android.appwidget.AppWidgetProvider"<br />          :: "-keep public class * extends android.content.BroadcastReceiver"<br />          :: "-keep public class * extends android.content.BroadcastReceiver"<br />          :: "-keep public class * extends android.app.backup.BackupAgentHelper"<br />          :: "-keep public class * extends android.content.ContentProvider"<br />          :: "-keep public class * extends android.view.View"<br />          :: "-keep public class * extends android.preference.Preference"<br />          :: Nil<br />      ) mkString " "<br /></pre></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T11:32:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yunglin.github.com/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard/" data-via="yunglinho" data-counturl="http://yunglin.github.com/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-lazy-val/" title="Previous Post: Data Modeling With Jackson Json and Scala - lazy val">&laquo; Data Modeling With Jackson Json and Scala - lazy val</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/11/16/my-experience-with-scala-on-android/" title="Next Post: My experience with Scala on Android">My experience with Scala on Android &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb's java and scala driver.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/dependency-injection-in-scala/">Dependency Injection in Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/migrate-to-octopress/">搬家到 Octopress </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/">Lesson Learned form Developing Locadz SDK</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/18/">成本降就該降售價嗎？</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("yunglinho", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/yunglinho" class="twitter-follow-button" data-show-count="false">Follow @yunglinho</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101164690243066571931?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 -  -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

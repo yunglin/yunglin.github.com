@@ -1,0 +1,588 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>碎碎唸</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="最近做了不少Restful WebService的案子，也用了不少外部的WebService API，看到許多的系統，在安全性上，有許多的漏洞，因此想寫篇文章來說說，到底要怎樣保護好你的WebService，必竟，台灣主流網站的安全性已經夠糟了，不用再多幾個有問題的API來把環境弄更糟。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://yunglin.github.com/blog/page/2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="碎碎唸" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">碎碎唸</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:yunglin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/03/how-to-protect-a-webservice/">How to Protect a WebService.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-03T23:27:00+08:00" pubdate data-updated="true">Jan 3<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+最近做了不少Restful WebService的案子，也用了不少外部的WebService API，看到許多的系統，在安全性上，有許多的漏洞，因此想寫篇文章來說說，到底要怎樣保護好你的WebService，必竟，<a href="http://plainpass.com/">台灣主流網站</a>的<a href="http://www.ithome.com.tw/itadm/article.php?c=71134">安全性</a>已經夠糟了，不用再多幾個有問題的API來把環境弄更糟。<br /><br />大家用Web API，最常碰到的保護機制是 ApiKey ，但是，請不要以為 ApiKey 有什麼保護做用，HTTP Request的東西都是明碼，你傳什麼，網路上流過的機器都可以看的一清二楚，假設你做的 client 端程式是用 ApiKey 來保護 client &lt;-&gt; server 間的通訊的話，要破的人，只要在 client 所在的區網內，安裝 packet sniffer 就可以拿到 client 內包的 ApiKey 了。 <br /><br />ApiKey通常是WebService Provider拿來統計流量用的，不要以為他有什麼安全機制存在。<br /><br />再來，有些 Web API 要求你要登入，才可以使用他們的 API ，如 <a href="http://www.chargify.com/">chargify</a> or <a href="http://code.google.com/googleapps/faq.html#gmailatomfeed">GMail</a>，這些服務所使用的機制是HTTP Basic Authentication ；但是非常不幸的是，HTTP Basic Authentication只不過變形的ApiKey，Basic Auth的運作方式是把 username:password 用 base64 編碼後，放在 HTTP Request Header 當成密碼傳到 server 端，因此，一樣可以被 sniffer 直接偷出來用。<br /><br />當然，你會問，我們不是有用 HTTPS 來把封包加密了嗎？然而，除非你把 certificate 預載在 client 端，要不然 client &lt;-&gt; server 第一次的通訊是危險的，會受到 <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in the middle attack</a> ，直接從中間把雙方收送的 certificate 換掉。<br /><br /><br />較安全的做法是，使用HTTPS Client Authentication，在包 client 就把 client 端該用的 server-signed certificate 包進 client 端裡面；這樣一來，少了透過 internet 交換 certificate 的機制，能夠確保 certificate 不會被偷換掉。<br /><br />另外，使用 Client Authentication 的好處是，只有 server 端認可的 client 可以使用 API ，縱始是第三方拿到了username, password, apikey，還是沒有辦法使用你的服務。<br /><br />至於有那些大廠，用了不安全的方式來保護他們的 web service api 呢？<a href="http://support.unblock-us.com/customer/portal/articles/291570-supported-and-unsupported-sites"> unblock-us 這邊</a>有幾個名單<br /><br /><br /><blockquote>unblock-us 是怎麼破解幾大影音網站的 geo-location check 的呢？<br /><br />一般的解決方案是用 VPN，但是影音串流不適合透過 VPN 來做 proxy。<br /><br />就我的猜測 unblock-us 等用的解決方案應該是這樣，在 DNS 那層把 server 端的 ip 反解成他們自己的機器，當 client 端送 request 給 http://api.poorguy.com, unblock-us 會先檢查這個 call 的用途，如果是做 geo-location 反解的，就送個假的回應給 client 端，如果是其他的方式，就轉送到正常的機器。<br /><br />等 client 端把這些處理做完後，要做影音串流的 rstp://stream.poorguy.com 又是傳回正常的 ip ，所以這樣用到的流量最小。<br /><br />這樣等於是直接的違反人家的授權去 hack API，這種服務可以活的很久嗎？？我不清楚<br /><br />不過從這一點也可以看到，各大廠做 operation 的能力優劣，像我的前雇主 <a href="http://rhapsody.com">rhapsody</a>就有利用 client authentication 在各式各樣的 client 端上。所以讓我想在台灣用都沒得用 :(  <br /></blockquote><br /><br />公商服務時間：<br /><br />小弟的公司，目前有時間接設計 WebService API 的案子，若是有合作機會的，<a href="mailto:yunglin@gmail.com">請與我連絡</a>。</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/08/lucene-on-android/">Lucene on Android</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-08T18:20:00+08:00" pubdate data-updated="true">Dec 8<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。<br /><br />Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說，無法把 index files 放在 apk 中直接讀取，一定要存放在 device or external storage 上，才能夠使用；或者是自己弄個虛擬目錄出來，不過，這會耗用過多的計憶體空間。<br /><br />我是選用把 index 放在 &#8216;src/res/raw&#8217; 底下，讓他變成 apk 的一部份，省去在網路上找個空間來放置 index 的問題，當要更新 index 時，就重編個 apk 叫使用者更新就好。<br /><br />在放 lucene index 時，如果你想用 compound format 的話，可以用底下的指令，把多個 index files 包裹成單一檔案 .cfs <br /><br /><pre class="brush: scala;">// run REPL with 'scala -cp luke-3.4.0_1-all.jar'<br /><br />import org.apache.lucene.store.FSDirectory<br />import org.apache.lucene.index._<br />import org.apache.lucene.analysis.standard._<br /><br />val source = FSDirectory.open(new java.io.File("source"))<br />val dest = FSDirectory.open(new java.io.File("dest"))<br /><br />// open source index<br />val reader = IndexReader.open(source)<br /><br />// create writer for compound index.<br />val analyzer = new StandardAnalyzer(org.apache.lucene.util.Version.LUCENE_34)<br />val writer = new org.apache.lucene.index.IndexWriter(dir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED)<br /><br />// force writer always use compound index format.<br />writer.getMergePolicy.asInstanceOf[LogByteSizeMergePolicy].setNoCFSRatio(1.0)<br /><br /><br />// add source index to dest index.<br />writer.addIndexes(reader)<br />writer.optimized<br />writer.close<br /><br />reader.close<br /></pre><br />接著，是把產生的 segment, segments_1, _0.cfs 拷到 src/res/raw 底下，讓這些檔案變成 .apk 的一部份。<br /><br /><br />接著，是要在第一次執行時，把這些 index 從 apk 中覆製到 SD 卡上或是機子上，這邊，我寫了個小工具來做這件事<br /><br /><pre class="brush: scala;">import android.content.Context<br />import android.os.Environment<br />import android.util.Log<br /><br />import com.bluetangstudio.android.disastermap.TaipeiDisasterApp.LogTag<br /><br />import org.apache.commons.io.FileUtils<br />import org.apache.lucene.store.{FSDirectory, Directory}<br /><br />import scala.collection.JavaConversions._<br />import java.io.File<br /><br />/**<br /> *  Helper class that search for lucene index directories on the device. The search order is<br /> *  external storage first then local storage. If lucene index does not exist on device, this<br /> *  class will copy the index from the apk to the device storage.<br /> *<br /> * @param context  the application context<br /> * @param path     the root folder name of the index directory to use and to look for.<br /> * @param source   the source of index resource to copy if index does not exist on the device.<br /> *                 format: Seq[(filename, resourceId)]<br /> */<br />case class LuceneOpenHelper(context: Context, path: String, source: Seq[Tuple2[String, Int]]) {<br /><br />    /**<br />     * create or open an Directory.<br />     */<br />    def open(): Option[Directory] = {<br />        val candidates = Seq(externalFolder, internalFolder).flatten<br /><br />        // find the folder with index in it.<br />        val folder = candidates.filter(f => f.exists() && f.list().length > 0).headOption<br />        val withIndex = folder.orElse(<br />            candidates.find(<br />                f => {<br />                    // ensure folder is available.<br />                    f.exists() || f.mkdirs() match {<br />                        // folder is not accessible<br />                        case false => false<br /><br />                        case _ => {<br />                            Log.d(LogTag, "Duplicating index from apk to %s...".format(f))<br />                            source.foreach(<br />                                s => {<br />                                    val is = context.getResources.openRawResource(s._2)<br />                                    try {<br />                                        FileUtils.copyInputStreamToFile(is, new File(f, s._1))<br />                                    } finally {<br />                                        is.close()<br />                                    }<br />                                }<br />                            )<br />                            true<br />                        }<br />                    }<br />                }<br />            )<br />        )<br /><br />        return withIndex.map(FSDirectory.open(_))<br />    }<br /><br />    private def externalFolder: Option[File] = {<br />        Environment.getExternalStorageState match {<br />            case Environment.MEDIA_MOUNTED => Option(context.getExternalFilesDir(path))<br />            case _ => None<br />        }<br />    }<br /><br />    private def internalFolder: Option[File] = {<br />        return Option(new File(context.getFilesDir, path))<br />    }<br /><br />}<br /></pre><br />最後，是在 *App 上加上這段<br /><br /><pre class="brush: scala;">object MyApp {<br />    private val INDEX_DIRECTORY = "idx"<br /><br />    private val INDEX_FILES = Seq(<br />        ("_0.cfs", R.raw.idx_0), <br />        ("segments", R.raw.segments), <br />        ("segments_1", R.raw.segments_1)<br />    )<br />}<br />class MyApp extends android.app.Application {<br /><br />    import MyApp._<br /><br />    private var _luceneSearcher: Option[IndexSearcher] = None<br /><br />    def luceneSearcher: Option[IndexSearcher] = {<br />        if (_luceneSearcher.isEmpty) {<br />            Log.d(LogTag, "Initializing new IndexSearcher...")<br />            _luceneSearcher = LuceneOpenHelper(this, INDEX_DIRECTORY, INDEX_FILES).open().map(new IndexSearcher(_))<br />        }<br />        _luceneSearcher<br />    }<br />   <br />    override def onLowMemory() {<br />        _luceneSearcher.foreach(s => s.close())<br />        _luceneSearcher = None<br />    }<br />}<br /></pre><br />這樣一來，就能在 Android 上面跑 lucene-core 了.</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/24/analytics-hadoop-v-s-dbms/">Analytics: Hadoop v.s. DBMS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-24T16:55:00+08:00" pubdate data-updated="true">Nov 24<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+最近兩周，我開始參加 <a href="http://www.blogger.com/www.taipei-gtug.org/">GTUG</a> 的活動，在活動間，有人問起，為什麼我公司選用DBMS(MySQL)來做資料分析，而不用 Hadoop。在這邊，我把跟公司的DB怪才同事的討論結果，稍為簡單敘述一下。<br /><br />首先，要先理解到的一點是，在 MapReduce 及 Hadoop 出現之前，Data Mining的工具及技術，已經在DBMS上建構了有30年了，相關的技術也發產的很成熟且有許多專書論述。<br /><br /><a href="http://en.wikipedia.org/wiki/Extract,_transform,_load">ETL(Extract, Transform, Load)</a>是這個領域的關鍵字，用 ETL 去找下去，會找到許多的書籍講怎麼做資料分析<br /><ul><li>Extract: 如何在雜亂的原始資料中，找出有用的訊號，並把這些訊號歸檔<br />例如：把 Apache 的 access.log 轉換成一對對的 (timestamp, session) </li><li>Transform: 如何把整理好的訊號，轉換成更好用的中介查詢表格<br />例如：把前面的 (timestamp, session) 轉換成以小時為單位的存取次數 (time-slice, count) </li><li>Load: 把整理好的資料，存到資料庫中。 <br /></li></ul>透過這個轉換過的Fact Table，我們可以把很昂貴的『每日訪問總數查尋』從 <br /><pre class="brush: sql"># pseudo code 應該是錯的，不過你知道我在表達什麼就好了 :P<br /><br />SELECT COUNT(UNIQUE session) FROM http_access<br />  GROUP BY DATE_FORMAT(timestamp,'%Y %m %d')<br /></pre>變成 <br /><pre class="brush: sql">SELECT SUM(count) FROM access_counts<br />  GROUP BY DATE_FORMAT(time_slice,'%Y %m %d')<br /></pre><br />假設，你的原始資料有一整年這麼多，總共有四千萬筆(40M)，那麼，前者就是把四千萬筆的資料讀出來，然後過濾加總，而後者，由於資料匯入時已先處理過了，所以要處理的只有24 * 365筆資料；而這兩者間所花費的時間差易，會隨著查尋次數而產生重大差異。&nbsp; <br /><br />試問，若是每次你老闆跟你要資料時，你要跟他說，要等半小時才可以，還是說等我五分鐘？  至於前面的半小時是怎麼算出來的呢？<br /><br />由於DB運算，瓶頸多是卡在硬碟存取上，在前面的例子中，40M筆資料，假設一筆是1K bytes，那麼，總資料量是 40GB ，從硬碟循序讀取 40GB 出來，所花的時間是 40GB / 40MB/s(硬碟速度) = 17分鐘  <br /><br /><h3>MapReduce & DBMS</h3><br />MapReduce是把資料分拆運算，然後再加總的技術；但是，MapReduce的概念對 RDBMS 並不是什麼新奇的事，在<a href="http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/admin/c0005292.htm">這份IBM的文件</a>中，便清楚的敘述到，DBMS會對 SQL 指令做編譯，DBMS內部就會依資料型態、INDEX檔、CPU Core的數量等，去做最佳化，這些，是Hadoop不會幫你做的。 <br /><br />既然DBMS那麼好那麼，為什麼會有 MapReduce 等技術的出現呢，那是因為，DBMS可以幫你scale up，但是最終，還是會碰上硬體的極限，那麼，這時只有 scale out ，才能解決這問題。  但是 scale out 的程式難度，總是比 scale up 困難，而且，一個不好的分析模式，並不會因為跑的快10倍，就變得比較好；因此， ETL 的概念，在使用 MapReduce 時仍是可以應用的，<br /><br /><br />講到這邊，什麼時候該用 Hadoop ，什麼時候該選用 DBMS ，應該很清楚了<br /><ol><li>首先，就是要先看你要找的分析訊號是什麼，定好分析的步驟及查詢表格</li><li>再來，看你的資料量會有多大，做些簡單的計算，看看是不是能在合理的時間內跑完</li><li>最後，看你這些報表倒底是有多常被取用，若是，這是內部的報表，只要一個月能出一次就好，那麼，Hadoop可能就大才小用；若是，你是要做產品，像Google Analytics做到即時大量分析，那麼你可能就需要用到Hadoop<br /><br />過去我在 <a href="http://medio.com/">Medio</a> 服務時，公司有幫美國幾大電信商分析 App 的購買行為，由於，這些是每個月才需產生一次的報表，而且，資料的訊號有待我們的 data expert 去尋找，因此，我們的資料專家是把資料倒到 MicroStrategy 再去下指令分析的，並沒有用到 Hadoop</li></ol></div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Sam Wong</div>
+<div class='content'>
+我不會Hadoop…想請教，用Hadoop不也得ETL嗎？<br /><br />也許Fact Table的設計可以節省 - 以Scale out MapReduce的bruteforce來換取事前精準按business requirement設計fact table schema - 但Hadoop也不能當OTLP用吧？Hadoop應該沒有ACID的能力吧？</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/22/source-code-of-my-scala-on-android-project/">Source Code of My Scala on Android Project.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-22T16:21:00+08:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+把前面幾回講的用Scala寫的Android程式，放上 bitbucket 了，有興趣的可以自己去下載來看。<br /> <br />https://bitbucket.org/bluetang/android-taipei-disaster</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/16/my-experience-with-scala-on-android/">My Experience With Scala on Android</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T16:53:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+用Scala開發Android，是個滿有趣的經驗，大致上來因為我切入的時間點較晚，所以大部份的問題已經被前人所解決，就用 https://github.com/jberkel/android-plugin 把專案用 sbt 開好後，就可以開始寫 android.<br /><br />我用的 IDE 是 intellij 11 EAP，用 sbt-idea 把 idea project 設好後，把預設的 asset pa th 從 .idea_module 改成 src/main ，就可以開始開發了。<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" imageanchor="1" style=""><img border="0" width="600" src="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" /></a></div><br />在開發上，除了前一回碰上的<a href="http://blog.yunglinho.com/2011/11/data-modeling-with-jackson-json-and_5795.html">proguard問題</a>外，我還碰上另一個比較嚴重的問題－不能在Scala裡寫 AsyncTask<br /><br />這問題跟<a href="https://issues.scala-lang.org/browse/SI-3622">SI-3622</a> <a href="https://issues.scala-lang.org/browse/SI-3494">SI-3494</a>有關，看來是在 Scala 2.8解掉的問題，2.9又跑回來了，我這邊看到的狀況是<br /><br /><pre class="brush: scala">override protected def doInBackground(params: Params*): Result<br /></pre><br />會被Scala compiler專換成<br /><pre class="brush: java">public Result doInBackground(Seq params)<br />    public Result doInBackground(Params[] params)<br /></pre><br /><br />而底下的code，則是scala compiler會吐出 overides nothing.<br /><pre class="brush: scala">override protected def doInBackground(params: Array[Params]): Result<br /></pre><br />不管怎樣，都跟Android要求的<code>protected Result doInBackground(Params[] params)</code>不同，所以在runtime時會跑出NoSuchMethodError.<br /><br />解決方法是在 java 裡寫個 bridge interface ，幫 scala compiler 搞不定的東西，在這個 interface 裡定意好<br /><br /><pre class="brush: java">public abstract class SAsyncTask&lt;Params, Progress, Result> extends AsyncTask&lt;Params, Progress, Result> {<br /><br />    protected abstract Result doInBackground(Seq&lt;Params> params);<br /><br />    @Override<br />    protected Result doInBackground(Params... paramses) {<br />        return doInBackground(JavaConversions.asScalaBuffer(Arrays.asList(paramses)));<br />    }<br />}<br /></pre></div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>yunglin</div>
+<div class='content'>
+多補幾個有關repeated parameters的討論，看來是Spec本身有問題，然後實作時一改再改，一路從2.7開始修修補補過來<br /><br />https://issues.scala-lang.org/browse/SI-1342<br />https://issues.scala-lang.org/browse/SI-1459<br />http://stackoverflow.com/questions/5512402/overriding-a-repeated-class-parameter-in-scala</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard/">Data Modeling With Jackson Json and Scala - Proguard</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T11:32:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+關於Proguard，官方的網頁是這麼自述的：<br /><blockquote>ProGuard is a free Java class file shrinker, optimizer, obfuscator, and preverifier. It detects and removes unused classes, fields, methods, and attributes. It optimizes bytecode and removes unused instructions. It renames the remaining classes, fields, and methods using short meaningless names. Finally, it preverifies the processed code for Java 6 or for Java Micro Edition.<br /></blockquote><br />在Mobile App開發的時候，多會用proguard把沒有用到的程式碼濾除，並把變數名稱跟函式名稱用更精簡的字串來取代，這樣編出來的程式會更小，以我用Scala開發的Android程式，使用的的函式庫大小超過10MB，但是用proguard編出來的class.min.jar只有1.7MB，8.xMB的scala-runtime.jar一大票沒用到的功能都被移掉了。<br /><br />這麼好的功具當然也有他的問題存在，proguard是使用靜態分析的方式，去追縱看有那些程式碼會被執行到，有那些程式碼是不會被碰到的可以被移除的；但由於Jackson是使用Reflection的方式去取得物件的屬性及是用reflection的方式去生成物件，因此，這些行為並不會被proguard偵測到，反而是被認為是dead code而被移除掉。<br /><br />另外proguard會把變數名稱改寫，這也是跟jackson不相容的地方，當getXxxx被改寫成gY，jackson自然無法知道這是Xxxx的getter，因此若是要在proguard的環境下使用jackson，obfuscator是要被關掉的。<br /><br />底下這邊，是我在<a href="https://market.android.com/details?id=com.bluetangstudio.android.disastermap">台北積水地圖</a>內，用的proguard設定檔<br /><br /><pre class="brush: scala">proguardOption in Android :=<br />      ("-dontoptimize -dontpreverify -dontobfuscate"  // shrinking only<br />          :: "-dontskipnonpubliclibraryclassmembers"  // keep Jackson's internal classes<br />          :: "-dontskipnonpubliclibraryclasses"       // keep Jackson's internal classes<br />          :: "-keepattributes *Annotation*."          // keep Jackson Json Annotations.<br />          :: "-keep class org.codehaus.jackson.**"<br />          :: "-keep class com.bluetangstudio.android.model.**"<br />          :: "-keep class com.bluetangstudio.searchcloud.client.**"<br />          :: """-keep class com.bluetangstudio.searchcloud.client.** {<br />                 <init>(...);<br />                 public static ** valueOf(...);<br />             }"""<br />          :: """-keep class com.bluetangstudio.** {<br />                 void set*(***);<br />                 void set*(int, ***);<br /><br />                 boolean is*();<br />                 boolean is*(int);<br /><br />                 *** get*();<br />                 *** get*(int);<br />             }"""<br />          :: """-keep class * implements android.os.Parcelable {<br />                 public static final android.os.Parcelable$Creator *;<br />             }"""<br />          :: """-keepclassmembers class * {<br />                 ** MODULE$;<br />             }"""<br />          :: "-keep public class org.xml.sax.EntityResolver"<br />          :: "-keep public class scala.Either"<br />          :: "-keep public class scala.Function1"<br />          :: "-keep public class scala.Function2"<br />          :: "-keep public class scala.Tuple2"<br />          :: "-keep public class scala.collection.Iterable"<br />          :: "-keep public class scala.PartialFunction"<br />          :: "-keep public class scala.collection.Seq"<br />          :: "-keep public class scala.collection.TraversableOnce"<br />          :: "-keep public class scala.collection.generic.CanBuildFrom"<br />          :: "-keep public class scala.collection.immutable.Map"<br />          :: "-keep public class scala.collection.immutable.List"<br />          :: "-keep public class scala.collection.mutable.StringBuilder"<br />          :: "-keep public class scala.Predef$$less$colon$less"<br />          :: "-keep public class scala.math.Numeric"<br />          :: "-keep public class scala.math.Ordering"<br />          :: "-keep public class scala.reflect.ClassManifest"<br />          :: "-keep public class scala.runtime.IntRef"<br />          :: "-keep public class scala.runtime.BooleanRef"<br />          :: "-keep public class scala.runtime.AbstractFunction1"<br />          :: "-keep public class * extends android.app.Activity"<br />          :: "-keep public class * extends android.app.Application"<br />          :: "-keep public class * extends android.app.Service"<br />          :: "-keep public class * extends android.appwidget.AppWidgetProvider"<br />          :: "-keep public class * extends android.content.BroadcastReceiver"<br />          :: "-keep public class * extends android.content.BroadcastReceiver"<br />          :: "-keep public class * extends android.app.backup.BackupAgentHelper"<br />          :: "-keep public class * extends android.content.ContentProvider"<br />          :: "-keep public class * extends android.view.View"<br />          :: "-keep public class * extends android.preference.Preference"<br />          :: Nil<br />      ) mkString " "<br /></pre></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-lazy-val/">Data Modeling With Jackson Json and Scala - Lazy Val</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T00:50:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個<br /><pre class="brush: java">public volatile int bitmap$0;</pre><br />若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object 中，所有的lazy val，都會仍是 null ，不會被初始化。<br /><br />這個問題，只有做好unit-testing可以避免，因為這個欄位是 public 的，所以不需要setter or constructor， Jackson 就可以直接把值設定進去，只用unit-test仔細檢查生成的，確定沒有預料之外的欄位被寫入到 json 中，才可以免去後來在 runtime 發生不可預料的問題。<br /><br />至於怎麼去除這欄位呢，只要在class上標上<code>@JsonIgnoreProperties({"bitmap$0"})</code>即可</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-polymorphic-types/">Data Modeling With Jackson Json and Scala - Polymorphic Types</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T00:21:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+關於 Jackson Json 對多型的支援，原開發者已經有一篇 <a href="http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html">blog</a> 很清楚的解釋該怎麼做，因此，我只寫下在 scala 上面要注意的眉角。<br /><br />首先，我先寫下理想中，Jackson在Scala上該怎麼使用，在來談，為什麼不能這麼用<br /><pre class="brush: scala">@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")<br />@JsonSubTypes(Array(<br />     new JsonSubTypes.Type(name = "flood", value = classOf[Flood]),<br />     new JsonSubTypes.Type(name = "mountainslide", value = classOf[MountainSlide])<br />)) <br />trait Disaster {}<br /><br />case class Flood @JsonCreator()(<br />    @BeanProperty @JsonProperty("event") event: String,<br />    @BeanProperty @JsonProperty("address") address: String<br />) extends Disaster<br /><br />case class MountainSlide @JsonCreator()(<br />    @BeanProperty @JsonProperty("event") event: String,<br />    @BeanProperty @JsonProperty("landmark") landmark: String<br />) extends Disaster<br /><br /></pre><br />在 scala 2.8.0 上面，我碰上的問題是<a href="https://issues.scala-lang.org/browse/SI-2764">不能在annotation內使用 java enum</a> 如： <code>use = JsonTypeInfo.Id.NAME</code> <br /><br />在 scala 2.9.1 上，上面的問題消失了，不過碰上另一個問題，當一個 annotation 上面有兩個 java enum，scala compiler 及 java compiler 都不會吐出錯誤，但是annotations從bytecode中消失了，<a href="https://issues.scala-lang.org/browse/SI-5165">SI-5165</a>中紀錄了這問題。<br /><br />不管怎樣，在現在這時間，若是你想用Jackson + Scala來處理多型，那麼，最頂層類別，一定要用Java來寫，才不會碰上上述兩個問題。</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/">Data Modeling With Jackson Json and Scala</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-15T17:59:00+08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+我用Scala有一年半左右，第一次看<a href="http://bone.twbbs.org.tw/blog/">brianhsu</a>介紹 case class ，就對 Scala 的簡潔著迷，當然，經過了一年半後，許多的面紗揭開後，Scala在與Java函式庫整合的小問題就跑出來了，接下來，我會寫寫怎麼用Jackson Json及Scala來設計一個Json WebService API的Model Objects.<br /><br /><h3>case class</h3><br />Scala的case class在經過Scala compiler轉換後，就會生成一個POJO，例如這樣一個簡單的case class<br /><pre class="brush: scala">case class Disaster(event: String)</pre><br />會被轉換成如下的Java Code<br /><pre class="brush: java">public class Disaster<br />    implements ScalaObject, Product, Serializable<br />{<br />    public String event()<br />    {<br />        return event;<br />    }<br />    public int hashCode()<br />    {<br />        return ScalaRunTime$.MODULE$._hashCode(this);<br />    }<br />    public String toString()<br />    {<br />        return ScalaRunTime$.MODULE$._toString(this);<br />    }<br />    public boolean equals(Object obj)<br />    {<br />        //removed<br />    }<br />    public Disaster(String event)<br />    {<br />        this.event = event;<br />        super();<br />        scala.Product.class.$init$(this);<br />    }<br />    private final String event;<br />}<br /></pre><br />這個POJO跟一般POJO的不同處在於<br /><ol><li>immutable object，沒有辦法去更改這物件的屬性</li><li>getter的命名不是Java通用的 getXxxx() 而是 xxxx()</li></ol><br />這在一般使用上，不是問題，反而是優點，然而，當於 Java binding framework 如 Jackson Json 或 JAXB 要做整合時，就變成問題了，原因在於，多數的 java binding frameworks 在將資料轉回Java Object時，多是呼叫沒代參數的default constructor，然後再呼叫setter(s)把物件的屬性傳進去。<br /><br />另一個問題則是，多數的java binding frameworks在偵側那些屬性是serializable時，要麻是用java annotation一個個屬性去標，要不然就是用 refection 去找 getXxxx() <br /><br />而好死不死的plain scala case class沒有辦法滿足上面兩個條件，因此，我們要想辦法繞過這兩個問題。第二個問題比較好解，只要在屬性上標上 @scala.reflect.BeanProperty ，Scala compiler就會自動幫你把你的屬性加上 getXxxx() 及 setXxxx(&#8230;)。<br /><br /><pre class="brush: scala">case class Disaster(@BeanProperty event: String)</pre><br />第一的問題，在Jackson Json的解法是用 @JsonCreator 去指定不代變數default constructor的替代品，然而，在這邊我們須要把每一個屬性的名稱，用 @JsonProperty(&#8220;xxx&#8221;) 標在 constructor 的參數上，這是因為，Java compiler在編譯時，會把 parameter 的名稱擦去，如 public Disaster(String event) 在經過編譯後的 bytecode 中只剩下 public Disaster(String p1)，因此我們須要用java annotation來強制幫參數取個名稱，這樣，當Jackson在把 Json String 轉成Object時，才知道該把那個json object的屬性對到java object的那個屬性之上。<br /><br /><pre class="brush: scala">case class Disaster @JsonCreator()(<br />    @BeanProperty @JsonProperty("event") event: String<br />)<br /></pre><br /><br /><hr /><br />當我們的Scala case class已經是Jackson Json Serializable後，我們要怎麼樣把scala case class object轉成json string再轉回來呢，請看底下的例子。<br /><br /><pre class="brush: scala">val disaster = new Disaster("88 typhoon")<br />val mapper = new org.codehaus.jackson.map.ObjectMapper()<br /><br />val json = mapper.writeValueAsString(disaster)<br />assert(json === """{"event": "88typhon"}"""}<br />  <br />val copy = mapper.readValue[Disaster](json, classOf[[Disaster])<br />assert(copy === disaster)<br /></pre><br />這邊我們會碰上Scala較Java語法上比較沒有那麼漂亮的地方，在Java裡，若是函式支援generic <t>且又有個Class<t>的參數，那麼，我們不用把<t>傳兩次進去這個函式，如<br /></t></t></t><br /><pre class="brush: java">Disaster copy = mapper.readValue(json, Disaster.class)<br /></pre><br />因此在Scala的這邊，我會寫個JsonSerializer來把 scala 這邊的語法弄漂亮些 <br /><br /><pre class="brush: scala">object JsonSerializer {<br />  private val mapper = new ObjectMapper<br /><br />  def fromJson[T &lt;: AnyRef](jsonString: String)(implicit m: Manifest[T]): T = {<br />    mapper.readValue(jsonString, m.erasure).asInstanceOf[T];<br />  }<br />}<br />// readValue the scala way.<br />val disaster = JsonSerializer.fromJson[Disaster](json)<br /></pre><br />最後，<code>@JsonCreator</code>不一定是要標在constructor上面，他也可以標在static method上面，這樣一來，可以讓你做到scala constructor無法做到的一些處理<br /><br /><pre class="brush: scala">case class Disaster(<br />    @BeanProperty event: String, <br />    location: Option[GeoPoint]) {<br />  <br />  /** helper method for jackson json */<br />  def getLocation = location.getOrElse(null)<br />}<br /><br />object Disaster {<br /><br />  @JsonCreator<br />  def newInstance(<br />    @Property("event") event: String,<br />    @Property("location") location: GeoPoint): Disaster = {<br />    <br />    val locationOption = if (location == null) {<br />       None<br />    } else {<br />       Some(location)<br />    } <br />    return new Disaster(event, locationOption)<br />  }<br />}<br /></pre>下一回，我們會看，如何讓Jackson Json能夠對多型的物件做處理</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/15/">台北市政府公開資料（三）- 台北積水地圖</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-15T17:49:00+08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+花了三個禮拜，學習怎麼開發Android程式，在沒買開發機的狀況下，在模擬器上完成了我的第一個Android App - <a href="https://market.android.com/details?id=com.bluetangstudio.android.disastermap">台北積水地圖</a><br /><br /><br /><img align="left" border="0" height="400" src="https://g1.gstatic.com/android/market/com.bluetangstudio.android.disastermap/ss-480-0-0" /><img border="0" height="400" src="https://ssl.gstatic.com/android/market/com.bluetangstudio.android.disastermap/ss-480-1-0" /><br /><br /><br/><br /><br />資料來源一樣是從台北市政府所來，原始資料檔可從<a href="http://data.taipei.gov.tw/ct.asp?xItem=3928148&ctNode=45190&mp=datataipei">『臺北市歷年積水紀錄圖』</a>下載。我把資料檔的座標系轉換(TW67 -> WSG84)後，就塞到跟前一回一樣的後端去做處理，剩下的就都是前端的工作了。<br /><br />在前端UI開發上，依以前開發的習慣，先把wireframe（假UI）畫好才動工，找了找一些畫UI的工具，最後買了<a href="http://keynotopia.com/android-prototyping-templates/">keynotopia</a>出的工具，這傢伙也是個奇人，開start-up不到<a href="http://blog.amirkhella.com/2010/09/21/the-story-of-keynotopia-how-i-launched-a-profitable-product-in-3-hours/">三小時就開始獲利</a>；在畫假UI時就發現，傳統上我們用點來代表一個物件，在畫地圖（羞～）時，並不能合理的表現許多地理圖型。<br /><br />然而，若是我們要把地理圖型直接畫在地圖上讓使用者直接點開，那麼，我們又要處理重疊的狀況，這在淹水地圖上就特別麻煩，因為常淹水的區塊會互相重疊多次，或像納利颱風，一次淹掉了一大塊的區塊，在處理點選時，我們要怎麼知道使用者點選的是那一層的資料？<br /><br />而在顯示上，要怎麼處理重疊的區塊，讓使用者知道，某個地點曾淹水多次？一個選項是用顏色來做，重疊的部份用加深的顏色來顯式；最後，我們還是回歸傳統的點座標的方式，來表示淹水的區域，等使用者點開後，才用色塊畫出實際淹水的地區。等下次改版時，等我對Android 2D再熟一些時，或許會嘗試用顏色的方式來做呈現。<br /><br /><br />接下來，我會在有空的時候，再開發一個程式，把台北市的土地分區（住一、住二、商用&#8230;）資料，跟土地的地號資料，做成個台北都更地圖，若各位有類似的需求，請<a href="mailto:yho at bluetangstudio dot com">與我聯絡</a></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/3/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb&#8217;s java and scala driver.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/dependency-injection-in-scala/">Dependency Injection in Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/migrate-to-octopress/">搬家到 Octopress </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/">Lesson Learned form Developing Locadz SDK</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/18/">成本降就該降售價嗎？</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("yunglinho", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/yunglinho" class="twitter-follow-button" data-show-count="false">Follow @yunglinho</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101164690243066571931?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 -  -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'yunglin';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

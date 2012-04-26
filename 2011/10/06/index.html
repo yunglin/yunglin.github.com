@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>轉換台北市政府公開資料的格式 - 碎碎唸</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="在台北市政府公開的資料中，有一大部份是用shapefile的格式開放的，如何把這些資料轉換出來，變成是一個問題，在這邊把我怎麼把TWD67座標的shapefile，轉換成WSG84的 GeoJSON格式。首先，請參考前文把里介圖在QGIS中打開。再來按這邊講的，把TWD67的定義加入到 QGIS &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://yunglin.github.com/blog/2011/10/06">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="碎碎唸" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">碎碎唸</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:yunglin.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">轉換台北市政府公開資料的格式</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-06T17:01:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div class='post'>
+在台北市政府公開的資料中，有一大部份是用shapefile的格式開放的，如何把這些資料轉換出來，變成是一個問題，在這邊把我怎麼把TWD67座標的shapefile，轉換成WSG84的 GeoJSON格式。<br /><br />首先，請參考前文把里介圖在QGIS中打開。<br /><br />再來按<a href="http://gis-tech.blogspot.com/2008/11/quantum-gis_24.html">這邊</a>講的，把TWD67的定義加入到 QGIS 中<br /><br />接著，選Layer Property -&gt; Set Layer CRS -&gt; TWD 67<br /><br />然後，指定專案用的CRS定意，FIle -&gt; Project Property -&gt; CRS -&gt; WSG 84<br /><br />最後，是把Layer另存新檔，Layer -&gt; Save As -&gt; File Format: GeoJSON, Encoding: UTF-8<br /><br />這樣，就可以把shapefile的內容匯出來，變成像下述的格式<br /><br />{ &#8220;type&#8221;: &#8220;Feature&#8221;, &#8220;id&#8221;: 0, &#8220;properties&#8221;: { &#8220;AREA&#8221;: 16326625.055040, &#8220;NEW&#8221;: 6301200042.000000, &#8220;FULL&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PERF_ID&#8221;: 63012.000000, &#8220;COUN_ID&#8221;: &#8220;6301200&#8221;, &#8220;CPID&#8221;: &#8220;63012&#8221;, &#8220;CPTID&#8221;: &#8220;6301200&#8221;, &#8220;CPTVID&#8221;: &#8220;6301200042&#8221;, &#8220;NPID&#8221;: 63012.000000, &#8220;NPTID&#8221;: 6301200.000000, &#8220;NPTVID&#8221;: 6301200042.000000, &#8220;PNAME&#8221;: &#8220;臺北市&#8221;, &#8220;TNAME&#8221;: &#8220;北投區&#8221;, &#8220;VNAME&#8221;: &#8220;湖田里&#8221;, &#8220;PTVNAME&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PTNAME&#8221;: &#8220;臺北市北投區&#8221;, &#8220;TVNAME&#8221;: &#8220;北投區湖田里&#8221;, &#8220;TM2_MAX_X&#8221;: 306973.245000, &#8220;TM2_MAX_Y&#8221;: 2789383.300000, &#8220;TM2_MIN_X&#8221;: 301490.096000, &#8220;TM2_MIN_Y&#8221;: 2783263.350000, &#8220;MAX_X&#8221;: 0.000000, &#8220;MAX_Y&#8221;: 0.000000, &#8220;MIN_X&#8221;: 0.000000, &#8220;MIN_Y&#8221;: 0.000000 }, &#8220;geometry&#8221;: { &#8220;type&#8221;: &#8220;Polygon&#8221;, &#8220;coordinates&#8221;: [ [ [ 121.522589, 25.174993 ], [ 121.522587, 25.174995 ], [ 121.522557, 25.175033 ], [ 121.522408, 25.175170 ], [ 121.522317, 25.175324 ], [ 121.522314, 25.175367 ], [ 121.522323, 25.175569 ], [ 121.522315, 25.175789 ], [ 121.522322, 25.175950 ], [ 121.522270, 25.176082 ], [ 121.522158, 25.176302 ], [ 121.522043, 25.176548 ], [ 121.522002, 25.176598 ], [ 121.521997, 25.176648 ], [ 121.522278, 25.177273 ], [ 121.522359, 25.177825 ], [ 121.522384, 25.178200 ], [ 121.522338, 25.178332 ], [ 121.522127, 25.178615 ], [ 121.521821, 25.178986 ], [ 121.521780, 25.179026 ], [ 121.521691, 25.179134 ], [ 121.522349, 25.179671 ], [ 121.522623, 25.179892 ], [ 121.522810, 25.179997 ], [ 121.522949, 25.180089 ], [ 121.523101, 25.180244 ], [ 121.523337, 25.180539 ], [ 121.523425, 25.180655 ], [ 121.523550, 25.180683 ], [ 121.523641, 25.180779 ], [ 121.523652, 25.180779 ], [ 121.523816, 25.1809<br /><br /><br /><br /></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-06T17:01:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://yunglin.github.com/blog/2011/10/06/" data-via="yunglinho" data-counturl="http://yunglin.github.com/blog/2011/10/06/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/09/07/-mac-osx/" title="Previous Post: 如何在Mac OSX上，讀取台北市政府放出來的地圖資料">&laquo; 如何在Mac OSX上，讀取台北市政府放出來的地圖資料</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/10/18/" title="Next Post: 台北市政府公開資料（二）- 按地理位址搜尋資料">台北市政府公開資料（二）- 按地理位址搜尋資料 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb's java and scala driver.</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/dependency-injection-in-scala/">Dependency Injection in Scala</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/22/migrate-to-octopress/">搬家到 Octopress </a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/">Lesson Learned form Developing Locadz SDK</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/04/18/">成本降就該降售價嗎？</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("yunglinho", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/yunglinho" class="twitter-follow-button" data-show-count="false">Follow @yunglinho</a>
+  
+</section>
+
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101164690243066571931?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 -  -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
