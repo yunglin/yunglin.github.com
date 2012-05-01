@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: mongodb | 碎碎唸]]></title>
-  <link href="http://yunglin.github.com/blog/categories/mongodb/atom.xml" rel="self"/>
-  <link href="http://yunglin.github.com/"/>
-  <updated>2012-04-30T17:10:27+08:00</updated>
-  <id>http://yunglin.github.com/</id>
+  <link href="http://blog.yunglinho.com/blog/categories/mongodb/atom.xml" rel="self"/>
+  <link href="http://blog.yunglinho.com/"/>
+  <updated>2012-05-01T14:41:04+08:00</updated>
+  <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Mongodb Scala DAO]]></title>
-    <link href="http://yunglin.github.com/blog/2012/04/30/mongodb-dao/"/>
+    <link href="http://blog.yunglinho.com/blog/2012/04/30/mongodb-dao/"/>
     <updated>2012-04-30T11:50:00+08:00</updated>
-    <id>http://yunglin.github.com/blog/2012/04/30/mongodb-dao</id>
+    <id>http://blog.yunglinho.com/blog/2012/04/30/mongodb-dao</id>
     <content type="html"><![CDATA[<p>這篇文章將說說，我使用 MongoDB &amp; Cashbah 的一些心得，這程式的主架構是
 我從 simplistic_ 學來的。</p>
 
@@ -362,9 +362,9 @@ def optionalAttribute[A, B &lt;: Any](name: String, dataType: Conversion[A, B])(
   
   <entry>
     <title type="html"><![CDATA[Problem in Mongodb's java and scala driver.]]></title>
-    <link href="http://yunglin.github.com/blog/2012/04/26/mongodb-java-driver-sucks/"/>
+    <link href="http://blog.yunglinho.com/blog/2012/04/26/mongodb-java-driver-sucks/"/>
     <updated>2012-04-26T18:45:00+08:00</updated>
-    <id>http://yunglin.github.com/blog/2012/04/26/mongodb-java-driver-sucks</id>
+    <id>http://blog.yunglinho.com/blog/2012/04/26/mongodb-java-driver-sucks</id>
     <content type="html"><![CDATA[<p>MongoDB 的 Java Driver 支援透過 Transformer<em> 去掛上 encodingHook 及 decodingHook，
 使用方式可以參考 <code>Salat URISerializer</code></em>.</p>
 
