@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2012-05-17T16:12:34+08:00</updated>
+  <updated>2012-05-17T16:14:19+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -76,15 +76,15 @@
 <h2>如何建立信認</h2>
 <p>信認是個很抽象的名詞，你摸不到看不到，但是卻在人與人的往來，無形中慢慢的形成；信認就如宗教信仰一樣，
 你無法買到，無法強迫別人去接受、也無法一促即成，只能一步步的去建立。</p>
-<img alt="/images/2012-05-17/we-can-do-it.jpg" src="http://blog.yunglinho.com/images/2012-05-17/we-can-do-it.jpg" />
 <p>但是，我們是軟體工程師，我們信仰的是科學、是工程技術、是數字管理，我們善長的是透過科學的研究手法，
 一步步的去拆解問題，弄清楚什麼是已知的事實，什麼是未知的問題，面對問題，解決問題。</p>
 <p>販賣口號，不是軟體工程師所善長及該做的。</p>
+<img alt="/images/2012-05-17/we-can-do-it.jpg" src="http://blog.yunglinho.com/images/2012-05-17/we-can-do-it.jpg" />
 </div>
 <div class="section" id="id6">
 <h2>可量化的軟體品質就是信認的來源</h2>
 <p>對於中小企業及新進入雲端服務的公司，「可量化的軟體品質指標」就是可以最快取得客戶信認的方式；我希望
-在未來的某一天，我可以聽見台灣的軟體公司是這麼介紹自己的</p>
+在未來的某一天，我可以聽見台灣的軟體公司是這麼介紹自己的產品</p>
 <blockquote>
 我們的網路服務，能夠同時服務兩百萬上線用戶，提供 50ms 以下的即時性的反應，我們的服務，整合了超過
 40個內部及外部的開發商客戶，在過去的兩年內，我們提供了 99% availability ； Agile 的開發流程，
