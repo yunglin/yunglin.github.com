@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2012-05-17T16:20:05+08:00</updated>
+  <updated>2012-05-17T17:56:54+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,14 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[軟體品質指標系列(一)：軟體品質指標有那些]]></title>
+    <link href="http://blog.yunglinho.com/blog/2012/05/17/runtime-quality-metrics-series-2/"/>
+    <updated>2012-05-17T17:49:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2012/05/17/runtime-quality-metrics-series-2</id>
+    <content type="html"><![CDATA[<p>軟體品質指標有那些，</p>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[軟體品質指標系列(一)：為什麼軟體開發者需要在意軟體品質指標]]></title>
@@ -57,7 +65,7 @@
 </dl>
 <p>許多單機版或 2-Tier 的程式，經過時間的證明，他們的生命週期，甚至超過了開發者的生命週期，許多
 國內百貨零售業用的進銷存系統，目前仍是在用20年前的 DOS 系統就是一例。對客戶來說，他們對這些DOS版
-軟體的信任，超越了新科技所帶來的新功能需求。只要更新硬體，他們就可以繼續使用者些軟體，甚至是享受新
+軟體的信任，超越了新科技所帶來的新功能需求。只要更新硬體，他們就可以繼續使用這些軟體，甚至是享受新
 硬體所帶來的更高效能。</p>
 <p><strong>信任</strong> 在雲端服務上，更是重要；在享受雲端服務的便利的另一方面，雲端服務的使用者更是需要放更多
 的信任在服務提供商上，除了上述的信任外，客戶還要信任你的服務可以隨著他的服務及你的服務一起增長。</p>
@@ -1964,16 +1972,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
 多補幾個有關repeated parameters的討論，看來是Spec本身有問題，然後實作時一改再改，一路從2.7開始修修補補過來<br /><br />https://issues.scala-lang.org/browse/SI-1342<br />https://issues.scala-lang.org/browse/SI-1459<br />http://stackoverflow.com/questions/5512402/overriding-a-repeated-class-parameter-in-scala</div>
 </div>
 </div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Data Modeling With Jackson Json and Scala - Proguard]]></title>
-    <link href="http://blog.yunglinho.com/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard/"/>
-    <updated>2011-11-16T11:32:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard</id>
-    <content type="html"><![CDATA[<div class='post'>
-關於Proguard，官方的網頁是這麼自述的：<br /><blockquote>ProGuard is a free Java class file shrinker, optimizer, obfuscator, and preverifier. It detects and removes unused classes, fields, methods, and attributes. It optimizes bytecode and removes unused instructions. It renames the remaining classes, fields, and methods using short meaningless names. Finally, it preverifies the processed code for Java 6 or for Java Micro Edition.<br /></blockquote><br />在Mobile App開發的時候，多會用proguard把沒有用到的程式碼濾除，並把變數名稱跟函式名稱用更精簡的字串來取代，這樣編出來的程式會更小，以我用Scala開發的Android程式，使用的的函式庫大小超過10MB，但是用proguard編出來的class.min.jar只有1.7MB，8.xMB的scala-runtime.jar一大票沒用到的功能都被移掉了。<br /><br />這麼好的功具當然也有他的問題存在，proguard是使用靜態分析的方式，去追縱看有那些程式碼會被執行到，有那些程式碼是不會被碰到的可以被移除的；但由於Jackson是使用Reflection的方式去取得物件的屬性及是用reflection的方式去生成物件，因此，這些行為並不會被proguard偵測到，反而是被認為是dead code而被移除掉。<br /><br />另外proguard會把變數名稱改寫，這也是跟jackson不相容的地方，當getXxxx被改寫成gY，jackson自然無法知道這是Xxxx的getter，因此若是要在proguard的環境下使用jackson，obfuscator是要被關掉的。<br /><br />底下這邊，是我在<a href="https://market.android.com/details?id=com.bluetangstudio.android.disastermap">台北積水地圖</a>內，用的proguard設定檔<br /><br /><pre class="brush: scala">proguardOption in Android :=<br />      ("-dontoptimize -dontpreverify -dontobfuscate"  // shrinking only<br />          :: "-dontskipnonpubliclibraryclassmembers"  // keep Jackson's internal classes<br />          :: "-dontskipnonpubliclibraryclasses"       // keep Jackson's internal classes<br />          :: "-keepattributes *Annotation*."          // keep Jackson Json Annotations.<br />          :: "-keep class org.codehaus.jackson.**"<br />          :: "-keep class com.bluetangstudio.android.model.**"<br />          :: "-keep class com.bluetangstudio.searchcloud.client.**"<br />          :: """-keep class com.bluetangstudio.searchcloud.client.** {<br />                 <init>(...);<br />                 public static ** valueOf(...);<br />             }"""<br />          :: """-keep class com.bluetangstudio.** {<br />                 void set*(***);<br />                 void set*(int, ***);<br /><br />                 boolean is*();<br />                 boolean is*(int);<br /><br />                 *** get*();<br />                 *** get*(int);<br />             }"""<br />          :: """-keep class * implements android.os.Parcelable {<br />                 public static final android.os.Parcelable$Creator *;<br />             }"""<br />          :: """-keepclassmembers class * {<br />                 ** MODULE$;<br />             }"""<br />          :: "-keep public class org.xml.sax.EntityResolver"<br />          :: "-keep public class scala.Either"<br />          :: "-keep public class scala.Function1"<br />          :: "-keep public class scala.Function2"<br />          :: "-keep public class scala.Tuple2"<br />          :: "-keep public class scala.collection.Iterable"<br />          :: "-keep public class scala.PartialFunction"<br />          :: "-keep public class scala.collection.Seq"<br />          :: "-keep public class scala.collection.TraversableOnce"<br />          :: "-keep public class scala.collection.generic.CanBuildFrom"<br />          :: "-keep public class scala.collection.immutable.Map"<br />          :: "-keep public class scala.collection.immutable.List"<br />          :: "-keep public class scala.collection.mutable.StringBuilder"<br />          :: "-keep public class scala.Predef$$less$colon$less"<br />          :: "-keep public class scala.math.Numeric"<br />          :: "-keep public class scala.math.Ordering"<br />          :: "-keep public class scala.reflect.ClassManifest"<br />          :: "-keep public class scala.runtime.IntRef"<br />          :: "-keep public class scala.runtime.BooleanRef"<br />          :: "-keep public class scala.runtime.AbstractFunction1"<br />          :: "-keep public class * extends android.app.Activity"<br />          :: "-keep public class * extends android.app.Application"<br />          :: "-keep public class * extends android.app.Service"<br />          :: "-keep public class * extends android.appwidget.AppWidgetProvider"<br />          :: "-keep public class * extends android.content.BroadcastReceiver"<br />          :: "-keep public class * extends android.content.BroadcastReceiver"<br />          :: "-keep public class * extends android.app.backup.BackupAgentHelper"<br />          :: "-keep public class * extends android.content.ContentProvider"<br />          :: "-keep public class * extends android.view.View"<br />          :: "-keep public class * extends android.preference.Preference"<br />          :: Nil<br />      ) mkString " "<br /></pre></div>
 ]]></content>
   </entry>
   
