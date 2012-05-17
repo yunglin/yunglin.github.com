@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="關於 Jackson Json 對多型的支援，原開發者已經有一篇 blog 很清楚的解釋該怎麼做，因此，我只寫下在 scala 上面要注意的眉角。首先，我先寫下理想中，Jackson在Scala上該怎麼使用，在來談，為什麼不能這麼用@JsonTypeInfo(use = JsonTypeInfo &hellip;">
+  <meta name="description" content="Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個public volatile int bitmap$0;若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-lazy-val/">Data Modeling With Jackson Json and Scala - Lazy Val</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T00:50:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個<br /><pre class="brush: java">public volatile int bitmap$0;</pre><br />若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object 中，所有的lazy val，都會仍是 null ，不會被初始化。<br /><br />這個問題，只有做好unit-testing可以避免，因為這個欄位是 public 的，所以不需要setter or constructor， Jackson 就可以直接把值設定進去，只用unit-test仔細檢查生成的，確定沒有預料之外的欄位被寫入到 json 中，才可以免去後來在 runtime 發生不可預料的問題。<br /><br />至於怎麼去除這欄位呢，只要在class上標上<code>@JsonIgnoreProperties({"bitmap$0"})</code>即可</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -431,48 +468,9 @@ Having a good build system is like living in the heaven, and having a bad build 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/07/01/-google-android-market/">對於北市府開罰Google Android Market的一些感想</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-07-01T02:11:00+08:00" pubdate data-updated="true">Jul 1<span>st</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><!--
-  ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved.
-  -->
-
-<div class='post'>
-對於一個新興、發展中的行業，開明的政府，應該採取延後立法的動作；在一個運作正常，還未出現嚴重問題的市場，政府不該強硬將現有的法規，不經與業界及消費者團體討論資詢，就強加以規範，只能說郝軍頭上行下效。垃圾袋政策如此，App Market也如此。<br /><br />今天Google被罰，跟本是天龍人間的自我感覺良好。<a href="http://www.libertytimes.com.tw/2011/new/jun/23/today-life14.htm">月初市議員要求市府處理</a>iPhone&nbsp;App Store上 350,000的 App中，一隻無法運作的程式的問題。<br /><br />就為了這 1/350,000 &nbsp;的問題程式，葉大官人，就這麼巧妙（恐怖）的善用行政解釋的權力，在短短的幾日內，就把數個發展中的數位產業，輕輕鬆鬆的就納入了現有的消保法去管理。<br /><br /><br />這之間的過程，比立法院立法還簡便，立法程序好歹會有行政單位、幾個立委助理看過法案再送表決；今天，一個擁有極大權力的行政官員，明知法已不適用，卻仍執意擴大解釋消保法適用範圍。在部落格上，未經見面，就以上到下的指導口氣告訴商家<br /><br />『我希望Google能意識到自己犯了多大的錯誤—不是對臺北市政府，而是對全世界信賴Google跟Android系統的消費者。』<br /><br />只能說，好大的官威。大官人，請你了解，你的一言一行，對我們這些小民，有多長遠的影響好嗎。<br /><br />ref:<br />1.&nbsp;<a href="http://www.libertytimes.com.tw/2011/new/jun/23/today-life14.htm">蘋果黑心APP再不退錢 今將被重罰</a><br />2.<a href="http://blog.yam.com/philipy/article/39261422">從處罰Google一百萬談起</a><br /><br />葉狀師表示：『<span class="Apple-style-span" style="font-family: Arial, 新細明體, taipei, Helvetica, sans-serif;"><span style="font-family: 新細明體;">也有網友質疑，軟體不應該適用郵購買賣七日鑑賞期的規定。我必須同意這是一個非常有爭議的議題，但是，目前法律並沒有將軟體買賣排除消費者保護法七日鑑賞期之適用，所以</span></span><span class="Apple-style-span" style="font-family: Arial, 新細明體, taipei, Helvetica, sans-serif;"><span lang="EN-US"><span style="font-family: 'Times New Roman'; line-height: normal;">Google</span></span></span><span class="Apple-style-span" style="font-family: Arial, 新細明體, taipei, Helvetica, sans-serif;"><span style="font-family: 新細明體;">不能自己變成立法者，自己決定適不適用消保法的規定—台灣的業者不能，</span></span><span class="Apple-style-span" style="font-family: Arial, 新細明體, taipei, Helvetica, sans-serif;"><span lang="EN-US"><span style="font-family: 'Times New Roman'; line-height: normal;">Google</span></span></span><span class="Apple-style-span" style="font-family: Arial, 新細明體, taipei, Helvetica, sans-serif;"><span style="font-family: 新細明體;">也不能。』</span></span></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/4/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -485,6 +483,10 @@ Having a good build system is like living in the heaven, and having a bad build 
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/05/17/runtime-quality-metrics-series-1/">軟體品質指標系列(一)：為什麼軟體開發者需要在意軟體品質指標</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/05/17/ridiculous-rule-change/">鬼島之鬼交通法規變革</a>
@@ -500,10 +502,6 @@ Having a good build system is like living in the heaven, and having a bad build 
     
       <li class="post">
         <a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb&#8217;s java and scala driver.</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/04/22/dependency-injection-in-scala/">Dependency Injection in Scala</a>
       </li>
     
   </ul>
