@@ -9,9 +9,10 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="下個月受軟協的邀請，要跟國內發展雲端服務的廠商講一場演講，原本想講的是 Coda Hale 的 metrics library 的使用
-不過跟軟協的詹副秘書長聊了一聊後，決定把主題改成 軟體品質 ，畢竟，太偏實作的東西，拿來給
-中高階主管聽，可能會睡著吧 XD 軟體品質指標 &hellip;">
+  <meta name="description" content="接下來，我們就來探討，軟體品質指標有那些種類 可用度 Availability
+一個服務的可用度，是由很多環節組合起來的，某些環節是掌控在開發者手中，某些環節則是
+在使用者手中的；對使用者來說，一個服務的可用度，是由底下幾個環節的總合： 軟體本身的可用度
+IT/Cloud 架構本身的可用度 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +77,182 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/22/runtime-quality-metrics-series-2/">軟體品質指標系列(二)：軟體品質有那些</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-22T17:49:00+08:00" pubdate data-updated="true">May 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>接下來，我們就來探討，軟體品質指標有那些種類</p>
+<div class="section" id="availability">
+<h2>可用度 Availability</h2>
+<p>一個服務的可用度，是由很多環節組合起來的，某些環節是掌控在開發者手中，某些環節則是
+在使用者手中的；對使用者來說，一個服務的可用度，是由底下幾個環節的總合：</p>
+<ul class="simple">
+<li>軟體本身的可用度</li>
+<li>IT/Cloud 架構本身的可用度</li>
+<li>服務提供者端的網路環境</li>
+<li>外部服務的可用度</li>
+<li>使用者端的網路環境</li>
+</ul>
+<p>在計算 Availability 時，是把上面幾個因素相乘起來，便是你服務的可用度，假設你的IT架構
+本身只能提供 99.99% 的可用度，那你的服務本身的可用度將會小於 99.99% 。當然，你可以透
+過 Multi-Host 的方式，將服務布建在多個不同 Data Center，此時你的服務可用度，將可超
+過單一平台可以提供的可用度。</p>
+<blockquote>
+假設 Cloud A 可以提供的可用度是 99% ， Cloud B 可以提供的可用度是 98% ，而你將服
+務同部布建在兩者之上，那麼兩者一起停機的機會是 (1-99%)*(1-98%) = 0.02% ，因此可靠
+度提昇為 99.98% 。</blockquote>
+<p>然而，為了提高可靠到而佈建到 Multi-Host 時，不只要把 Presentation Layer / Frontend 放
+到多個平台上面去，同時，使用者的資料也要同步到多個平台去，這樣，才能夠必免單一IT平台停機的
+問題。但是這麼一來，當停機的平台再次上線時，如何處理資料的不一致問題，便成了另一難題。因此
+，多數的服務提供者只會把服務佈建在單一平台上。</p>
+<div class="section" id="id1">
+<h3>服務提供者端的網路環境</h3>
+<p>目前，多數的雲端服務商仍是把主機設立在海外，在台灣沒有 Data Center ，因此，當台灣對外的海
+纜出了問題時，雖然服務本身在海外仍是可用的，但是在台灣就連不上線，這一點，也是台灣的開發者
+在選用雲端平台時需要考慮進去的。</p>
+<p>過去幾年來，台灣對外的海纜，幾乎每兩年都會斷線超過一天。</p>
+<blockquote>
+<ul class="simple">
+<li>2001/02/09 中美海纜遭魚船勾破，數據傳輸容量遽減至原來的四成。HiNet, SeedNet, TaNet 均受影響</li>
+<li>2003/10/02 中美海纜遭魚船勾破</li>
+<li>2006/12/26 恆春地震造成四條國際海纜中美海纜、法新歐亞三號、亞太光纜一號二號網絡斷線，影響到台灣對中國、香港、新加坡等東南亞國家和地區，以及上述地區對外的國際通信。耗時三週修複。</li>
+<li>2009/08/13 莫拉克颱風造成對外海纜斷線，影響台灣往中國大陸汕頭及東南亞地區，包括新加坡、菲律賓及香港等地之通信。影響時間超過一週</li>
+<li>2010/03/04 高雄甲仙地震造成中美海纜斷線，影響時間超過一個月</li>
+<li>2011/11/14 ~ 2012/21/26 海纜進行維修，將造成HiNet連線中國之部份連網服務傳輸延遲時間變長。</li>
+</ul>
+</blockquote>
+<p>若是你服務的對像是以亞洲為主，還是建議放在台灣或日本，若是服務對像以全球為目標，建議還是就放在美國吧。</p>
+</div>
+<div class="section" id="soa-in-reality">
+<h3>外部服務的可用度 / SOA in Reality</h3>
+<img alt="/images/2012-05-22/cloud-farm.jpg" src="/images/2012-05-22/cloud-farm.jpg" style="width: 400px;" />
+<p>在幾年前，流行的系統架構是 SOA ，讓每一個團隊專注在單一面向功能的服務，將服務透過SOAP/Restful API供
+內部及外部的使用者來使用。這樣的好處是，可以增快服務更新的速度減少測試的範圍，在組織上，也可讓組織將重點
+放在核心服務上，而將其它的需求委由外部服務處理。</p>
+<p>如此一來，對使用者來說，多重 SOA 子服務組合而成的服務，看起來就像是在雲端運行的一台大電腦，跟舊式的服務
+並沒有差異。</p>
+<img alt="/images/2012-05-22/cloud-server.png" src="/images/2012-05-22/cloud-server.png" style="width: 400px;" />
+<p>然而經過幾年的經驗後，大家發現實際上的經驗並不是那麼的美好；如同開頭所說的，服務的可用度，是所有子服務的
+總合，單一服務的問題，將會把整體的可用度都拉低。</p>
+<p>在我的實務經驗上， SOA 架構，反而變成無止境的 finger pointing ，最後變成，需要對所有外部服務的可用度做
+長期的追縱，評估他實際上的可用度。另外，在委外給外部服務時，只會把可以離線處理的服務委外給外部服務，需要線
+上即時處理的，還是自行開發較好。</p>
+<img alt="/images/2012-05-22/finger-pointing.png" src="/images/2012-05-22/finger-pointing.png" style="width: 400px;" />
+</div>
+<div class="section" id="service-level-agreement-term-of-service">
+<h3>Service Level Agreement / Term of Service</h3>
+<p>TBD</p>
+</div>
+</div>
+<div class="section" id="manageability">
+<h2>可維護性 Manageability</h2>
+<p>可維護性指的是，一個服務在運行時，留下了多少的資料，供 admin 做為判斷服務狀況的依據。一個線上的服務，除了
+基本的 log 檔外，還需提供底下的特性</p>
+<ul class="simple">
+<li>Configurability: 提供設定檔，讓 admin / tester 能夠在不修改程式碼本身，而對軟體的功能做條整。</li>
+<li>Monitorability : 提供開放性的介面，讓 admin 可以很容易的去追縱服務本身的建康狀態及用量，供 admin 來判斷，是否需要增加硬體的來分散線上伺服器的負擔。</li>
+</ul>
+<div class="section" id="monitoring-is-must">
+<h3>Monitoring is Must</h3>
+<p>在提供一個服務時，我們一定要監控服務本身的狀況，並且要把這份資料與外部分享，減少本身溝通的成本及增加客戶對
+服務的信任。</p>
+<p>不管是設計多麼精良的服務，各個軟體平台商仍免不了會發生大型的災難，如：</p>
+<ul class="simple">
+<li>Amazon AWS 於 2008, 2010, 2011 各發生過數小時的問題，造成 EBS 使用上的問題，導制 reddit, zynga 等下遊廠商的服務問題</li>
+<li>Google Gamil 於 2009 年發生過大形的停機，耖造成拳體用戶無法使用 Gmail 兩個半小時。</li>
+<li>Azure 於 2012/02/29 ，由於時間同步的問題，造成用戶無法開啟新的 VM instance.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="performance">
+<h2>Performance</h2>
+<p>效能，算是個最常用的品質指標了，在講效能時我們通常會分成兩塊來講，一塊是反應時間(Response Time)，
+另一塊是處理量(throughput)，前者只的是服務單一需求所要花的時間，後者則是單位時間內，可同時服務的
+總需求數量。</p>
+<p>影響效能的因素有很多，在多數的系統中，往往處理量增加的結果就是反應時間也一起增加，因此在系統設計
+的初期，這些就要納入規格中，變成設計的一環；那麼，什麼是好的效能呢？在反應時間這邊有個很好的指標
+，就是跟人互動的UI程式，如果反應時間能壓在 100ms 以下，那麼人們的認知就會覺的這個程式是即時使用
+的，如果反應時間拉到 200ms 以上，就會開始覺得頓頓的。</p>
+<p>對於網頁程式來說，反應時間不只是從 Web Server 這一端出去的時間，還要算上網路傳輸的時間以及流覽
+器繪製畫面的時間，因此能留給網站主機的反應時間只剩下 50ms 上下；如果你的程式還有呼叫其於的外部
+程式，那麼每多一層，反應時間至少增加 20ms ，或者是說少 20ms 給你的程式使用。</p>
+</div>
+<div class="section" id="reliability">
+<h2>Reliability</h2>
+<p>可靠度(Reliability)跟可用度(Availability)是兩個常被弄混的名詞，Availability講的是，在一段長的時間內，系統可被使用的時間(Up Time)，
+Reliability則講的是在單位時間內，系統出錯的次數。一個線上服務，可能是可用的(Available)但是他的輸出結果是有問題的(Unreliable)</p>
+<p>Reliability 的評量指標有</p>
+<ul class="simple">
+<li>單位時間內，回傳錯誤訊息或者是無回應的次數。</li>
+<li>單位時間內，輸出結果是錯誤的次數。</li>
+</ul>
+<p>Reliability的問題，往往是系統內的 Bug ，只是在使用量大時，才會凸顯他的存在，因此軟體開發者不可忽略這微小的訊號。</p>
+</div>
+<div class="section" id="scalability">
+<h2>Scalability</h2>
+<p>Scalability 講的是你的服務能不能夠隨著用戶數的增長，而跟著成長，服務的可延展性可以分為， <strong>直向擴充 Scale Up</strong> 及
+<strong>橫向擴充 Scale Out</strong> ，兩者都可以幫你增加可同時服務的線上用戶數，但是後者的可擴充的程度，仍是遠高過前者的。</p>
+<p>Scalability 讓我們動態的依事件配置不同數量的伺服器數量，以防止 Slashdot Effect 的發生，如總統大選或報稅截止日等事件
+，往往會在一日內擁入超過平日百倍的用戶數，如何讓服務正常運做，是軟體品質極重要的一環。</p>
+<p>而 Scalability 對 Application Service Provider 更是重要，因為 Cloud Based ERP or CRM 系統，較一般的網頁更有黏
+著性，一個有數萬個用戶的中型網站，同時間上線的用戶可能只有數百個，而於他們的 Session 中存的資料也只有數 kilo bytes。
+然而對企業用戶來說 Cloud Based ERP, CRM ，在上班時間，可是一直在使用的，一間 200 人公司用的 ERP 系統，可能就會有
+200 active sessions ，每個 Session 又存了許多正在處理中的表格資料。</p>
+<p>如何 scale up/out database intensive application 變成 ASP 提供者不得不面對的難題。</p>
+</div>
+<div class="section" id="security">
+<h2>Security</h2>
+<p>網路服務的安全性問題，常常是個被誤會且忽略的問題，台灣許多主流的 Hosting Company 及 Billing Provider 的網站都出
+過問題；他們的問題是，某本常用的軟體手冊的程式碼，在教導如何實作使用者認證時，只有在首頁有檢查帳號，等帳號檢查過了，
+就會被導到內部的網頁去，然而，在內部網頁這邊，卻沒有檢查使用者有沒有登入。</p>
+<p>變成，只要得知內部網業的網址(form target)就可以直接存取內部的資料，因此，許多網站就被 Search Engine Crawler 長驅
+直入，把所有的使用者資料都放在搜尋結果中公開了。至於實既的例子我就不多舉了。</p>
+<p>另外我有寫過一篇 <a class="reference external" href="/blog/2012/01/03/how-to-protect-a-webservice/">專文</a> 討論，該如合保護一個 WebService ，台灣的政府及民間網站，常常用一些沒有被認可的電子簽證來做 https 的
+安全通訊，然而 https 的金鑰交換，在第一次是不安全的，因此，若是你的金鑰是沒有經過第三方簽核的，那麼再交換金鑰時可能
+會受到 <a class="reference external" href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in the middle attack</a> 直接把金鑰換掉。</p>
+<p>使用 https 時，必需遵守幾個使用規範，這樣子通訊才會是安全的。</p>
+<p>回到正題，服務的安全性可以分為幾塊</p>
+<ul class="simple">
+<li>通訊的安全性。</li>
+<li>身份的認可查核</li>
+<li>資料的安全性及使用權限</li>
+<li>資料的使用及變更的計錄追蹤</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>待續</h2>
+<p>在下一篇，我將講述，如何把這些概念，轉換成實際的數值指標。</p>
+</div></div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -2158,43 +2335,6 @@ Touch Event，或者是其它程式或者是系統底層的事件，如 Intent �
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/27/-service-how-to-debian-ize-your-web-application/">[Service上線前你該知道的事]How to Debian-ize Your Web Application.</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-27T23:19:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-在布建一個Web Application時，用.war來佈屬服務，算是最沒有效率的一種方式，因為，這樣無法把web container所需要的設定檔一起佈建出去，同時，也無法板本控製你的應用程式；本文接下來會敘述，如何用maven & jetty & debian來佈屬你的Web Application。<br /><br />首先，先講講我的需求，我的需求如下<br /><ul><li>Web Application的版本必需能夠簡單被管理，要能簡單的就知道目前安裝的版本，並且輕鬆的昇級到新版</li><li>Web Application被佈建時，要連Web Container及設定擋包在一起</li><li>Debian Box開關機時，要能自動開關Web Container</li></ul><br />這些需求，我是靠 unix-maven-plugin ，幫我把我的 web application 包成一個 .deb 來做到的，包成 .deb 的好處是，在 debian 上可以簡單的安裝，若是公司有架 debian package repository, 那麼，打個 apt-get install <app> 就可以安裝或昇級到最新版，同時間，可以透過 debian 安裝的機制，來把些 script 掛入 rc.*<br /><br />由於 unix-maven-plugin 已被原作者遺棄，所以需要從 <a href="https://github.com/yunglin/unix-maven-plugin">github</a>下載並安裝後人修改過的版本。<br /><br />然後依<a href="#appendix">附錄</a>的方式，增修你的設定檔，需要增修的檔案有<br /><ul><li>pom.xml: 加入 unix-maven-plugin 及服務的名稱及PORT</li><li>src/main/unix/resources/default/${service.user} : 給 jetty 用的 default 設定值，在這邊你可以修改 JAVA_OPTIONS 及 NO_START</li><li>src/main/unix/resources/etc/jetty.conf</li><li>src/main/unix/resources/etc/start.conf</li><li>src/main/unix/resources/scripts/${service.user} : 給 debian 用的 init script</li><li>src/main/unix/resources/scripts/post-install post-remove pre-install pre-remove : debian 在安裝及昇級 .deb 時會跑的 script</li></ul><br />將這些檔案設定好後，在 debian 的機器上打 mvn package deploy ,就可以自動生成 .deb 的檔案，並且上傳到你的 maven repository 上去，如果貴公司有架 debian package repository　的話，還可以加一段程式碼把 .deb 傳到 debian package repository 去。<br /><br />接著，打 dpkg -i xxxx.deb 就可以把你的 web application 當成一個 debian service 安裝到你的 debain machine 上去。<br /><br />查詢目前安裝的板本則是打 dpkg -l xxxx 即可<br /><br /><pre class="brush: shell;">||/ Name           Version        Description<br />+++-==============-==============-============================================<br />ii  backend       1.2.0-20120327.143115          backend<br /></pre><br /><br /><a name="appendix"><h3>附錄</h3></a><br /><br />把底下的這段，加入你的 pom.xml <br /><br /><pre class="brush: xml;"><project xmlns="http://maven.apache.org/POM/4.0.0" <br />         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" <br />         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0<br />         http://maven.apache.org/xsd/maven-4.0.0.xsd"><br />  <modelversion>4.0.0</modelVersion><br />  <groupid>com.locadz</groupId><br />  <artifactid>backend</artifactId><br />  <packaging>war</packaging><br />  <description>backend</description><br />  <version>1.2.0-SNAPSHOT</version><br />  <name>backend</name><br />  <properties><br />    <version.maven.unix.plugin>1.0-alpha-6.1</version.maven.unix.plugin><br />    <version.jetty>7.4.5.v20110725</version.jetty><br /><br />    <service.name>Locadz Backend</service.name><br />    <service.home>/var/lib/bluetang/locadz-backend</service.home><br />    <service.user>locadz-backend</service.user><br />    <service.port>9080</service.port><br />  </properties><br />  <profiles><br />    <profile><br />      <id>debian-package</id><br />      <activation><br />        <os><br />          <family>unix</family><br />          <name>linux</name><br />        </os><br />      </activation><br />      <build><br />        <plugins><br />          <plugin><br />            <artifactid>maven-resources-plugin</artifactId><br />            <version>2.5</version><br />            <executions><br />              <execution><br />                <id>copy-resources</id><br />                <!-- here the phase you need --><br />                <phase>process-resources</phase><br />                <goals><br />                  <goal>copy-resources</goal><br />                </goals><br />                <configuration><br />                  <outputdirectory>${basedir}/target</outputDirectory><br />                  <resources><br />                    <resource><br />                      <directory>src/main/unix</directory><br />                      <targetpath>unix</targetPath><br />                      <includes><br />                        <include>**/*</include><br />                      </includes><br />                      <filtering>true</filtering><br />                    </resource><br />                  </resources><br />                </configuration><br />              </execution><br />            </executions><br />          </plugin><br /><br />          <!-- build .deb --><br />          <plugin><br />            <groupid>org.mortbay.jetty.toolchain</groupId><br />            <artifactid>unix-maven-plugin</artifactId><br />            <version>${version.maven.unix.plugin}</version><br />            <extensions>true</extensions><br />            <executions><br />              <execution><br />                <phase>package</phase><br />                <goals><br />                  <goal>package-deb-attached</goal><br />                </goals><br />              </execution><br />            </executions><br />            <configuration><br />              <!-- debug mode should be always enable on this plugin. cause the info it<br />                  provided is not sufficient when things goes wrong. Also, it does not<br />                  take the maven standard debug flag '-X'.<br />              --><br />              <debug>true</debug><br />              <contact>yho@bluetangstudio.com</contact><br />              <contactemail>yho@bluetangstudio.com</contactEmail><br />              <defaults><br />                <fileattributes><br />                  <user>${service.user}</user><br />                  <group>adm</group><br />                </fileAttributes><br />                <directoryattributes><br />                  <user>${service.user}</user><br />                  <group>adm</group><br />                </directoryAttributes><br />              </defaults><br />              <deb><br />                <section>bluetang</section><br />                <priority>extra</priority><br />              </deb><br />              <assembly><br /><br />                <!-- extract jetty first --><br />                <extract-artifact><br />                  <artifact>org.eclipse.jetty:jetty-distribution:zip</artifact><br />                  <to>${service.home}</to><br />                  <pattern>/jetty-distribution-${version.jetty}(.*)</pattern><br />                  <replacement>$1</replacement><br />                  <excludes><br />                    <!-- Exclude all default contexts and web application, no need for them --><br />                    <exclude>*/contexts/**</exclude><br />                    <exclude>*/contexts-available/**</exclude><br />                    <exclude>*/webapps/**</exclude><br />                    <exclude>*/javadoc/**</exclude><br />                    <exclude>*/LICENSES/**</exclude><br />                    <exclude>*/logs/**</exclude><br />                    <exclude>**/win32/**</exclude><br />                  </excludes><br />                </extract-artifact><br />                <!-- put war file on the top of jetty --><br />                <copyfile><br />                  <path>${project.build.directory}/${project.build.finalName}.${project.packaging}<br />                  </path><br />                  <tofile>${service.home}/webapps/ROOT.war</toFile><br />                </copyFile><br />                <copyfile><br />                  <path>${basedir}/target/unix/resources/default/${service.user}</path><br />                  <todir>/etc/default</toDir><br />                </copyFile><br />                <copydirectory><br />                  <from>${basedir}/target/unix/resources/etc</from><br />                  <to>/etc/bluetang/${service.user}</to><br />                </copyDirectory><br />                <copyfile><br />                  <path>${basedir}/target/unix/scripts/${service.user}</path><br />                  <todir>/etc/init.d</toDir><br />                  <attributes><br />                    <mode>0754</mode><br />                    <user>${service.user}</user><br />                    <group>admin</group><br />                  </attributes><br />                </copyFile><br />              </assembly><br />            </configuration><br />          </plugin><br />        </plugins><br />      </build><br /><br />    </profile><br />  </profiles><br /><br />  <dependencies><br />    <!-- because of a bug in unix-maven-plugin, it can not pickup dependency from<br />                   plguin-dependencies. As a result, we put jetty-distribution here.<br />            --><br />    <dependency><br />      <groupid>org.eclipse.jetty</groupId><br />      <artifactid>jetty-distribution</artifactId><br />      <version>${version.jetty}</version><br />      <type>zip</type><br />      <!-- SC-57: dirty hack to excludes all child dependencies --><br />      <exclusions><br />        <exclusion><br />          <groupid>*</groupId><br />          <artifactid>*</artifactId><br />        </exclusion><br />      </exclusions><br />    </dependency><br />  </dependencies><br /></project><br /></pre><br />然後把下面這塊存成 src/main/unix/resources/default/${service.user}<br /><br /><pre class="brush: shell;"># Defaults for jetty see /etc/${service.user}/jetty for more<br /><br /># change to 0 to allow Jetty to start<br />NO_START=0<br /><br /># change to 'no' or uncomment to use the default setting in /etc/default/rcS<br />VERBOSE=yes<br /><br /># Run Jetty as this user ID (default: jetty)<br /># Set this to an empty string to prevent Jetty from starting automatically<br />JETTY_USER=${service.user}<br /><br /># Listen to connections from this network host<br /># Use 0.0.0.0 as host to accept all connections.<br /># Uncomment to restrict access to localhost<br />#JETTY_HOST=$(uname -n)<br />JETTY_HOST=0.0.0.0<br /><br /># The network port used by Jetty<br />JETTY_PORT=${service.port}<br /><br /># Timeout in seconds for the shutdown of all webapps<br />#JETTY_SHUTDOWN=30<br /><br /># Additional arguments to pass to Jetty<br />#JETTY_ARGS=<br /><br /># Extra options to pass to the JVM<br />JAVA_OPTIONS="-Xmx256m -Djava.awt.headless=true -Duser.timezone=UTC"<br /><br /># Home of Java installation.<br />#JAVA_HOME=<br /><br /># The first existing directory is used for JAVA_HOME (if JAVA_HOME is not<br /># defined in /etc/default/jetty). Should contain a list of space separated directories.<br />#JDK_DIRS="/usr/lib/jvm/default-java /usr/lib/jvm/java-6-sun"<br /><br /># Java compiler to use for translating JavaServer Pages (JSPs). You can use all<br /># compilers that are accepted by Ant's build.compiler property.<br />#JSP_COMPILER=jikes<br /><br /># Jetty uses a directory to store temporary files like unpacked webapps<br />JETTY_TMP=/var/cache/bluetang/jetty<br /><br /># Jetty uses a config file to setup its boot classpath<br />JETTY_START_CONFIG=/etc/bluetang/${service.user}/start.config<br /><br /># Default for number of days to keep old log files in /var/log/jetty/<br />#LOGFILE_DAYS=14<br /></pre><br /><br />然後把下面這塊存成 src/main/unix/resources/ect/jetty.conf<br /><br /><pre class="brush: shell;"># list of jetty configuration and property files<br />/var/lib/bluetang/${service.user}/etc/jetty-logging.xml<br /></pre><br /><br />然後把下面這塊存成 src/main/unix/resources/etc/start.conf<br /><br /><pre class="brush: shell;"># This file controls what file are to be put on classpath or command line.<br />#<br /># Format is as follows:<br /># Each line contains entry for one JAR file.<br /># Format of line:<br />#<br />#  SUBJECT [ [!] CONDITION [AND|OR] ]*<br />#<br /># where SUBJECT:<br />#   ends with ".class" is the Main class to run.<br />#   ends with ".xml" is a configuration file for the command line<br />#   ends with "/" is a directory from which to add all jar and zip files.<br />#   ends with "/*" is a directory from which to add all unconsidered jar and zip files.<br />#   ends with "/**" is a directory from which to recursively add all unconsidered jar and zip files.<br />#   Containing = are used to assign system properties.<br />#   all other subjects are treated as files to be added to the classpath.<br />#<br /># Subjects may include system properties with $(propertyname) syntax.<br />#<br /># Files starting with "/" are considered absolute, all others are relative to<br /># the home directory.<br />#<br /># CONDITION is one of:<br />#   always<br />#   never<br />#   available classname        # true if class on classpath<br />#   property name              # true of set<br />#   java OPERATOR version      # java version compared to literal<br />#   nargs OPERATOR number      # number of command line args compared to literal<br />#   OPERATOR := one of "<",">","<=",">=","==","!="<br />#<br /># CONDITIONS can be combined with AND OR or !, with AND being the assume<br /># operator for a list of CONDITIONS.<br /># Classpath operations are evaluated on the fly, so once a class or jar is<br /># added to the classpath, subsequent available conditions will see that class.<br />#<br /><br />$(jetty.class.path)                              always<br />$(jetty.lib)/**                                  exists $(jetty.lib)<br /><br />jetty.home=/var/lib/bluetang/${service.user}                      always<br /><br /># The main class to run<br />org.mortbay.xml.XmlConfiguration.class<br /><br /># The default configuration files<br />$(jetty.home)/etc/jetty.xml                      nargs == 0<br /><br />/usr/share/java/servlet-api-2.5.jar<br />/usr/share/java/slf4j-api.jar<br /><br /># Optional stuff for libjetty-extra-java<br />/usr/share/java/gnumail.jar<br />/usr/share/java/activation.jar<br />/usr/share/java/ant.jar<br /><br /># Set the jetty classpath<br />/usr/share/jetty/lib/**<br /><br /># Add a resources directory if it is there<br />$(jetty.home)/resources/<br /><br /></pre><br /><br /><br />然後把下面這塊存成 src/main/unix/scripts/${service.user}<br /><br /><pre class="brush: shell;">#!/bin/bash  <br />### BEGIN INIT INFO<br /># Provides:          ${service.user}<br /># Required-Start:<br /># Required-Stop:<br /># Default-Start:     2 3 4 5<br /># Default-Stop:      0 1 6<br /># Short-Description: Start daemon at boot time<br /># Description:       Enable service provided by daemon.<br />### END INIT INFO<br />#<br /># Startup script for jetty under *nix systems (it works under NT/cygwin too).<br />#<br /># Configuration files<br />#<br /># /etc/default/${service.user}<br />#   If it exists, this is read at the start of script. It may perform any <br />#   sequence of shell commands, like setting relevant environment variables.<br />#<br /># /etc/bluetang/${service.user}/jetty.conf<br />#   If found, and no configurations were given on the command line,<br />#   the file will be used as this script's configuration. <br />#   Each line in the file may contain:<br />#     - A comment denoted by the pound (#) sign as first non-blank character.<br />#     - The path to a regular file, which will be passed to jetty as a <br />#       config.xml file.<br />#     - The path to a directory. Each *.xml file in the directory will be<br />#       passed to jetty as a config.xml file.<br />#<br />#   The files will be checked for existence before being passed to jetty.<br />#<br /># $JETTY_HOME/etc/jetty.xml<br />#   If found, used as this script's configuration file, but only if<br />#   /etc/bluetang/${service.user}/jetty.conf was not present. See above.<br />#   <br /># Configuration variables<br />#<br /># JAVA<br />#   Command to invoke Java. If not set, java (from the PATH) will be used.<br />#<br /># JAVA_OPTIONS<br />#   Extra options to pass to the JVM<br />#<br /># JETTY_HOME<br />#   Where Jetty is installed. If not set, the script will try go<br />#   guess it by first looking at the invocation path for the script,<br />#   and then by looking in standard locations as $HOME/opt/jetty<br />#   and /opt/jetty. The java system property "jetty.home" will be<br />#   set to this value for use by configure.xml files, f.e.:<br />#<br />#    <arg><systemproperty name="jetty.home" default="."/>/webapps/jetty.war</Arg><br />#<br /># JETTY_PORT<br />#   Override the default port for Jetty servers. If not set then the<br />#   default value in the xml configuration file will be used. The java<br />#   system property "jetty.port" will be set to this value for use in<br />#   configure.xml files. For example, the following idiom is widely<br />#   used in the demo config files to respect this property in Listener<br />#   configuration elements:<br />#<br />#    <set name="Port"><systemproperty name="jetty.port" default="8080"/></Set><br />#<br />#   Note: that the config file could ignore this property simply by saying:<br />#<br />#    <set name="Port">8080</Set><br />#<br /># JETTY_RUN<br />#   Where the jetty.pid file should be stored. It defaults to the<br />#   first available of /var/run, /usr/var/run, and /tmp if not set.<br />#  <br /># JETTY_PID<br />#   The Jetty PID file, defaults to $JETTY_RUN/jetty.pid<br />#   <br /># JETTY_ARGS<br />#   The default arguments to pass to jetty.<br />#<br /># JETTY_USER<br />#   if set, then used as a username to run the server as<br />#<br />JETTY_HOME=${service.home}<br />JETTY_USER=${service.user}<br />JETTY_PID=$JETTY_RUN/${service.user}.pid<br />usage()<br />{<br />    echo "Usage: ${0##*/} [-d] {start|stop|run|restart|check|supervise} [ CONFIGS ... ] "<br />    exit 1<br />}<br /><br />[ $# -gt 0 ] || usage<br /><br /><br />##################################################<br /># Some utility functions<br />##################################################<br />findDirectory()<br />{<br />  local L OP=$1<br />  shift<br />  for L in "$@"; do<br />    [ "$OP" "$L" ] || continue<br />    printf %s "$L"<br />    break<br />  done<br />}<br /><br />running()<br />{<br />  local PID=$(cat "$1" 2>/dev/null) || return 1<br />  kill -0 "$PID" 2>/dev/null<br />}<br /><br />readConfig()<br />{<br />  (( DEBUG )) && echo "Reading $1.."<br />  source "$1"<br />}<br /><br /><br /><br />##################################################<br /># Get the action & configs<br />##################################################<br />CONFIGS=()<br />NO_START=0<br />DEBUG=0<br /><br />while [[ $1 = -* ]]; do<br />  case $1 in<br />    -d) DEBUG=1 ;;<br />  esac<br />  shift<br />done<br />ACTION=$1<br />shift<br /><br />##################################################<br /># See if there's a default configuration file<br />##################################################<br />if [ -f /etc/default/${service.user} ] ; then<br />  . /etc/default/${service.user}<br />fi<br /><br /><br />##################################################<br /># Set tmp if not already set.<br />##################################################<br />TMPDIR=${TMPDIR:-/tmp}<br /><br />##################################################<br /># Jetty's hallmark<br />##################################################<br />JETTY_INSTALL_TRACE_FILE="etc/jetty.xml"<br /><br /><br />##################################################<br /># Try to determine JETTY_HOME if not set<br />##################################################<br />if [ -z "$JETTY_HOME" ] <br />then<br />  JETTY_SH=$0<br />  case "$JETTY_SH" in<br />    /*)   ;;<br />    ./*)  ;;<br />    *)    JETTY_SH=./$JETTY_SH ;;<br />  esac<br />  JETTY_HOME=${JETTY_SH%/*/*}<br /><br />  if [ ! -f "${JETTY_SH%/*/*}/$JETTY_INSTALL_TRACE_FILE" ]<br />  then<br />    JETTY_HOME=<br />  fi<br />fi<br /><br /><br /><br />##################################################<br /># if no JETTY_HOME, search likely locations.<br />##################################################<br />if [ -z "$JETTY_HOME" ] ; then<br />  STANDARD_LOCATIONS=(<br />        "/usr/share"<br />        "/usr/share/java"<br />        "${HOME}"<br />        "${HOME}/src"<br />        "${HOME}/opt"<br />        "/opt"<br />        "/java"<br />        "/usr/local"<br />        "/usr/local/share"<br />        "/usr/local/share/java"<br />        "/home"<br />        )<br />  JETTY_DIR_NAMES=(<br />        "jetty-7"<br />        "jetty7"<br />        "jetty-7.*"<br />        "jetty"<br />        "Jetty-7"<br />        "Jetty7"<br />        "Jetty-7.*"<br />        "Jetty"<br />        )<br /><br />  for L in "${STANDARD_LOCATIONS[@]}"<br />  do<br />    for N in "${JETTY_DIR_NAMES[@]}"<br />    do<br />      POSSIBLE_JETTY_HOME=("$L/"$N)<br />      if [ ! -d "$POSSIBLE_JETTY_HOME" ]<br />      then<br />        # Not a directory. skip.<br />        unset POSSIBLE_JETTY_HOME<br />      elif [ ! -f "$POSSIBLE_JETTY_HOME/$JETTY_INSTALL_TRACE_FILE" ]<br />      then<br />        # Trace file not found. skip.<br />        unset POSSIBLE_JETTY_HOME<br />      else<br />        # Good hit, Use it<br />        JETTY_HOME=$POSSIBLE_JETTY_HOME<br />        # Break out of JETTY_DIR_NAMES loop<br />        break<br />      fi<br />    done<br />    if [ -n "$POSSIBLE_JETTY_HOME" ]<br />    then<br />      # We have found our JETTY_HOME<br />      # Break out of STANDARD_LOCATIONS loop<br />      break<br />    fi<br />  done<br />fi<br /><br /><br />##################################################<br /># No JETTY_HOME yet? We're out of luck!<br />##################################################<br />if [ -z "$JETTY_HOME" ]; then<br />  echo "** ERROR: JETTY_HOME not set, you need to set it or install in a standard location"<br />  exit 1<br />fi<br /><br />cd "$JETTY_HOME"<br />JETTY_HOME=$PWD<br /><br /><br />#####################################################<br /># Check that jetty is where we think it is<br />#####################################################<br />if [ ! -r "$JETTY_HOME/$JETTY_INSTALL_TRACE_FILE" ]<br />then<br />  echo "** ERROR: Oops! Jetty doesn't appear to be installed in $JETTY_HOME"<br />  echo "** ERROR:  $JETTY_HOME/$JETTY_INSTALL_TRACE_FILE is not readable!"<br />  exit 1<br />fi<br /><br />##################################################<br /># Try to find this script's configuration file,<br /># but only if no configurations were given on the<br /># command line.<br />##################################################<br />if [ -z "$JETTY_CONF" ] <br />then<br />  if [ -f /etc/bluetang/${service.user}/jetty.conf ]<br />  then<br />     JETTY_CONF=/etc/bluetang/${service.user}/jetty.conf<br />  elif [ -f "${JETTY_HOME}/etc/jetty.conf" ]<br />  then<br />     JETTY_CONF="${JETTY_HOME}/etc/jetty.conf"<br />  fi<br />fi<br /><br />##################################################<br /># Get the list of config.xml files from jetty.conf<br />##################################################<br />if [ -z "$CONFIGS" ] && [ -f "$JETTY_CONF" ] && [ -r "$JETTY_CONF" ]<br />then<br />  while read -r CONF<br />  do<br />    if expr "$CONF" : '#' >/dev/null ; then<br />      continue<br />    fi<br /><br />    if [ -d "$CONF" ]<br />    then<br />      # assume it's a directory with configure.xml files<br />      # for example: /etc/jetty.d/<br />      # sort the files before adding them to the list of CONFIGS<br />      for file in "$CONF/"*.xml<br />      do<br />        if [ -r "$FILE" ] && [ -f "$FILE" ]<br />        then<br />          CONFIGS+=("$FILE")<br />        else<br />          echo "** WARNING: Cannot read '$FILE' specified in '$JETTY_CONF'"<br />        fi<br />      done<br />    else<br />      # assume it's a command line parameter (let start.jar deal with its validity)<br />      CONFIGS+=("$CONF")<br />    fi<br />  done < "$JETTY_CONF"<br />fi<br /><br />#####################################################<br /># Find a location for the pid file<br />#####################################################<br />if [ -z "$JETTY_RUN" ]<br />then<br />  JETTY_RUN=$(findDirectory -w /var/run /usr/var/run /tmp)<br />fi<br /><br />#####################################################<br /># Find a PID for the pid file<br />#####################################################<br />if [ -z "$JETTY_PID" ]<br />then<br />  JETTY_PID="$JETTY_RUN/jetty.pid"<br />fi<br /><br />##################################################<br /># Setup JAVA if unset<br />##################################################<br />if [ -z "$JAVA" ]<br />then<br />  JAVA=$(which java)<br />fi<br /><br />if [ -z "$JAVA" ]<br />then<br />  echo "Cannot find a Java JDK. Please set either set JAVA or put java (>=1.5) in your PATH." 2>&2<br />  exit 1<br />fi<br /><br />#####################################################<br /># See if JETTY_PORT is defined<br />#####################################################<br />if [ "$JETTY_PORT" ]<br />then<br />  JAVA_OPTIONS+=("-Djetty.port=$JETTY_PORT")<br />fi<br /><br />#####################################################<br /># See if JETTY_LOGS is defined<br />#####################################################<br />if [ "$JETTY_LOGS" ]<br />then<br />  JAVA_OPTIONS+=("-Djetty.logs=$JETTY_LOGS")<br />fi<br /><br />#####################################################<br /># Are we running on Windows? Could be, with Cygwin/NT.<br />#####################################################<br />case "`uname`" in<br />CYGWIN*) PATH_SEPARATOR=";";;<br />*) PATH_SEPARATOR=":";;<br />esac<br /><br /><br />#####################################################<br /># Add jetty properties to Java VM options.<br />#####################################################<br />JAVA_OPTIONS+=("-Djetty.home=$JETTY_HOME" "-Djava.io.tmpdir=$TMPDIR")<br /><br />[ -f "$JETTY_HOME/etc/start.config" ] && JAVA_OPTIONS=("-DSTART=$JETTY_HOME/etc/start.config" "${JAVA_OPTIONS[@]}")<br /><br />#####################################################<br /># This is how the Jetty server will be started<br />#####################################################<br /><br />JETTY_START=$JETTY_HOME/start.jar<br />[ ! -f "$JETTY_START" ] && JETTY_START=$JETTY_HOME/lib/start.jar<br /><br />START_INI=$(dirname $JETTY_START)/start.ini<br />[ -r "$START_INI" ] || START_INI=""<br /><br />RUN_ARGS=(${JAVA_OPTIONS[@]} -jar "$JETTY_START" $JETTY_ARGS "${CONFIGS[@]}")<br />RUN_CMD=("$JAVA" ${RUN_ARGS[@]})<br /><br />#####################################################<br /># Comment these out after you're happy with what <br /># the script is doing.<br />#####################################################<br />if (( DEBUG ))<br />then<br />  echo "JETTY_HOME     =  $JETTY_HOME"<br />  echo "JETTY_CONF     =  $JETTY_CONF"<br />  echo "JETTY_RUN      =  $JETTY_RUN"<br />  echo "JETTY_PID      =  $JETTY_PID"<br />  echo "JETTY_ARGS     =  $JETTY_ARGS"<br />  echo "CONFIGS        =  ${CONFIGS[*]}"<br />  echo "JAVA_OPTIONS   =  ${JAVA_OPTIONS[*]}"<br />  echo "JAVA           =  $JAVA"<br />  echo "RUN_CMD        =  ${RUN_CMD}"<br />fi<br /><br />##################################################<br /># Do the action<br />##################################################<br />case "$ACTION" in<br />  start)<br />    echo -n "Starting ${service.name}: "<br /><br />    if (( NO_START )); then<br />      echo "Not starting ${service.user} - NO_START=1";<br />      exit<br />    fi<br /><br /><br />    if type start-stop-daemon > /dev/null 2>&1<br />    then<br />      unset CH_USER<br />      if [ -n "$JETTY_USER" ]<br />      then<br />        CH_USER="-c$JETTY_USER"<br />      fi<br />      if start-stop-daemon -S -p"$JETTY_PID" $CH_USER -d"$JETTY_HOME" -b -m -a "$JAVA" -- "${RUN_ARGS[@]}" --daemon<br />      then<br />        sleep 1<br />        if running "$JETTY_PID"<br />        then<br />          echo "OK"<br />        else<br />          echo "FAILED"<br />        fi<br />      fi<br /><br />    else<br /><br />      if [ -f "$JETTY_PID" ]<br />      then<br />        if running $JETTY_PID<br />        then<br />          echo "Already Running!"<br />          exit 1<br />        else<br />          # dead pid file - remove<br />          rm -f "$JETTY_PID"<br />        fi<br />      fi<br /><br />      if [ "$JETTY_USER" ]<br />      then<br />        touch "$JETTY_PID"<br />        chown "$JETTY_USER" "$JETTY_PID"<br />        # FIXME: Broken solution: wordsplitting, pathname expansion, arbitrary command execution, etc.<br />        su - "$JETTY_USER" -c "<br />          ${RUN_CMD[*]} --daemon &<br />          disown \$!<br />          echo \$! > '$JETTY_PID'"<br />      else<br />        "${RUN_CMD[@]}" &<br />        disown $!<br />        echo $! > "$JETTY_PID"<br />      fi<br /><br />      echo "STARTED ${service.name} `date`"<br />    fi<br /><br />    ;;<br /><br />  stop)<br />    echo -n "Stopping ${service.name}: "<br />    if type start-stop-daemon > /dev/null 2>&1; then<br />      start-stop-daemon -K -p"$JETTY_PID" -d"$JETTY_HOME" -a "$JAVA" -s HUP<br /><br />      TIMEOUT=30<br />      while running "$JETTY_PID"; do<br />        if (( TIMEOUT-- == 0 )); then<br />          start-stop-daemon -K -p"$JETTY_PID" -d"$JETTY_HOME" -a "$JAVA" -s KILL<br />        fi<br /><br />        sleep 1<br />      done<br /><br />      rm -f "$JETTY_PID"<br />      echo OK<br />    else<br />      PID=$(cat "$JETTY_PID" 2>/dev/null)<br />      kill "$PID" 2>/dev/null<br /><br />      TIMEOUT=30<br />      while running $JETTY_PID; do<br />        if (( TIMEOUT-- == 0 )); then<br />          kill -KILL "$PID" 2>/dev/null<br />        fi<br /><br />        sleep 1<br />      done<br /><br />      rm -f "$JETTY_PID"<br />      echo OK<br />    fi<br /><br />    ;;<br /><br />  restart)<br />    JETTY_SH=$0<br />    if [ ! -f $JETTY_SH ]; then<br />      if [ ! -f $JETTY_HOME/bin/jetty.sh ]; then<br />        echo "$JETTY_HOME/bin/jetty.sh does not exist."<br />        exit 1<br />      fi<br />      JETTY_SH=$JETTY_HOME/bin/jetty.sh<br />    fi<br /><br />    "$JETTY_SH" stop "$@"<br />    "$JETTY_SH" start "$@"<br /><br />    ;;<br /><br />  supervise)<br />    #<br />    # Under control of daemontools supervise monitor which<br />    # handles restarts and shutdowns via the svc program.<br />    #<br />    exec "${RUN_CMD[@]}"<br /><br />    ;;<br /><br />  run|demo)<br />    echo "Running Jetty: "<br /><br />    if [ -f "$JETTY_PID" ]<br />    then<br />      if running "$JETTY_PID"<br />      then<br />        echo "Already Running!"<br />        exit 1<br />      else<br />        # dead pid file - remove<br />        rm -f "$JETTY_PID"<br />      fi<br />    fi<br /><br />    exec "${RUN_CMD[@]}"<br /><br />    ;;<br /><br />  check)<br />    echo "Checking arguments to Jetty: "<br />    echo "JETTY_HOME     =  $JETTY_HOME"<br />    echo "JETTY_CONF     =  $JETTY_CONF"<br />    echo "JETTY_RUN      =  $JETTY_RUN"<br />    echo "JETTY_PID      =  $JETTY_PID"<br />    echo "JETTY_PORT     =  $JETTY_PORT"<br />    echo "JETTY_LOGS     =  $JETTY_LOGS"<br />    echo "START_INI      =  $START_INI"<br />    echo "CONFIGS        =  ${CONFIGS[*]}"<br />    echo "JAVA_OPTIONS   =  ${JAVA_OPTIONS[*]}"<br />    echo "JAVA           =  $JAVA"<br />    echo "CLASSPATH      =  $CLASSPATH"<br />    echo "RUN_CMD        =  ${RUN_CMD[*]}"<br />    echo<br /><br />    if [ -f "$JETTY_RUN/jetty.pid" ]<br />    then<br />      echo "Jetty running pid=$(< "$JETTY_RUN/jetty.pid")"<br />      exit 0<br />    fi<br />    exit 1<br /><br />    ;;<br /><br />  *)<br />    usage<br /><br />    ;;<br />esac<br /><br />exit 0<br /><br /></pre>然後把下面這塊存成 src/main/unix/scripts/post-install，並修改 USER=locadz-backend 這一行成跟你 ${service.user} 一樣的值<pre class="brush: shell;">#!/bin/sh<br />set -e<br /><br />USER=locadz-backend<br /><br />case "$1" in<br />    configure)<br />        if ! id $USER > /dev/null 2>&1 ; then<br />            adduser --system --home /var/lib/bluetang/$USER --no-create-home \<br />                --group --disabled-password --shell /bin/false \<br />                $USER<br />        fi<br /><br />        if [ ! -e /var/log/bluetang ]<br />        then<br />            mkdir -p /var/log/bluetang<br />        fi<br />        if [ ! -e /var/log/bluetang/$USER/ ]<br />        then<br />            ln -s /var/lib/bluetang/$USER/logs /var/log/bluetang/$USER<br />        fi<br />        if [ ! -e /var/cache/bluetang/$USER ]<br />        then<br />            mkdir -p /var/cache/bluetang/$USER<br />        fi<br /><br /><br />        chown -R $USER:adm /var/cache/bluetang/$USER /var/log/bluetang/$USER /var/lib/bluetang/$USER<br />        chmod 0744 /etc/init.d/$USER<br />        update-rc.d $USER defaults<br /><br />    ;;<br /><br />    abort-upgrade|abort-remove|abort-deconfigure)<br />    ;;<br /><br />    *)<br />        echo "$0 called with unknown argument \`$1'" >&2<br />        exit 1<br />    ;;<br />esac<br /><br /></pre>然後把下面這塊存成 src/main/unix/scripts/post-remove，並修改 USER=locadz-backend 這一行成跟你 ${service.user} 一樣的值<pre class="brush: shell;">#!/bin/sh<br />set -e<br /><br />USER=locadz-backend<br /><br />#DEBHELPER#<br /><br /># Remove cached files<br />rm -rf /var/cache/blutang/$USER/*<br /><br />case "$1" in<br />    remove)<br />        # Remove ROOT webapp if not modified<br />        RWLOC="/var/lib/bluetang/$USER/webapps/root"<br />        RWFILES="$RWLOC/index.html $RWLOC/jetty_banner.gif"<br />        if [ "`(cat $RWFILES | md5sum -) 2>/dev/null | cut -d ' ' -f 1`" \<br />                            = "12471c4b3020defb7ebd30ef84c0f9dd" ] ; then<br />            rm $RWFILES<br />            rmdir --ignore-fail-on-non-empty \<br />                /var/lib/bluetang/$USER/webapps/root \<br />                /var/lib/bluetang/$USER/webapps \<br />                /var/lib/bluetang/$USER || true<br />        fi<br />        if [ -d "/var/cache/bluetang/$USER" ] ; then<br />            rm -rf /var/cache/bluetang/$USER<br />        fi<br />    ;;<br /><br />    purge)<br />        # Remove user/group and log files (don't remove everything under<br />        # /var/lib/jetty because there might be user-installed webapps)<br />        deluser jetty || true<br />        rm -rf /var/log/bluetang/$USER<br />        if [ -d "/var/lib/bluetang/$USER" ] ; then<br />            rmdir --ignore-fail-on-non-empty /var/lib/bluetang/$USER || true<br />        fi<br />        rmdir --ignore-fail-on-non-empty /etc/bluetang/$USER/contexts /etc/bluetang/$USER || true<br />    ;;<br /><br />    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)<br />        # Nothing to do here<br />    ;;<br /><br />    *)<br />        echo "$0 called with unknown argument \`$1'" >&2<br />        exit 1<br />    ;;<br />esac<br /></pre>然後把下面這塊存成 src/main/unix/scripts/pre-install，並修改 USER=locadz-backend 這一行成跟你 ${service.user} 一樣的值<pre class="brush: shell;">#!/bin/sh<br />#<br /># This is the preinst script for the Blue Tang Servers<br />#<br /># Written by Yung-Lin Ho yho@bluetangstudio.com<br /><br />set -e<br />USER=locadz-backend<br />SCRIPT=/etc/init.d/$USER<br /><br /><br />case "$1" in<br />    upgrade|remove|purge)<br />        $SCRIPT stop<br />        ;;<br />    install|failed-upgrade|abort-install|abort-upgrade|disappear)<br />        ;;<br />    *)<br />        echo "preinst called with unknown argument \`$1'" >&2<br />        ;;<br />esac<br /><br />exit 0<br /></pre>下面這塊存成 src/main/unix/scripts/pre-remove，並修改 USER=locadz-backend 這一行成跟你 ${service.user} 一樣的值<pre class="brush: shell;">#!/bin/sh<br />#<br /># This is the prerm script for the Blue Tang Servers<br />#<br /># Written by Yung-Lin Ho yho@bluetangstudio.com<br /><br />set -e<br />USER=locadz-backend<br />SCRIPT=/etc/init.d/$USER<br /><br />case "$1" in<br />    upgrade)<br />        ;;<br />    remove|purge)<br />        $SCRIPT stop<br />        ;;<br />    failed-upgrade|abort-install|abort-upgrade|disappear)<br />        ;;<br />    *)<br />        echo "prerm called with unknown argument \`$1'" >&2<br />        ;;<br />esac<br /><br />exit 0<br /></pre></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2210,6 +2350,10 @@ Touch Event，或者是其它程式或者是系統底層的事件，如 Intent �
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/05/22/runtime-quality-metrics-series-2/">軟體品質指標系列(二)：軟體品質有那些</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/05/17/runtime-quality-metrics-series-1/">軟體品質指標系列(一)：為什麼軟體開發者需要在意軟體品質指標</a>
       </li>
     
@@ -2223,10 +2367,6 @@ Touch Event，或者是其它程式或者是系統底層的事件，如 Intent �
     
       <li class="post">
         <a href="/blog/2012/04/30/mongodb-dao/">Mongodb Scala DAO</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb&#8217;s java and scala driver.</a>
       </li>
     
   </ul>
