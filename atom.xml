@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2012-05-25T15:02:04+08:00</updated>
+  <updated>2012-05-25T15:06:37+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,22 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Runtime Quality Metrics Series 3]]></title>
+    <title type="html"><![CDATA[軟體品質指標系列(三)：軟體品質如何測量]]></title>
     <link href="http://blog.yunglinho.com/blog/2012/05/23/runtime-quality-metrics-series-3/"/>
-    <updated>2012-05-23T00:00:00+08:00</updated>
+    <updated>2012-05-23T14:45:00+08:00</updated>
     <id>http://blog.yunglinho.com/blog/2012/05/23/runtime-quality-metrics-series-3</id>
-    <content type="html"><![CDATA[<blockquote>
-&#8212;</blockquote>
-<div class="system-message">
-<p class="system-message-title">System Message: WARNING/2 (<tt class="docutils">&lt;string&gt;</tt>, line 2)</p>
-Block quote ends without a blank line; unexpected unindent.</div>
-<p>layout: post
-title: &quot;軟體品質指標系列(三)：軟體品質如何測量&quot;
-date: 2012-05-23 14:45
-comments: true
-categories:
-&#8212;</p>
-<p>在這一系列的第一回我們談到，我們是軟體工程師，不談虛幻的概念，只講能夠量化追蹤的數值指標，那麼，
+    <content type="html"><![CDATA[<p>在這一系列的第一回我們談到，我們是軟體工程師，不談虛幻的概念，只講能夠量化追蹤的數值指標，那麼，
 我們要怎麼把品質轉換程數值指標呢？</p>
 <div class="section" id="id1">
 <h2>軟體品質如何測量</h2>
