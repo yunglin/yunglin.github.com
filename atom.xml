@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2012-07-03T21:41:44+08:00</updated>
+  <updated>2012-07-13T16:36:04+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,354 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Spatial Search with Lucene]]></title>
+    <link href="http://blog.yunglinho.com/blog/2012/07/11/spatial-search-with-lucene/"/>
+    <updated>2012-07-11T16:06:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2012/07/11/spatial-search-with-lucene</id>
+    <content type="html"><![CDATA[<div class="section" id="before-we-start">
+<h2>Before We Start</h2>
+<p>As some of my blog readers may know, my previous startup project was an online location based search service. Thing
+does not go well and I am going to open source some of the related work.</p>
+<p>In this post, I will show you how to use Lucene to do spatial search as well as how it works internally.</p>
+</div>
+<div class="section" id="spatial-search">
+<h2>Spatial Search</h2>
+<div class="section" id="spatial-search-and-geo-tagging">
+<h3>Spatial Search and Geo Tagging</h3>
+<p>Geo-tagging is a popular way to do spatial search. Instead of using the actual location to tag a POI, the geo-tagging
+uses geotag to group items within a predefined range as a whole. When performing a search, it is simply pull out all
+items with the same tag.</p>
+<dl class="docutils">
+<dt>There are few popular ways to do geo-tagging, including</dt>
+<dd><ul class="first last simple">
+<li>GeoHash</li>
+<li>QuadTree</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="geohash">
+<h3>GeoHash</h3>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Geohash">GeoHash</a> is way to encode latitude and longitude using base32 code. There is a fundamental flaw that makes it hard to
+do spatial search. The problem is the geo hash generated is not continuous. The neighbor of a particular block may not
+share the same prefix with its nearest eight neighbors. When using geohash to do spatial search, we need to calculate
+the hash value of nearby neighbors by ourselves.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="text"><span class="line">+-------+-------+-------+
+</span><span class="line">| ezefr | ezs48 | ezs49 |
+</span><span class="line">+-------+-------+-------+
+</span><span class="line">| ezefr | ezs42 | ezs43 |
+</span><span class="line">+-------+-------+-------+
+</span><span class="line">| ezefp | ezs40 | ezs41 |
+</span><span class="line">+-------+-------+-------+
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="quad-tree">
+<h3>Quad-Tree</h3>
+<p>Quad-Tree addresses the issue in geohash and adapt a better way to do geo-tagging. This example gives us a
+great example on how Quad-Tree does geo-tagging.</p>
+<img alt="http://i.msdn.microsoft.com/dynimg/IC96238.jpg" src="http://i.msdn.microsoft.com/dynimg/IC96238.jpg" />
+<dl class="docutils">
+<dt>The Quad-Tree has the following advantage when doing spatial search</dt>
+<dd><ul class="first last simple">
+<li>it can be really fast if you stores data as a tri. Such as, Lucene, internally, it uses indexed tri to store
+NumericField.</li>
+<li>the neighbors of a block share the longest common prefix.</li>
+</ul>
+</dd>
+</dl>
+<p>For more extensive information regarding geo-tagging, you should check
+<a class="reference external" href="http://msdn.microsoft.com/en-us/library/bb259689.aspx">here</a>,
+<a class="reference external" href="http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/]">here</a> and
+<a class="reference external" href="http://gist.github.com/1193577">here</a>.</p>
+</div>
+</div>
+<div class="section" id="our-custom-approach">
+<h2>Our Custom Approach</h2>
+<p>Lucene&#8217;s <a class="reference external" href="http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/api/contrib-spatial/index.html">contrib-spatial</a> uses geo-tagging to implements spatial search and only support searching for
+features near a point.</p>
+<p>A pair of latitude and longitude gives us a quickstart for your location based application. However, not every
+single feature in a LBS application can be described as a point. Let us take school district as an example.
+The School A may be closer to your house than School B is, but your house is belong to school district for school B.
+Another example is bike trails, bike trail is a line not a single point.</p>
+<p>A full feature spatial search must support complicated geometric operations. This is why we create our own Lucene
+spatial search implementation.</p>
+<p>In the GIS area, Geometry are used to describe shape of features. The common geometries are:</p>
+<div class="section" id="geometry-primitives-2d">
+<h3>Geometry primitives(2D)</h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="56%" />
+<col width="30%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Type</th>
+<th class="head">Text Format</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Point</td>
+<td>POINT (30 10)</td>
+<td><img alt="PointExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/SFA_Point.svg/51px-SFA_Point.svg.png" /></td>
+</tr>
+<tr><td>LineString</td>
+<td>LINESTRING (30 10, 10 30, 40 40)</td>
+<td><img alt="LineStringExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/SFA_LineString.svg/51px-SFA_LineString.svg.png" /></td>
+</tr>
+<tr><td rowspan="2">Polygon</td>
+<td>POLYGON ((30 10, 10 20, 20 40, 40 40, 30 10))</td>
+<td><img alt="PolygonExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/SFA_Polygon.svg/51px-SFA_Polygon.svg.png" /></td>
+</tr>
+<tr><td>POLYGON ((35 10, 10 20, 15 40, 45 45, 35 10),
+(20 30, 35 35, 30 20, 20 30))|</td>
+<td><img alt="PolygonExample2" src="http://upload.wikimedia.org/wikipedia/commons/thumb/5/55/SFA_Polygon_with_hole.svg/51px-SFA_Polygon_with_hole.svg.png" /></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="multipart-geometries-2d">
+<h3>Multipart geometries (2D)</h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="53%" />
+<col width="28%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Type</th>
+<th class="head">Text Format</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>MultiPoint</td>
+<td>MULTIPOINT ((10 40), (40 30), (20 20), (30 10))</td>
+<td><img alt="MultiPointExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/SFA_MultiPoint.svg/51px-SFA_MultiPoint.svg.png" /></td>
+</tr>
+<tr><td>MultiLineString</td>
+<td>MULTILINESTRING ((10 10, 20 20, 10 40)
+(40 40, 30 30, 40 20, 30 10))</td>
+<td><img alt="MultiLineStringExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/86/SFA_MultiLineString.svg/51px-SFA_MultiLineString.svg.png" /></td>
+</tr>
+<tr><td>MultiPolygon</td>
+<td>MULTIPOLYGON (((30 20, 10 40, 45 40, 30 20)),
+((15 5, 40 10, 10 20, 5 10, 15 5)))</td>
+<td><img alt="MultiPolygonExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/SFA_MultiPolygon.svg/51px-SFA_MultiPolygon.svg.png" /></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="how-to-calculate-quadtree-value-for-geometries">
+<h3>How to Calculate QuadTree value for Geometries</h3>
+<p>When hashing a <tt class="docutils literal">Geometry primitive</tt>, we will calculate the minimum bounding rectangle(MBR) of this geometry. For
+example, the minumum bouding box for <img alt="PolygonExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/SFA_Polygon.svg/51px-SFA_Polygon.svg.png" /> is the grid made up of (1, 1), (1, 4), (4, 4), (4, 1).</p>
+<p>We will calculate the quadtree hashcode for the MBR, the quadtree hashcode for the MBR is the longest common prefix of
+quadtree values for the four corners.</p>
+<dl class="docutils">
+<dt>When indexing this geometry with Lucene, we will store these fields in lucene</dt>
+<dd><ul class="first last simple">
+<li>geometry: POLYGON ((3 1, 1 2, 2 4, 4 4, 3 1))</li>
+<li>geometry__quadtree: QuadTree value of the polygon.</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="implementation-detail">
+<h2>Implementation Detail</h2>
+<p>The number of digits we used in the quad-tree implementation is 17 digits. This allows us to lay items on an 600 x 600
+meter block. This number comes from 40075000 / 2 ^16 (Earth Circumference / level of details). The 17 digits number
+will be stored as a long value. The digits we used are 1(upper left), 2(upper right), 3(lower left), 4(lower right),
+and 0 (whole block in the given detail).</p>
+<p>When encoding a coordinate, we will stores the quadtree value as a NumericField in Lucene. Internally, Lucene will use
+indexed trie to store NumericField. The &quot;Indexed Trie&quot; uses buckets to group terms. We will use the default
+precisionStep(4) for now.</p>
+<div class="section" id="index-phase">
+<h3>Index Phase</h3>
+<p>During the index phase, we will store the geometry in its text form and in quadtree value. Each of them has their own
+use during search phase.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">point</span> <span class="k">=</span> <span class="nc">Point</span><span class="o">(</span><span class="mf">24.123</span><span class="o">,</span> <span class="mf">18.921</span><span class="o">)</span>
+</span><span class="line"><span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="n">point</span><span class="o">.</span><span class="n">quadtree</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">raw</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Field</span><span class="o">(</span><span class="s">&quot;location&quot;</span><span class="o">,</span> <span class="n">point</span><span class="o">.</span><span class="n">wkt</span><span class="o">,</span> <span class="nc">Field</span><span class="o">.</span><span class="nc">Store</span><span class="o">.</span><span class="nc">YES</span><span class="o">,</span> <span class="nc">Field</span><span class="o">.</span><span class="nc">Index</span><span class="o">.</span><span class="nc">NOT_ANALYZED</span><span class="o">)</span>
+</span><span class="line"><span class="k">val</span> <span class="n">field</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">NumericField</span><span class="o">(</span><span class="s">&quot;location&quot;</span> <span class="o">+</span> <span class="s">&quot;__quadtree&quot;</span><span class="o">)</span>
+</span><span class="line"><span class="n">field</span><span class="o">.</span><span class="n">setLongValue</span><span class="o">(</span><span class="n">code</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="n">doc</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="n">raw</span><span class="o">)</span>
+</span><span class="line"><span class="n">doc</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="n">field</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="search-phase">
+<h3>Search Phase</h3>
+<dl class="docutils">
+<dt>The search phase has two parts</dt>
+<dd><ul class="first last simple">
+<li>filter: fetches all possible features that may contains the geometry X by using Lucene&#8217;s range query against the
+quadtree field.</li>
+<li>select: for each possible results, run geometric operation to see if result Y contains geometry X.</li>
+</ul>
+</dd>
+</dl>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">field</span> <span class="k">=</span> <span class="s">&quot;location&quot;</span>
+</span><span class="line"><span class="c1">// create a point.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">point</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">makeShape</span><span class="o">(</span><span class="nc">Point</span><span class="o">(</span><span class="mi">24</span><span class="o">,</span> <span class="mi">18</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// turn point into search range.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">circle</span> <span class="k">=</span> <span class="n">point</span><span class="o">.</span><span class="n">buffer</span><span class="o">(</span><span class="nc">Distance</span><span class="o">(</span><span class="s">&quot;500m&quot;</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a query container for complex queries.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">query</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">BooleanQuery</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// filtering: search for items in this range</span>
+</span><span class="line"><span class="n">query</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="nc">QuadTreeRangeQueryFactory</span><span class="o">.</span><span class="n">buildLocalQuery</span><span class="o">(</span><span class="n">field</span><span class="o">,</span> <span class="n">circle</span><span class="o">.</span><span class="n">quadtree</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// selecting and scoring: the value source will return the distance between</span>
+</span><span class="line"><span class="c1">// the point and each feature.</span>
+</span><span class="line"><span class="n">query</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">ValueSourceQuery</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">makeValueSource</span><span class="o">(</span><span class="s">&quot;location&quot;</span><span class="o">,</span> <span class="n">point</span><span class="o">));</span>
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">founds</span> <span class="k">=</span> <span class="n">indexSearcher</span><span class="o">.</span><span class="n">search</span><span class="o">(</span><span class="n">query</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></div>
+</div>
+<div class="section" id="open-source-projects">
+<h2>Open Source Projects</h2>
+<div class="section" id="scala-shapely">
+<h3>Scala Shapely</h3>
+<p><a class="reference external" href="https://bitbucket.org/bluetang/common-shapely/">Shapely</a> is Scala binding for JTS Topology Suite. The goal of Shapely is to provide an easy to use factory to
+create JTS geometry class instances. It allows us to create various geometry shape with easy to use factory methods.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="c1">// create a point</span>
+</span><span class="line"><span class="nc">Point</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a line string</span>
+</span><span class="line"><span class="nc">LineString</span><span class="o">((</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">30</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">40</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a polygon</span>
+</span><span class="line"><span class="nc">Polygon</span><span class="o">((</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a polygon with a hole in it.</span>
+</span><span class="line"><span class="nc">Polygon</span><span class="o">(</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">((</span><span class="mi">35</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">15</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">45</span><span class="o">,</span> <span class="mi">45</span><span class="o">),</span> <span class="o">(</span><span class="mi">35</span><span class="o">,</span> <span class="mi">10</span><span class="o">)),</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">((</span><span class="mi">20</span><span class="o">,</span> <span class="mi">30</span><span class="o">),</span> <span class="o">(</span><span class="mi">35</span><span class="o">,</span> <span class="mi">35</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="mi">30</span><span class="o">)))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a multi-point</span>
+</span><span class="line"><span class="nc">MultiPoint</span><span class="o">((</span><span class="mi">10</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">30</span><span class="o">),</span> <span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a multi line-string.</span>
+</span><span class="line"><span class="nc">MultiLineString</span><span class="o">(</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">((</span><span class="mi">10</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">40</span><span class="o">)),</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">((</span><span class="mi">40</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">30</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">))</span>
+</span><span class="line"><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a multi-polygon.</span>
+</span><span class="line"><span class="nc">MultiPolygon</span><span class="o">(</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">(</span>
+</span><span class="line">        <span class="nc">Seq</span><span class="o">((</span><span class="mi">30</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">45</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">20</span><span class="o">))</span>
+</span><span class="line">        <span class="o">),</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">(</span>
+</span><span class="line">        <span class="nc">Seq</span><span class="o">((</span><span class="mi">15</span><span class="o">,</span> <span class="mi">5</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">15</span><span class="o">,</span> <span class="mi">5</span><span class="o">))</span>
+</span><span class="line">        <span class="o">)</span>
+</span><span class="line">    <span class="o">)</span>
+</span><span class="line"><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="lucene-spatial">
+<h3>Lucene Spatial</h3>
+<p><a class="reference external" href="https://bitbucket.org/bluetang/lucene-spatial/">Lucene Spatial</a> is the geo-spatial module for lucene built on the top of shapely. The
+lucene-spatial modules uses a SpatialContext instance to encode location fields and to
+create location queries.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="c1">// create a context.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">context</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SpatialContext</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a shape from the representation of a geometry.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">shape</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">makeShape</span><span class="o">(</span><span class="s">&quot;Point(0 10)&quot;</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create lucene fieldables for a location field.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">fields</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">makeFieldables</span><span class="o">(</span><span class="s">&quot;field&quot;</span><span class="o">,</span> <span class="n">shape</span><span class="o">).</span><span class="n">toList</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a location query to look for features within 5KM radius.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">query</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">makeQuery</span><span class="o">(</span><span class="s">&quot;field&quot;</span><span class="o">,</span> <span class="n">shape</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Distance</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="nc">Distance</span><span class="o">.</span><span class="nc">Unit</span><span class="o">.</span><span class="nc">KM</span><span class="o">))</span>
+</span></code></pre></td></tr></table></div></figure></div>
+</div>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[那些系統整合教我的事 -- 資料錯誤]]></title>
@@ -2258,24 +2606,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
     <id>http://blog.yunglinho.com/blog/2011/12/08/lucene-on-android</id>
     <content type="html"><![CDATA[<div class='post'>
 嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。<br /><br />Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說，無法把 index files 放在 apk 中直接讀取，一定要存放在 device or external storage 上，才能夠使用；或者是自己弄個虛擬目錄出來，不過，這會耗用過多的計憶體空間。<br /><br />我是選用把 index 放在 &#8216;src/res/raw&#8217; 底下，讓他變成 apk 的一部份，省去在網路上找個空間來放置 index 的問題，當要更新 index 時，就重編個 apk 叫使用者更新就好。<br /><br />在放 lucene index 時，如果你想用 compound format 的話，可以用底下的指令，把多個 index files 包裹成單一檔案 .cfs <br /><br /><pre class="brush: scala;">// run REPL with 'scala -cp luke-3.4.0_1-all.jar'<br /><br />import org.apache.lucene.store.FSDirectory<br />import org.apache.lucene.index._<br />import org.apache.lucene.analysis.standard._<br /><br />val source = FSDirectory.open(new java.io.File("source"))<br />val dest = FSDirectory.open(new java.io.File("dest"))<br /><br />// open source index<br />val reader = IndexReader.open(source)<br /><br />// create writer for compound index.<br />val analyzer = new StandardAnalyzer(org.apache.lucene.util.Version.LUCENE_34)<br />val writer = new org.apache.lucene.index.IndexWriter(dir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED)<br /><br />// force writer always use compound index format.<br />writer.getMergePolicy.asInstanceOf[LogByteSizeMergePolicy].setNoCFSRatio(1.0)<br /><br /><br />// add source index to dest index.<br />writer.addIndexes(reader)<br />writer.optimized<br />writer.close<br /><br />reader.close<br /></pre><br />接著，是把產生的 segment, segments_1, _0.cfs 拷到 src/res/raw 底下，讓這些檔案變成 .apk 的一部份。<br /><br /><br />接著，是要在第一次執行時，把這些 index 從 apk 中覆製到 SD 卡上或是機子上，這邊，我寫了個小工具來做這件事<br /><br /><pre class="brush: scala;">import android.content.Context<br />import android.os.Environment<br />import android.util.Log<br /><br />import com.bluetangstudio.android.disastermap.TaipeiDisasterApp.LogTag<br /><br />import org.apache.commons.io.FileUtils<br />import org.apache.lucene.store.{FSDirectory, Directory}<br /><br />import scala.collection.JavaConversions._<br />import java.io.File<br /><br />/**<br /> *  Helper class that search for lucene index directories on the device. The search order is<br /> *  external storage first then local storage. If lucene index does not exist on device, this<br /> *  class will copy the index from the apk to the device storage.<br /> *<br /> * @param context  the application context<br /> * @param path     the root folder name of the index directory to use and to look for.<br /> * @param source   the source of index resource to copy if index does not exist on the device.<br /> *                 format: Seq[(filename, resourceId)]<br /> */<br />case class LuceneOpenHelper(context: Context, path: String, source: Seq[Tuple2[String, Int]]) {<br /><br />    /**<br />     * create or open an Directory.<br />     */<br />    def open(): Option[Directory] = {<br />        val candidates = Seq(externalFolder, internalFolder).flatten<br /><br />        // find the folder with index in it.<br />        val folder = candidates.filter(f => f.exists() && f.list().length > 0).headOption<br />        val withIndex = folder.orElse(<br />            candidates.find(<br />                f => {<br />                    // ensure folder is available.<br />                    f.exists() || f.mkdirs() match {<br />                        // folder is not accessible<br />                        case false => false<br /><br />                        case _ => {<br />                            Log.d(LogTag, "Duplicating index from apk to %s...".format(f))<br />                            source.foreach(<br />                                s => {<br />                                    val is = context.getResources.openRawResource(s._2)<br />                                    try {<br />                                        FileUtils.copyInputStreamToFile(is, new File(f, s._1))<br />                                    } finally {<br />                                        is.close()<br />                                    }<br />                                }<br />                            )<br />                            true<br />                        }<br />                    }<br />                }<br />            )<br />        )<br /><br />        return withIndex.map(FSDirectory.open(_))<br />    }<br /><br />    private def externalFolder: Option[File] = {<br />        Environment.getExternalStorageState match {<br />            case Environment.MEDIA_MOUNTED => Option(context.getExternalFilesDir(path))<br />            case _ => None<br />        }<br />    }<br /><br />    private def internalFolder: Option[File] = {<br />        return Option(new File(context.getFilesDir, path))<br />    }<br /><br />}<br /></pre><br />最後，是在 *App 上加上這段<br /><br /><pre class="brush: scala;">object MyApp {<br />    private val INDEX_DIRECTORY = "idx"<br /><br />    private val INDEX_FILES = Seq(<br />        ("_0.cfs", R.raw.idx_0), <br />        ("segments", R.raw.segments), <br />        ("segments_1", R.raw.segments_1)<br />    )<br />}<br />class MyApp extends android.app.Application {<br /><br />    import MyApp._<br /><br />    private var _luceneSearcher: Option[IndexSearcher] = None<br /><br />    def luceneSearcher: Option[IndexSearcher] = {<br />        if (_luceneSearcher.isEmpty) {<br />            Log.d(LogTag, "Initializing new IndexSearcher...")<br />            _luceneSearcher = LuceneOpenHelper(this, INDEX_DIRECTORY, INDEX_FILES).open().map(new IndexSearcher(_))<br />        }<br />        _luceneSearcher<br />    }<br />   <br />    override def onLowMemory() {<br />        _luceneSearcher.foreach(s => s.close())<br />        _luceneSearcher = None<br />    }<br />}<br /></pre><br />這樣一來，就能在 Android 上面跑 lucene-core 了.</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Analytics: Hadoop V.S. DBMS]]></title>
-    <link href="http://blog.yunglinho.com/blog/2011/11/24/analytics-hadoop-v-s-dbms/"/>
-    <updated>2011-11-24T16:55:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2011/11/24/analytics-hadoop-v-s-dbms</id>
-    <content type="html"><![CDATA[<div class='post'>
-最近兩周，我開始參加 <a href="http://www.blogger.com/www.taipei-gtug.org/">GTUG</a> 的活動，在活動間，有人問起，為什麼我公司選用DBMS(MySQL)來做資料分析，而不用 Hadoop。在這邊，我把跟公司的DB怪才同事的討論結果，稍為簡單敘述一下。<br /><br />首先，要先理解到的一點是，在 MapReduce 及 Hadoop 出現之前，Data Mining的工具及技術，已經在DBMS上建構了有30年了，相關的技術也發產的很成熟且有許多專書論述。<br /><br /><a href="http://en.wikipedia.org/wiki/Extract,_transform,_load">ETL(Extract, Transform, Load)</a>是這個領域的關鍵字，用 ETL 去找下去，會找到許多的書籍講怎麼做資料分析<br /><ul><li>Extract: 如何在雜亂的原始資料中，找出有用的訊號，並把這些訊號歸檔<br />例如：把 Apache 的 access.log 轉換成一對對的 (timestamp, session) </li><li>Transform: 如何把整理好的訊號，轉換成更好用的中介查詢表格<br />例如：把前面的 (timestamp, session) 轉換成以小時為單位的存取次數 (time-slice, count) </li><li>Load: 把整理好的資料，存到資料庫中。 <br /></li></ul>透過這個轉換過的Fact Table，我們可以把很昂貴的『每日訪問總數查尋』從 <br /><pre class="brush: sql"># pseudo code 應該是錯的，不過你知道我在表達什麼就好了 :P<br /><br />SELECT COUNT(UNIQUE session) FROM http_access<br />  GROUP BY DATE_FORMAT(timestamp,'%Y %m %d')<br /></pre>變成 <br /><pre class="brush: sql">SELECT SUM(count) FROM access_counts<br />  GROUP BY DATE_FORMAT(time_slice,'%Y %m %d')<br /></pre><br />假設，你的原始資料有一整年這麼多，總共有四千萬筆(40M)，那麼，前者就是把四千萬筆的資料讀出來，然後過濾加總，而後者，由於資料匯入時已先處理過了，所以要處理的只有24 * 365筆資料；而這兩者間所花費的時間差易，會隨著查尋次數而產生重大差異。&nbsp; <br /><br />試問，若是每次你老闆跟你要資料時，你要跟他說，要等半小時才可以，還是說等我五分鐘？  至於前面的半小時是怎麼算出來的呢？<br /><br />由於DB運算，瓶頸多是卡在硬碟存取上，在前面的例子中，40M筆資料，假設一筆是1K bytes，那麼，總資料量是 40GB ，從硬碟循序讀取 40GB 出來，所花的時間是 40GB / 40MB/s(硬碟速度) = 17分鐘  <br /><br /><h3>MapReduce & DBMS</h3><br />MapReduce是把資料分拆運算，然後再加總的技術；但是，MapReduce的概念對 RDBMS 並不是什麼新奇的事，在<a href="http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/admin/c0005292.htm">這份IBM的文件</a>中，便清楚的敘述到，DBMS會對 SQL 指令做編譯，DBMS內部就會依資料型態、INDEX檔、CPU Core的數量等，去做最佳化，這些，是Hadoop不會幫你做的。 <br /><br />既然DBMS那麼好那麼，為什麼會有 MapReduce 等技術的出現呢，那是因為，DBMS可以幫你scale up，但是最終，還是會碰上硬體的極限，那麼，這時只有 scale out ，才能解決這問題。  但是 scale out 的程式難度，總是比 scale up 困難，而且，一個不好的分析模式，並不會因為跑的快10倍，就變得比較好；因此， ETL 的概念，在使用 MapReduce 時仍是可以應用的，<br /><br /><br />講到這邊，什麼時候該用 Hadoop ，什麼時候該選用 DBMS ，應該很清楚了<br /><ol><li>首先，就是要先看你要找的分析訊號是什麼，定好分析的步驟及查詢表格</li><li>再來，看你的資料量會有多大，做些簡單的計算，看看是不是能在合理的時間內跑完</li><li>最後，看你這些報表倒底是有多常被取用，若是，這是內部的報表，只要一個月能出一次就好，那麼，Hadoop可能就大才小用；若是，你是要做產品，像Google Analytics做到即時大量分析，那麼你可能就需要用到Hadoop<br /><br />過去我在 <a href="http://medio.com/">Medio</a> 服務時，公司有幫美國幾大電信商分析 App 的購買行為，由於，這些是每個月才需產生一次的報表，而且，資料的訊號有待我們的 data expert 去尋找，因此，我們的資料專家是把資料倒到 MicroStrategy 再去下指令分析的，並沒有用到 Hadoop</li></ol></div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Sam Wong</div>
-<div class='content'>
-我不會Hadoop…想請教，用Hadoop不也得ETL嗎？<br /><br />也許Fact Table的設計可以節省 - 以Scale out MapReduce的bruteforce來換取事前精準按business requirement設計fact table schema - 但Hadoop也不能當OTLP用吧？Hadoop應該沒有ACID的能力吧？</div>
-</div>
-</div>
 ]]></content>
   </entry>
   
