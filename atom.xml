@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2012-08-23T00:55:32+08:00</updated>
+  <updated>2012-08-23T00:59:16+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[關於遊戲公司裁員事件的感想]]></title>
+    <title type="html"><![CDATA[關於遊戲公司裁員的感想]]></title>
     <link href="http://blog.yunglinho.com/blog/2012/08/23/corrupted-software-company/"/>
     <updated>2012-08-23T00:44:00+08:00</updated>
     <id>http://blog.yunglinho.com/blog/2012/08/23/corrupted-software-company</id>
@@ -92,8 +92,8 @@ L1快取，造成要從下層的快取或主計憶體上重新讀取資料。</p
 數字差不多就是L1及L2讀取速度的差異。依此推測，若是要從主記億體重讀的話，則會慢上200倍！</p>
 </div>
 </div>
-<div class="section" id="the-solution-08-30-04-40">
-<h2>The Solution 08:30 (+04:40)</h2>
+<div class="section" id="the-solution">
+<h2>The Solution</h2>
 <div class="section" id="a-new-high-level-programming-model">
 <h3>A new high level programming model</h3>
 <p>講完了問題，當然之後，當然要開始講解決方案了；許多大神、大師們覺得我們須要一個不同的 Programming Model
