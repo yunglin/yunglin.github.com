@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="最近兩周，我開始參加 GTUG 的活動，在活動間，有人問起，為什麼我公司選用DBMS(MySQL)來做資料分析，而不用 Hadoop。在這邊，我把跟公司的DB怪才同事的討論結果，稍為簡單敘述一下。首先，要先理解到的一點是，在 MapReduce 及 Hadoop 出現之前，Data &hellip;">
+  <meta name="description" content="最近做了不少Restful WebService的案子，也用了不少外部的WebService API，看到許多的系統，在安全性上，有許多的漏洞，因此想寫篇文章來說說，到底要怎樣保護好你的WebService，必竟，台灣主流網站的安全性已經夠糟了，不用再多幾個有問題的API來把環境弄更糟。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,80 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/03/how-to-protect-a-webservice/">How to Protect a WebService.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-03T23:27:00+08:00" pubdate data-updated="true">Jan 3<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+最近做了不少Restful WebService的案子，也用了不少外部的WebService API，看到許多的系統，在安全性上，有許多的漏洞，因此想寫篇文章來說說，到底要怎樣保護好你的WebService，必竟，<a href="http://plainpass.com/">台灣主流網站</a>的<a href="http://www.ithome.com.tw/itadm/article.php?c=71134">安全性</a>已經夠糟了，不用再多幾個有問題的API來把環境弄更糟。<br /><br />大家用Web API，最常碰到的保護機制是 ApiKey ，但是，請不要以為 ApiKey 有什麼保護做用，HTTP Request的東西都是明碼，你傳什麼，網路上流過的機器都可以看的一清二楚，假設你做的 client 端程式是用 ApiKey 來保護 client &lt;-&gt; server 間的通訊的話，要破的人，只要在 client 所在的區網內，安裝 packet sniffer 就可以拿到 client 內包的 ApiKey 了。 <br /><br />ApiKey通常是WebService Provider拿來統計流量用的，不要以為他有什麼安全機制存在。<br /><br />再來，有些 Web API 要求你要登入，才可以使用他們的 API ，如 <a href="http://www.chargify.com/">chargify</a> or <a href="http://code.google.com/googleapps/faq.html#gmailatomfeed">GMail</a>，這些服務所使用的機制是HTTP Basic Authentication ；但是非常不幸的是，HTTP Basic Authentication只不過變形的ApiKey，Basic Auth的運作方式是把 username:password 用 base64 編碼後，放在 HTTP Request Header 當成密碼傳到 server 端，因此，一樣可以被 sniffer 直接偷出來用。<br /><br />當然，你會問，我們不是有用 HTTPS 來把封包加密了嗎？然而，除非你把 certificate 預載在 client 端，要不然 client &lt;-&gt; server 第一次的通訊是危險的，會受到 <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in the middle attack</a> ，直接從中間把雙方收送的 certificate 換掉。<br /><br /><br />較安全的做法是，使用HTTPS Client Authentication，在包 client 就把 client 端該用的 server-signed certificate 包進 client 端裡面；這樣一來，少了透過 internet 交換 certificate 的機制，能夠確保 certificate 不會被偷換掉。<br /><br />另外，使用 Client Authentication 的好處是，只有 server 端認可的 client 可以使用 API ，縱始是第三方拿到了username, password, apikey，還是沒有辦法使用你的服務。<br /><br />至於有那些大廠，用了不安全的方式來保護他們的 web service api 呢？<a href="http://support.unblock-us.com/customer/portal/articles/291570-supported-and-unsupported-sites"> unblock-us 這邊</a>有幾個名單<br /><br /><br /><blockquote>unblock-us 是怎麼破解幾大影音網站的 geo-location check 的呢？<br /><br />一般的解決方案是用 VPN，但是影音串流不適合透過 VPN 來做 proxy。<br /><br />就我的猜測 unblock-us 等用的解決方案應該是這樣，在 DNS 那層把 server 端的 ip 反解成他們自己的機器，當 client 端送 request 給 http://api.poorguy.com, unblock-us 會先檢查這個 call 的用途，如果是做 geo-location 反解的，就送個假的回應給 client 端，如果是其他的方式，就轉送到正常的機器。<br /><br />等 client 端把這些處理做完後，要做影音串流的 rstp://stream.poorguy.com 又是傳回正常的 ip ，所以這樣用到的流量最小。<br /><br />這樣等於是直接的違反人家的授權去 hack API，這種服務可以活的很久嗎？？我不清楚<br /><br />不過從這一點也可以看到，各大廠做 operation 的能力優劣，像我的前雇主 <a href="http://rhapsody.com">rhapsody</a>就有利用 client authentication 在各式各樣的 client 端上。所以讓我想在台灣用都沒得用 :(  <br /></blockquote><br /><br />公商服務時間：<br /><br />小弟的公司，目前有時間接設計 WebService API 的案子，若是有合作機會的，<a href="mailto:yunglin@gmail.com">請與我連絡</a>。</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/08/lucene-on-android/">Lucene on Android</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-08T18:20:00+08:00" pubdate data-updated="true">Dec 8<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。<br /><br />Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說，無法把 index files 放在 apk 中直接讀取，一定要存放在 device or external storage 上，才能夠使用；或者是自己弄個虛擬目錄出來，不過，這會耗用過多的計憶體空間。<br /><br />我是選用把 index 放在 &#8216;src/res/raw&#8217; 底下，讓他變成 apk 的一部份，省去在網路上找個空間來放置 index 的問題，當要更新 index 時，就重編個 apk 叫使用者更新就好。<br /><br />在放 lucene index 時，如果你想用 compound format 的話，可以用底下的指令，把多個 index files 包裹成單一檔案 .cfs <br /><br /><pre class="brush: scala;">// run REPL with 'scala -cp luke-3.4.0_1-all.jar'<br /><br />import org.apache.lucene.store.FSDirectory<br />import org.apache.lucene.index._<br />import org.apache.lucene.analysis.standard._<br /><br />val source = FSDirectory.open(new java.io.File("source"))<br />val dest = FSDirectory.open(new java.io.File("dest"))<br /><br />// open source index<br />val reader = IndexReader.open(source)<br /><br />// create writer for compound index.<br />val analyzer = new StandardAnalyzer(org.apache.lucene.util.Version.LUCENE_34)<br />val writer = new org.apache.lucene.index.IndexWriter(dir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED)<br /><br />// force writer always use compound index format.<br />writer.getMergePolicy.asInstanceOf[LogByteSizeMergePolicy].setNoCFSRatio(1.0)<br /><br /><br />// add source index to dest index.<br />writer.addIndexes(reader)<br />writer.optimized<br />writer.close<br /><br />reader.close<br /></pre><br />接著，是把產生的 segment, segments_1, _0.cfs 拷到 src/res/raw 底下，讓這些檔案變成 .apk 的一部份。<br /><br /><br />接著，是要在第一次執行時，把這些 index 從 apk 中覆製到 SD 卡上或是機子上，這邊，我寫了個小工具來做這件事<br /><br /><pre class="brush: scala;">import android.content.Context<br />import android.os.Environment<br />import android.util.Log<br /><br />import com.bluetangstudio.android.disastermap.TaipeiDisasterApp.LogTag<br /><br />import org.apache.commons.io.FileUtils<br />import org.apache.lucene.store.{FSDirectory, Directory}<br /><br />import scala.collection.JavaConversions._<br />import java.io.File<br /><br />/**<br /> *  Helper class that search for lucene index directories on the device. The search order is<br /> *  external storage first then local storage. If lucene index does not exist on device, this<br /> *  class will copy the index from the apk to the device storage.<br /> *<br /> * @param context  the application context<br /> * @param path     the root folder name of the index directory to use and to look for.<br /> * @param source   the source of index resource to copy if index does not exist on the device.<br /> *                 format: Seq[(filename, resourceId)]<br /> */<br />case class LuceneOpenHelper(context: Context, path: String, source: Seq[Tuple2[String, Int]]) {<br /><br />    /**<br />     * create or open an Directory.<br />     */<br />    def open(): Option[Directory] = {<br />        val candidates = Seq(externalFolder, internalFolder).flatten<br /><br />        // find the folder with index in it.<br />        val folder = candidates.filter(f => f.exists() && f.list().length > 0).headOption<br />        val withIndex = folder.orElse(<br />            candidates.find(<br />                f => {<br />                    // ensure folder is available.<br />                    f.exists() || f.mkdirs() match {<br />                        // folder is not accessible<br />                        case false => false<br /><br />                        case _ => {<br />                            Log.d(LogTag, "Duplicating index from apk to %s...".format(f))<br />                            source.foreach(<br />                                s => {<br />                                    val is = context.getResources.openRawResource(s._2)<br />                                    try {<br />                                        FileUtils.copyInputStreamToFile(is, new File(f, s._1))<br />                                    } finally {<br />                                        is.close()<br />                                    }<br />                                }<br />                            )<br />                            true<br />                        }<br />                    }<br />                }<br />            )<br />        )<br /><br />        return withIndex.map(FSDirectory.open(_))<br />    }<br /><br />    private def externalFolder: Option[File] = {<br />        Environment.getExternalStorageState match {<br />            case Environment.MEDIA_MOUNTED => Option(context.getExternalFilesDir(path))<br />            case _ => None<br />        }<br />    }<br /><br />    private def internalFolder: Option[File] = {<br />        return Option(new File(context.getFilesDir, path))<br />    }<br /><br />}<br /></pre><br />最後，是在 *App 上加上這段<br /><br /><pre class="brush: scala;">object MyApp {<br />    private val INDEX_DIRECTORY = "idx"<br /><br />    private val INDEX_FILES = Seq(<br />        ("_0.cfs", R.raw.idx_0), <br />        ("segments", R.raw.segments), <br />        ("segments_1", R.raw.segments_1)<br />    )<br />}<br />class MyApp extends android.app.Application {<br /><br />    import MyApp._<br /><br />    private var _luceneSearcher: Option[IndexSearcher] = None<br /><br />    def luceneSearcher: Option[IndexSearcher] = {<br />        if (_luceneSearcher.isEmpty) {<br />            Log.d(LogTag, "Initializing new IndexSearcher...")<br />            _luceneSearcher = LuceneOpenHelper(this, INDEX_DIRECTORY, INDEX_FILES).open().map(new IndexSearcher(_))<br />        }<br />        _luceneSearcher<br />    }<br />   <br />    override def onLowMemory() {<br />        _luceneSearcher.foreach(s => s.close())<br />        _luceneSearcher = None<br />    }<br />}<br /></pre><br />這樣一來，就能在 Android 上面跑 lucene-core 了.</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -388,80 +462,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/18/">台北市政府公開資料（二）- 按地理位址搜尋資料</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-18T11:29:00+08:00" pubdate data-updated="true">Oct 18<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-多數的搜尋技術，在處理地理位址時，只處理地點的資料，例如餐廳、百貨公司等小地理區塊等，但是這些地點搜詢技術，並不適合用在處理大區塊範圍的資料，如行政區及學區等。<br /><div><br /></div><div>如多數外國網站用的坐標轉行政區的GeoNames，他在搜尋某個座標目前所屬的行政區時，是計算座標點與附近行政區中心的距離來猜測，但是行政區往往不是正圓型的，行政區的劃分多是依自然環境（如河川）來切割的，所以，既始某個座標離行政區甲較近，但是，在實務上則是被劃分到乙行政區去的；類似的例子還有學區等</div><div><br /></div><div>另一類無法用點去描述 的，是線型的資料，如登山步道、腳踏車道，當我們登山時，我們不一定要從起點開始爬，而是可以從中間點開始加入，因此，當我們在找附近所有的登山步道時，該是計算所有線型資料與目前座標點的最短距離，而非是算起點與目前座標點的距離。</div><div><br /></div><div>依據了這套需求，我在我公司的產品上增加了對地理區塊搜尋的功能，讓用戶能對點(Point)、線(LineString)，多邊型(Polygon)等資料，做搜尋。</div><div><br /></div><div>底下的連結，是搜詢台北101大樓所在的行政區，大家可以玩玩看</div><div><br /></div><div><a href="http://api.test.sccld.com/rest/1.0/model/bluetang_taipeidistricts/search/?f=geometry:25.033611,121.565,1m&amp;key=feec379d0f91408b84b2f6f08ecdd384&amp;count=1&amp;fl=properties">http://api.test.sccld.com/rest/1.0/model/bluetang_taipeidistricts/search/?f=geometry:25.033611,121.565,1m&amp;key=feec379d0f91408b84b2f6f08ecdd384&amp;count=1&amp;fl=properties</a></div><div><br /></div><div><span class="Apple-style-span" style="color: #444444; font-family: monospace, mono, consolas; font-size: 13px; line-height: 18px;"><span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">results</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">[</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span><span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">id</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">302</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">properties</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">AREA</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">522872.00372</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">NEW</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">6300200001</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">FULL</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;臺北市信義區西村里&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">PERF_ID</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">63002</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">COUN_ID</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;6300200&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">CPID</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;63002&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">CPTID</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;6300200&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">CPTVID</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;6300200001&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">NPID</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">63002</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">NPTID</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">6300200</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">NPTVID</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">6300200001</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">PNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;臺北市&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;信義區&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">VNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;西村里&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">PTVNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;臺北市信義區西村里&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">PTNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;臺北市信義區&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TVNAME</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;信義區西村里&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TM2_MAX_X</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">306528.415</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TM2_MAX_Y</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">2770435.21</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TM2_MIN_X</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">305428.311</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">TM2_MIN_Y</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">2769739.57</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">MAX_X</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">MAX_Y</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">MIN_X</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">MIN_Y</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">]</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">metadata</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">searchQuery</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">queries</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">[</span><span class="b" style="font-weight: bold;">]</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">constraints</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">[</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span><span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">@type</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;location&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">field</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;geometry&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">location</span>&#8221;:&nbsp;<span class="s" style="color: #0b7500; word-wrap: break-word;">&#8220;25.033611,121.565&#8221;</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">radius</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">1</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">]</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;"><span class="e"></span>&#8221;<span class="k" style="color: black;">pagination</span>&#8221;:&nbsp;<span class="b" style="font-weight: bold;">{</span><span class="ell"></span><span class="blockInner" style="border-left-color: rgb(187, 187, 187); border-left-style: dotted; border-left-width: 1px; display: block; margin-left: 2px; padding-left: 24px;"><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">start</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">count</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">1</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">}</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">start</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">0</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">count</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">1</span>,</span><span class="kvov" style="display: block; margin-left: -20px; padding-left: 20px; position: relative;">&#8221;<span class="k" style="color: black;">total</span>&#8221;:&nbsp;<span class="n" style="color: #1a01cc; font-weight: bold;">1</span></span></span><span class="b" style="font-weight: bold;">}</span></span></span><span class="b" style="font-weight: bold;">}</span></span></div></div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/06/">轉換台北市政府公開資料的格式</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-06T17:01:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-在台北市政府公開的資料中，有一大部份是用shapefile的格式開放的，如何把這些資料轉換出來，變成是一個問題，在這邊把我怎麼把TWD67座標的shapefile，轉換成WSG84的 GeoJSON格式。<br /><br />首先，請參考前文把里介圖在QGIS中打開。<br /><br />再來按<a href="http://gis-tech.blogspot.com/2008/11/quantum-gis_24.html">這邊</a>講的，把TWD67的定義加入到 QGIS 中<br /><br />接著，選Layer Property -&gt; Set Layer CRS -&gt; TWD 67<br /><br />然後，指定專案用的CRS定意，FIle -&gt; Project Property -&gt; CRS -&gt; WSG 84<br /><br />最後，是把Layer另存新檔，Layer -&gt; Save As -&gt; File Format: GeoJSON, Encoding: UTF-8<br /><br />這樣，就可以把shapefile的內容匯出來，變成像下述的格式<br /><br />{ &#8220;type&#8221;: &#8220;Feature&#8221;, &#8220;id&#8221;: 0, &#8220;properties&#8221;: { &#8220;AREA&#8221;: 16326625.055040, &#8220;NEW&#8221;: 6301200042.000000, &#8220;FULL&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PERF_ID&#8221;: 63012.000000, &#8220;COUN_ID&#8221;: &#8220;6301200&#8221;, &#8220;CPID&#8221;: &#8220;63012&#8221;, &#8220;CPTID&#8221;: &#8220;6301200&#8221;, &#8220;CPTVID&#8221;: &#8220;6301200042&#8221;, &#8220;NPID&#8221;: 63012.000000, &#8220;NPTID&#8221;: 6301200.000000, &#8220;NPTVID&#8221;: 6301200042.000000, &#8220;PNAME&#8221;: &#8220;臺北市&#8221;, &#8220;TNAME&#8221;: &#8220;北投區&#8221;, &#8220;VNAME&#8221;: &#8220;湖田里&#8221;, &#8220;PTVNAME&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PTNAME&#8221;: &#8220;臺北市北投區&#8221;, &#8220;TVNAME&#8221;: &#8220;北投區湖田里&#8221;, &#8220;TM2_MAX_X&#8221;: 306973.245000, &#8220;TM2_MAX_Y&#8221;: 2789383.300000, &#8220;TM2_MIN_X&#8221;: 301490.096000, &#8220;TM2_MIN_Y&#8221;: 2783263.350000, &#8220;MAX_X&#8221;: 0.000000, &#8220;MAX_Y&#8221;: 0.000000, &#8220;MIN_X&#8221;: 0.000000, &#8220;MIN_Y&#8221;: 0.000000 }, &#8220;geometry&#8221;: { &#8220;type&#8221;: &#8220;Polygon&#8221;, &#8220;coordinates&#8221;: [ [ [ 121.522589, 25.174993 ], [ 121.522587, 25.174995 ], [ 121.522557, 25.175033 ], [ 121.522408, 25.175170 ], [ 121.522317, 25.175324 ], [ 121.522314, 25.175367 ], [ 121.522323, 25.175569 ], [ 121.522315, 25.175789 ], [ 121.522322, 25.175950 ], [ 121.522270, 25.176082 ], [ 121.522158, 25.176302 ], [ 121.522043, 25.176548 ], [ 121.522002, 25.176598 ], [ 121.521997, 25.176648 ], [ 121.522278, 25.177273 ], [ 121.522359, 25.177825 ], [ 121.522384, 25.178200 ], [ 121.522338, 25.178332 ], [ 121.522127, 25.178615 ], [ 121.521821, 25.178986 ], [ 121.521780, 25.179026 ], [ 121.521691, 25.179134 ], [ 121.522349, 25.179671 ], [ 121.522623, 25.179892 ], [ 121.522810, 25.179997 ], [ 121.522949, 25.180089 ], [ 121.523101, 25.180244 ], [ 121.523337, 25.180539 ], [ 121.523425, 25.180655 ], [ 121.523550, 25.180683 ], [ 121.523641, 25.180779 ], [ 121.523652, 25.180779 ], [ 121.523816, 25.1809<br /><br /><br /><br /></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -479,6 +479,14 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/08/23/corrupted-software-company/">關於遊戲公司裁員事件的感想</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/07/19/introduction-to-actor-model/">[未完] Introduction to Actor Model</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/07/11/spatial-search-with-lucene/">Spatial Search with Lucene</a>
       </li>
     
@@ -488,14 +496,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
       <li class="post">
         <a href="/blog/2012/05/23/runtime-quality-metrics-series-3/">軟體品質指標系列(三)：軟體品質如何測量</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/22/runtime-quality-metrics-series-2/">軟體品質指標系列(二)：軟體品質指標有那些</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/17/runtime-quality-metrics-series-1/">軟體品質指標系列(一)：為什麼軟體開發者需要在意軟體品質指標</a>
       </li>
     
   </ul>

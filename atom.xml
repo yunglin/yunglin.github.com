@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2012-07-13T16:36:04+08:00</updated>
+  <updated>2012-08-23T00:55:32+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,286 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[關於遊戲公司裁員事件的感想]]></title>
+    <link href="http://blog.yunglinho.com/blog/2012/08/23/corrupted-software-company/"/>
+    <updated>2012-08-23T00:44:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2012/08/23/corrupted-software-company</id>
+    <content type="html"><![CDATA[<p>看到 <a class="reference external" href="https://www.facebook.com/MonkeyPotion?ref=stream">半路</a> <a class="reference external" href="https://www.facebook.com/MonkeyPotion/posts/445760425469302">分享</a> 最近 <a class="reference external" href="http://news.17173.com/content/2012-08-22/20120822114550361.shtml">幾間遊戲公司裁員</a> 的新聞，不經讓我想到過去在矽谷流浪歲月所認知道
+的黑暗面，底下就是一個我親身看過的一個例子。</p>
+<p>許多年前，AE用三億美金買了一家flash game公司，當時我上 linkedin 看一下 CEO 的背景，一看，
+不得了了，我竟然在 linkedin 上跟他是有直接聯結，原來我認識大人物自己都不知道。</p>
+<p>後來一查才知道，他們是我工作公司，在三年前買的一間英國公司，我們把他們買下來後，兩年閉鎖期一到
+，他們一群六七個人就離職開新公司去了，這間公司後來就又被AE買過去。</p>
+<p>當時，我不懂的是，為什麼AE要買這間公司呢？因為一個遊戲的生命週期就是六個月而已，一間遊戲公司的
+價值是在於有一個團隊可以持續生產出賣座的遊戲，然而這間flash game的團隊，已經證明了他們兩年一到
+就會走人，那為什麼AE公司要買這個公司呢？</p>
+<p>後來問一問做金融的朋友，答案跟我猜想的不遠，AE就是買一天的新聞就好 <strong>「AE買下flash game公司，跨足FB市場，未來營收將有爆發性成長」</strong></p>
+<p>上市公司們，他們想的，跟你我想的不一樣；靠股票換鈔票的公司，新聞效果過了，股價漲了，執行長選擇權
+生效後，就是可以把買進的公司全裁了，反正當初就是買新聞效應而已。</p>]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[[未完] Introduction to Actor Model]]></title>
+    <link href="http://blog.yunglinho.com/blog/2012/07/19/introduction-to-actor-model/"/>
+    <updated>2012-07-19T14:42:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2012/07/19/introduction-to-actor-model</id>
+    <content type="html"><![CDATA[<div class="section" id="the-challenge">
+<h2>The Challenge</h2>
+<p>在今天的講題開始前，我要先花一點時間講一下，我們這一代程式設計師面對的挑戰是什麼，為什麼我們需要一個新的程式架構？</p>
+<p>大家應該都很熟悉摩爾定律，摩爾定律是指：一個尺寸相同的晶片上，所容納的電晶體數量，約每隔18個月便會增加一倍，性能也將提升一倍。
+在Dr. Moore於1965年提出摩爾而後的40年間，摩爾定律準確的預測電晶體的發展，每18月就有更快一倍的處理器出來，每18個月記憶體的就倍
+增。對於軟體工程師來說，摩爾定律讓我們的程式，不用更新軟體，每隔一段時間，效能就自動增加。</p>
+<p>然而這一切，在 2005 年左右開始崩壞，那年，我在 ACM Queue 九月號讀到 &quot;The Future of Microprocessors&quot;,
+&quot;The Free Lunch Is Over: A Fundamental Turn Toward Concurrency in Software.&quot;等文章，提到，軟體工程師的免費午餐
+已經結束了，未來，處理器的時脈將不會隨著電晶體數而增長，只有處理器的核心數依然跟隨著摩爾定律，每18個月增加一倍，而後，類似的
+文章開始大量的出現在各樣的軟體雜誌之中。 Intel於 2006 年一月發表了個人電腦用的雙核處理器 - Core Duo， 2007 年四核的Core 2 Quad
+發表，我想現在在場的聽眾中，有不少的是用 Intel i7 八核的處理器。</p>
+<p>對軟體工程師來說，新的現實是 Amdahl&#8217;s Law ，一個程式能被多核心處理器加速的程度，不會高於程式中不可平行處理的部份的倒數。
+也就是說，如果程式中只有50%的部份是可平行處理的，那麼，多核心的處理器最多只能幫你加速兩倍，不管你有雙核，四核，還是六十四
+核等。如果程式中有 95% 的部份是可平行處理的，縱使你有兩千核的處理器，還是只能幫你加速 20 倍。</p>
+<p>不管你是寫單機版程式，或者是多人用的網路系統，如何善用多核心的處理器，是現在不得不開始面對的問題。</p>
+</div>
+<div class="section" id="concurrency-and-parallelism">
+<h2>Concurrency and Parallelism</h2>
+<p>接下來我們要先定義一下名詞，我們中文中講的平行處理，代表了兩個不同的涵意，一個是 Concurrency ， 另一個是 Parallelism</p>
+<p>Parallelism 講的是，程式中有兩個以上的部份，可以同時間被處理，而不會互相干擾。</p>
+<p>Concurrency 指的是，程式中的兩個以上的部份，可以同時間被處理，或者透過分時分享資源，同時間被處理器處理。</p>
+<p>然而，對軟體工程師來說，這兩者都是很困難的，因為我們的程式不免會用到共享的資源，在 Parallelism 中，如何找出共享的資源
+將這些模組分離出來最小化，是一種挑戰，在 Concurrency 中，如何確保共享的資源不變成程式中的瓶頸，又是另一個挑戰。</p>
+<p>在 Java 6 Concurrency API 就提供了不少工具來協助處理 Concurrency 的問題，如 Executor, CountDownLatch, Semaphore
+, DelayQueue 等工具。</p>
+</div>
+<div class="section" id="issue-shared-memory-concurrency">
+<h2>Issue: Shared Memory Concurrency</h2>
+<p>那 Shared Memory Concurrency 的問題在那呢？我記得我在學寫網頁時，第一次寫 Web Counter 時就學到了，原來小
+到一個 counter++ ，都會因為 thread 存取的順序，而發生 race condition 造成結果與預測的不同。Shared Memory
+Concurrency的難點就在於，如何正確的使用 Lock 及 Lock 的不可預測性。</p>
+<p>由於作業系統設計時，為了效能，不會將 Lock 設計成完全的公平，當有三個 Thread 依序去要一個 Lock 時，你執行三次，
+可能三次都是不同的 Thread 第一個拿到這個 Lock ，這個特性，造成了測試時及執行時的不可決定性，無法在測試時，模擬可
+能發生的所有狀況。</p>
+<p>此外 Lock 並不是容易去使用的，如果你在程式中使用了大量的 Lock ，將會造成程式中可被併行處理的部份減少，在 Java6
+之前，若是你在沒有需要用 lock 的地方使用了 lock ， jvm 仍然會去要這個 lock ，在 Java6 Mustang Release中， HotSpot JVM
+的實作引入了 lock elision 的觀念， HotSpot VM 將會透過執行階段的分析，去忽略掉這些多餘的 lock。</p>
+<p>然而， Lock 仍帶入了許多問題，如 lock starvation ，當許多 thread 大量、重覆的取用同一個 lock 時，由於取得 lock
+的機制並不是公平的，所以有可能會有 thread 一直取不到 lock 的狀況發生。</p>
+<p>另外，若是多個 Thread 都要存取相同的數個 lock ，則會造成互相卡位的狀況，形成 live lock。</p>
+<p>當然，你也可以說，用 Lock 太麻煩，而減少 Lock 的使用，那麼你的程式就會變得不 Thread-Safe ，在處理量大時，會發生
+Race Condition造成不可預期的結果產生。</p>
+<p>而用 Lock 最讓人絕望的是，若是 Lock 的順序弄錯了，會造成 Dead Lock ，變成，程式在設計的初期就要把各物件呼叫的順序
+先定出來，才可以避免 Dead Lock 的產生，但是你能保證你的程式 1.0版、1.1版、2.0版的呼叫順序都不變嗎？</p>
+<div class="section" id="false-sharing-cache-line-issue">
+<h3>False sharing: Cache Line Issue</h3>
+<p>如果說 Lock 的問題就夠讓人頭大了，那麼底下這個我最近讀到的問題，則會讓你更吃驚。在電腦的架構中，我們有主記憶體、處理器
+上有L1 L2 L3快取，處理器存取資料時，會把資料放在快取中，在適當的時機 在把修改寫回主記憶體；這點，大家應該不難去想像。</p>
+<p>然而，處理器在從主記憶體存取資料至快取時，是一個區塊一個區塊的去存取，所以在取用資料時，不只會拿回所需的資料，同時也會
+取用到相鄰的資料，這在多核心的機器上造成，若是core A 及 core B會去存取相鄰的資料，那麼他鍆將互相 invalidate 對方的
+L1快取，造成要從下層的快取或主計憶體上重新讀取資料。</p>
+<p>在一篇測試報告中，在一台八核的機器上的測式結果，有False Sharing問題的程式將比沒有False Sharing問題的程式慢12倍，這
+數字差不多就是L1及L2讀取速度的差異。依此推測，若是要從主記億體重讀的話，則會慢上200倍！</p>
+</div>
+</div>
+<div class="section" id="the-solution-08-30-04-40">
+<h2>The Solution 08:30 (+04:40)</h2>
+<div class="section" id="a-new-high-level-programming-model">
+<h3>A new high level programming model</h3>
+<p>講完了問題，當然之後，當然要開始講解決方案了；許多大神、大師們覺得我們須要一個不同的 Programming Model
+來解決這問題，他們覺的，這個新的解決方案要有底下幾個特性</p>
+<ul class="simple">
+<li>要容易被理解，跟容易被測試。</li>
+<li>換言之，也就是要deterministic，如果程式流程是輸入 A 產出 B ，那麼不管執行多少次，這個結果仍是要
+一樣的。</li>
+<li>既然 shared mutable state 是問題的根源，我們就把這問題給移除。</li>
+<li>能夠善用多核心所帶來的優點。</li>
+</ul>
+</div>
+<div class="section" id="possible-solutions">
+<h3>Possible Solutions</h3>
+<p>有個不同的解決方案被提出來，首先是 Functional Programming ，完全的把 Mutable State 移除，程式變
+成如同數學函式一般可以被堆疊，程式函式的本身不帶有狀態，所有的狀態都是由外部傳入的，如此一來，程式本身
+的運算處理就變的 deterministic</p>
+<p>而既然函式本身不帶有狀態，那麼他們便可以平行的被處理，例如在 scala 中，就引如了 parallel collection
+，讓軟體工程師可以很簡單的就會一群資料做平行的運算</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">).</span><span class="n">par</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">2</span><span class="o">)</span>
+</span><span class="line"><span class="n">res</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure><p>Functional Programming所需的 Lambda expression 將會在 Java8 時被實作出來，而 Parallel Collection
+也有機會在 Java8 時出現。</p>
+<p>在此順便打個廣告，台灣目前有個 functional programming user group 在運作中，若是各位有性去，可以上網
+找 fpug.tw</p>
+<p>而另一個可能的解決方案是 Actor Model ， Actor Model 將狀態封裝在Actor內部，Actor及Actor間，則是透過
+非同步的機制去傳遞訊息。</p>
+</div>
+</div>
+<div class="section" id="a-brief-history-of-the-actor-model">
+<h2>A Brief History of the Actor Model</h2>
+<p>在開始介紹 Actor Model 前，先簡單介紹一下 Actor Model 的歷史。 Actor Model 是於 1973 年 Carl Hewitt
+命名的，而由 Gul Agha 這位先生於 1985 年左右更精確的描述 Actor Model 。</p>
+<p>第一個大型的商業應用，則是由 Ericsson 於 1980 年代中期所完成的一個電信系統，這個系統非常的容錯，當大家在介
+紹 Actor Model 時，多會提到這個例子，因為這個系統達到了 99.9999999% 九個九的 uptime ，也就是說
+一整年下來，他停機的時間只有 31 ms ，非常的匪疑所思，因為，一般我們在寫的系統，能有兩個九，就已經是很了不
+起的成就了。</p>
+<p>這個專案另一個有名的產品是 erlang 這程式語言， erlang 在 1990 年代被 opensource ，後來被大量運用在
+message queue 跟 Concurrency 的程式之中。例如大家常用的 RabbitMQ 就是利用 erlang 寫成的，據說他的核
+心只有 5000 行 erlang 的程式碼。</p>
+</div>
+<div class="section" id="actor">
+<h2>Actor</h2>
+<p>那什麼是 Actor 呢， Actor 是一個非常輕量化的元件，在 Akka 的實作中，每一個 Actor 只占了約400 bytes
+的記憶體空間，每一個 Actor 擁有自己的狀態以及行為，將些狀態及行為都被封裝在 Actor 裡面。</p>
+<p>其他的 Actor 只能夠透過送訊息的方式，來與這個 Actor 來溝通，存取 Actor 的狀態及觸發行為；當 Actor 收
+到外部的訊息時，這些訊息會被放在信箱裡，依照順序來被這個 Actor 來處理。</p>
+<p>這個送訊息的及處理訊息的機制，是非同步的，你不能假設這個訊息一定會立刻被同一個 thread 處理，甚至，你不能
+假設說，你一定會收到一個回應。</p>
+<p>當 Actor 處理訊息時，他會被放在系統中預先配制好的 Thread 上執行、處理訊息。</p>
+<p>很有趣的是，當你這樣設計一個系統時，你的系統便會變得非常的 scalable 及非常的輕量化。因為使用 Actor Model
+你的 call stack 會變的很小，在我們用 imperative programming ，我們的 call stack 是從系統最外部，透過
+一層層的 method call 累加上來起來，當 CPU 在 Context Switching ，在從一個 Thread 跳到另一個 Thread 去
+執行時，需要讀入該 Thread 的 Call Stack ，當 Call Stack 越大時，Context Switch的成本就愈高。</p>
+<p>在Actor Model 中，兩個 Actor 在傳遞訊息時，其實只有把這個訊息的 reference 丟到另一個 Actor 的信箱中，訊
+息傳遞的成本非常的小，而 Actor 在被喚起處理訊息時，他的 call stack 是從他的信箱開始，而非整串的呼叫流程，因
+此， context switch 的成本變的很小。</p>
+<p>在 Actor Model 中，一個工作的處理，會變得很像我們在辦公室內做業的方法，當我們從系統外部收到一個訊息時，我們
+會把這個工作連同這個工作的寄送者先記錄下來，放到信箱中延後處理，當前一手完成工作後，運行中的 Actor 會把處理
+好的資料轉發給下一手，就這樣一層層轉發，最後在將完成的工作結果，送還給原始的寄送者。</p>
+</div>
+<div class="section" id="introduce-akka">
+<h2>Introduce Akka</h2>
+<p>接下來的部份，我們要介紹 Akka 這個 JVM 上 Actor Model 的實作。</p>
+<p>Akka 是由 Jonas Boner 於 2009 年所發起的，在開發 Akka 之前， Jonas 是在 Terracotta 做 JVM Clustering 以及在 BEA
+做 JRockit VM 的，具有多年食作 distributed system 的經驗。目前 Akka 背後的商業公司是 typesafe ， typesafe
+同時也是開發 Scala 這個 JVM 上最盛行 JAVA.NEXT 語言的公司。</p>
+<p>這個實作是跑在 JVM 上，提供了 Java 及 Scala 的 API ，在接下來的簡報中，我會用 Java API 為主 Scala API 為輔
+來介紹怎麼使用 Akka。</p>
+<p>Akka另外也引入了 remote actor 這個觀念，既然，我們所有的訊息傳遞都是非同步的，透過訊息的傳遞來呼叫，而這訊息本
+身，又是不帶狀態，可以被 serialize 的，狀態的本身是存在 Actor 中的，那麼，為什麼我們自然有可能的將工作放到別台
+機器上來處理。</p>
+<p>除了 Actor Model 外，Akka還提供了許多 module 來跟外部的系統整合，如 akka-camel ，能讓 akka 串接上 camel 這
+個 enterprise service bus ，便程它的一個 endpoint ，讓 Actor 能處理 camel 送來的訊息然後再將訊息轉發回 camel 中。</p>
+</div>
+<div class="section" id="define-actor">
+<h2>Define Actor</h2>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kn">import</span> <span class="nn">akka.actor.UntypedActor</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Counter</span> <span class="kd">extends</span> <span class="n">UntypedActor</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">   <span class="kd">private</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Object</span> <span class="n">message</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class="line">     <span class="k">if</span> <span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;increase&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">       <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;get&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">getSender</span><span class="o">().</span><span class="na">tell</span><span class="o">(</span><span class="k">new</span> <span class="n">Result</span><span class="o">(</span><span class="n">count</span><span class="o">));</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">unhandled</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="fault-tolerance-in-akka">
+<h2>Fault Tolerance in Akka</h2>
+<p>接下來我們要談的就是為什麼 ericsson 的系統能夠達到那麼高可靠度的原因以及 Akka 容錯的機制。</p>
+<p>當一個系統在運作時，不免因為一些設計外的因素、或不可預期的輸入，造成系統產生錯誤的狀態，有時，這個錯
+誤的狀態只是丟出一個 exception 就結束，但是在某些情況下，系統會處於一個混亂的狀態之中，無法再繼續處
+理任何的訊息。</p>
+<p>這個狀況，我相信大多數的 Windows 用戶都有碰上過，也非常清楚這個問題的解決方案，也就是 &#8211; 重開機</p>
+<p>在 Akka 中，Actor們如同現實生活中公司的組織，可以有低層的員工以及高層的 Supervisor ，當一個員工
+在處理訊息時，若是有發生無法自己無法排解的錯誤狀況的話，他將會把這錯誤狀況，回報給他的上級，由上級來
+決定如何處理。</p>
+<p>如果說，一個 supervisor 管理的 workers 都是獨立的個體，沒有交互影響的問題，那麼， supervisor 可以
+選擇將有問題的 worker 單獨重開機，當一個 actor 被重啟時，他的 actor reference 將保持不變，外面的 actor
+仍可以透過原有舊的 actor reference 跟這個重啟後的 actor 溝通。而被重啟的 actor 的信箱，仍會保存的
+尚未被處理的訊息在信箱內，而造成錯誤的訊息，則是在重啟時可以決定是否要保留重新處理。</p>
+<p>若是一個 supervisor 下的 workers 有相互依賴的情況的話，那麼， supervisor 可以在某一個 worker 發
+生錯誤時，重新啟動所有的 workers。</p>
+<p>這個錯誤排解的機制不止是可以串上一層而以，而是可以一層層的堆疊起來，位在最上端的，則是前面所看過的 ActorSystem
+；當一個錯誤是直屬主管無法排除的錯誤，那麼，這個錯誤訊息可以再轉發給更高層的主管，由他來解決。同樣的，重啟的觀
+念也可以套用在這邊。當一個系統的子系統發生錯誤時，我們可以重新啟動整個環境</p>
+</div>
+<div class="section" id="remote-actor">
+<h2>Remote Actor</h2>
+<p>在 Akka 的實作中 Actor 預設就是可以被 Remote 化的， Actor 在設計時，就已經是設計成 location transparent 及
+可被配置在本機或是遠端的，一個原本設計成本機用的 Actor ，可以不經任何的程式變化，直接修改設定檔，變成在啟動一個
+Actor時，自動就是啟動在遠端的。</p>
+<p>而傳遞訊息給 Remote Actor 跟傳給本機的 Actor 是沒有差別的，同樣是透過 tell 及 ask 這兩個 API ，在底層實作上
+Actor Reference 會帶有 Remote Actor 實際所在機器的位址，若是一個 Actor 是 Remote Actor 的話，被傳送的訊息
+就會透過 Java Serialization, Protocol Buffer Serializer 或者是自定的 Serializer 來將訊息寫入到遠方。</p>
+<p>而要使用那一種 Serializer ，是可以透過設定檔做切換的。</p>
+<p>Remote Actor 的配置，也是可以透過程式來控製，下圖便是一個例子。</p>
+</div>
+<div class="section" id="routing-clustering">
+<h2>Routing &amp; Clustering</h2>
+<p>對於 Cluster 的設計，目前 Akka 的團隊還在重新設計中，目標將會是在下一個 release 時，將 cluster 的功能
+加入到 Akka 中。</p>
+<p>目前，Akka 則是只支援 Routing 而已。 Routing 的機制是說，你有一群一樣的 actor，他們可以處理同樣類型的訊息
+，但是由誰來處理訊息，則是由 Router 來決定。</p>
+<p>你可能會問，什麼時候需要這樣做呢？會有 Routing 的需求時，多是因為有處理量限制的問題，例如，我想要最多不超過五個
+這類型的工作可以同時間被處理，或者是從使用者A來的需求，最多只讓它同時跑五個，但是從使用者B來的需求，最多可以跑十
+個，而且兩個人的程序不能混用。</p>
+<p>Akka 目前支援的 Routing 機制有</p>
+<ul class="simple">
+<li>RoundRobinRouter： 在一群 actor 中，依序將工作配發給他們。</li>
+<li>RandomRouter: 在一群 actor 中，隨意的將工作配發給他們。</li>
+<li>SmallestMailboxRouter: 在一群 actor 中，將工作配發給目前沒有在工作的，或者是待辦工作最少的 actor</li>
+<li>BroadcastRouter: 將工作配發給所有的 Actor</li>
+<li>ScatterGatherFirstCompletedRouter:  將工作配發給所有的 Actor，然後等待第一個回應，其餘的回應則是會被忽略捨棄掉。</li>
+</ul>
+<p>Routing 的機制也可以跟 Remote Actor 混用，將 Remote Actor 配發在多台機器上，然後透過 Router 將訊息配
+發給他們。</p>
+</div>
+<div class="section" id="performance">
+<h2>Performance</h2>
+<p>下圖的是 Akka 官方，於一台48核的 AMD 機器上，做簡單訊息傳送的 Performance Test 的測試結果。</p>
+<p>在一開始的實作中，Akka是使用 java.util.concurrent.ThreadPoolExecutor 控制最多有多少個 Actor 能同
+時被執行，然而在這 48核 的機器上，Akka Team發現，Akka無法 scale 超過 12 個併行的 actor ，不管你增加
+多少個 actor ，同時間內被處理的最大量卡在每秒一百四十萬個訊息這個數字。然而，同時間 CPU 的 Load 並沒
+有超過 10%</p>
+<p>Akka Team猜想是因為 ThreadPoolExecutor 底層的 task queue, LinkedBlockingQueue 有一個共用的 lock，
+最後造成擁塞，才會造成效率的不佳。</p>
+<p>後來在經過了 Doug Lea 的協助，使用 Fork-Join 重新實作 task executor ，於是效能就拉高到每秒兩千萬個訊息
+這數字。</p>
+</div>
+<div class="section" id="use-case">
+<h2>Use Case</h2>
+<p>那 Akka 可以被用在那些地方呢？目前 Akka 被應用在下面幾個地方。</p>
+<ul class="simple">
+<li>messaging system: 例如國內的 Cubie 就有用到 Akka 來處理訊息。</li>
+<li>Data Analysis: klout.com 例用 akka 來分析社群網站上如 facebook twitter 上訊息轉發的熱門程度
+以及誰是意見領袖等資料。</li>
+<li>股票交易系統： Akka 的一大客戶群是倫敦的金融公司，Akka的幾個特性很適合用來做股市交易用。像是用 Actor
+來追蹤一個股票的現貨股價變化以及產生各種線型圖；又或者是說，結合 Rule Based Engine 可以做風險控管的
+模組。例如說交易員要下單買一支股票時，Akka可以幫你同時檢查，這個交易員他目前手上可用資金的是多少，
+交易員目前股票組合的風險是多少，公司目前整體股票組合的風險是多少。
+數十至數百個不同規則的檢查是可以透過 remote actor 分散在許多機器上併行處理的，一個交易的風險評估，並不
+會隨著檢查的數量而線性增長。</li>
+<li>另外一個 Akka 被大量使用的環境是線上遊戲，過去有許多遊戲公司選擇用 MySQL 當後台，然後透過 cache 及 db
+sharding的方式，來增加 throughput ，後來他們發現，與其把 server 寫成 stateless 然後把狀態放在後台
+的 db 讓 db 變成效能的頻頸，不如把 state 放在 Actor 中，讓每個 Actor 代表一個遊戲中的角色，獨立維護
+它的狀態，這樣才能更 scalable.</li>
+</ul>
+</div>
+<div class="section" id="case-study">
+<h2>Case Study</h2>
+</div>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Spatial Search with Lucene]]></title>
@@ -2586,26 +2866,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
     <id>http://blog.yunglinho.com/blog/2012/02/08/-costco</id>
     <content type="html"><![CDATA[<div class='post'>
 真的有點受夠了台灣 Costco 老是在賣些美國沒賣的美國產品了。<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-AbngwpQU1j0/TzHyO4Cd2II/AAAAAAAADEk/0ekpFU-x-mg/s1600/GoldMax.png" imageanchor="1" style=""><img border="0" height="290" width="400" src="http://4.bp.blogspot.com/-AbngwpQU1j0/TzHyO4Cd2II/AAAAAAAADEk/0ekpFU-x-mg/s400/GoldMax.png" /></a></div><br /><br /><br />https://www.google.com/search?q=vitamin%20goldmax 找下去，找不到一個條目的東西，台灣 Costco 也敢拿出來賣？這些採購人員是心理只有錢是吧？<br /><br />以前住美國時，我大多的日用產品都是在 costco 買的，那是因為，美國 costco 設定的營業方針是『貨品以近乎進貨成本來賣、獲利全靠會員費』，賺不賺錢，就看選貨能力來吸引會員數。<br /><br />Costco@USA選貨的標準又剛好跟我的收入很相近，所以，若是要買日用品又懶得做功課時，就去 costco 買；那是我相信 costco 的選貨標準，不用讓我在買日用品時，還要一個個拿起來看產地與成份，逛的很舒服<br /><br />但是台灣的 Costco 逛起來給我的感覺卻不是如此， 50%的貨品是台灣採購的，讓我逛起來像是在逛市場一樣，要玩訛虞我詐的遊戲，許多商品的外包照片跟內容跟本不符，又有許多假美國商品，逛起來要心驚膽顫，一點都沒有消費的樂趣。</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[How to Protect A WebService.]]></title>
-    <link href="http://blog.yunglinho.com/blog/2012/01/03/how-to-protect-a-webservice/"/>
-    <updated>2012-01-03T23:27:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2012/01/03/how-to-protect-a-webservice</id>
-    <content type="html"><![CDATA[<div class='post'>
-最近做了不少Restful WebService的案子，也用了不少外部的WebService API，看到許多的系統，在安全性上，有許多的漏洞，因此想寫篇文章來說說，到底要怎樣保護好你的WebService，必竟，<a href="http://plainpass.com/">台灣主流網站</a>的<a href="http://www.ithome.com.tw/itadm/article.php?c=71134">安全性</a>已經夠糟了，不用再多幾個有問題的API來把環境弄更糟。<br /><br />大家用Web API，最常碰到的保護機制是 ApiKey ，但是，請不要以為 ApiKey 有什麼保護做用，HTTP Request的東西都是明碼，你傳什麼，網路上流過的機器都可以看的一清二楚，假設你做的 client 端程式是用 ApiKey 來保護 client &lt;-&gt; server 間的通訊的話，要破的人，只要在 client 所在的區網內，安裝 packet sniffer 就可以拿到 client 內包的 ApiKey 了。 <br /><br />ApiKey通常是WebService Provider拿來統計流量用的，不要以為他有什麼安全機制存在。<br /><br />再來，有些 Web API 要求你要登入，才可以使用他們的 API ，如 <a href="http://www.chargify.com/">chargify</a> or <a href="http://code.google.com/googleapps/faq.html#gmailatomfeed">GMail</a>，這些服務所使用的機制是HTTP Basic Authentication ；但是非常不幸的是，HTTP Basic Authentication只不過變形的ApiKey，Basic Auth的運作方式是把 username:password 用 base64 編碼後，放在 HTTP Request Header 當成密碼傳到 server 端，因此，一樣可以被 sniffer 直接偷出來用。<br /><br />當然，你會問，我們不是有用 HTTPS 來把封包加密了嗎？然而，除非你把 certificate 預載在 client 端，要不然 client &lt;-&gt; server 第一次的通訊是危險的，會受到 <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in the middle attack</a> ，直接從中間把雙方收送的 certificate 換掉。<br /><br /><br />較安全的做法是，使用HTTPS Client Authentication，在包 client 就把 client 端該用的 server-signed certificate 包進 client 端裡面；這樣一來，少了透過 internet 交換 certificate 的機制，能夠確保 certificate 不會被偷換掉。<br /><br />另外，使用 Client Authentication 的好處是，只有 server 端認可的 client 可以使用 API ，縱始是第三方拿到了username, password, apikey，還是沒有辦法使用你的服務。<br /><br />至於有那些大廠，用了不安全的方式來保護他們的 web service api 呢？<a href="http://support.unblock-us.com/customer/portal/articles/291570-supported-and-unsupported-sites"> unblock-us 這邊</a>有幾個名單<br /><br /><br /><blockquote>unblock-us 是怎麼破解幾大影音網站的 geo-location check 的呢？<br /><br />一般的解決方案是用 VPN，但是影音串流不適合透過 VPN 來做 proxy。<br /><br />就我的猜測 unblock-us 等用的解決方案應該是這樣，在 DNS 那層把 server 端的 ip 反解成他們自己的機器，當 client 端送 request 給 http://api.poorguy.com, unblock-us 會先檢查這個 call 的用途，如果是做 geo-location 反解的，就送個假的回應給 client 端，如果是其他的方式，就轉送到正常的機器。<br /><br />等 client 端把這些處理做完後，要做影音串流的 rstp://stream.poorguy.com 又是傳回正常的 ip ，所以這樣用到的流量最小。<br /><br />這樣等於是直接的違反人家的授權去 hack API，這種服務可以活的很久嗎？？我不清楚<br /><br />不過從這一點也可以看到，各大廠做 operation 的能力優劣，像我的前雇主 <a href="http://rhapsody.com">rhapsody</a>就有利用 client authentication 在各式各樣的 client 端上。所以讓我想在台灣用都沒得用 :(  <br /></blockquote><br /><br />公商服務時間：<br /><br />小弟的公司，目前有時間接設計 WebService API 的案子，若是有合作機會的，<a href="mailto:yunglin@gmail.com">請與我連絡</a>。</div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Lucene On Android]]></title>
-    <link href="http://blog.yunglinho.com/blog/2011/12/08/lucene-on-android/"/>
-    <updated>2011-12-08T18:20:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2011/12/08/lucene-on-android</id>
-    <content type="html"><![CDATA[<div class='post'>
-嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。<br /><br />Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說，無法把 index files 放在 apk 中直接讀取，一定要存放在 device or external storage 上，才能夠使用；或者是自己弄個虛擬目錄出來，不過，這會耗用過多的計憶體空間。<br /><br />我是選用把 index 放在 &#8216;src/res/raw&#8217; 底下，讓他變成 apk 的一部份，省去在網路上找個空間來放置 index 的問題，當要更新 index 時，就重編個 apk 叫使用者更新就好。<br /><br />在放 lucene index 時，如果你想用 compound format 的話，可以用底下的指令，把多個 index files 包裹成單一檔案 .cfs <br /><br /><pre class="brush: scala;">// run REPL with 'scala -cp luke-3.4.0_1-all.jar'<br /><br />import org.apache.lucene.store.FSDirectory<br />import org.apache.lucene.index._<br />import org.apache.lucene.analysis.standard._<br /><br />val source = FSDirectory.open(new java.io.File("source"))<br />val dest = FSDirectory.open(new java.io.File("dest"))<br /><br />// open source index<br />val reader = IndexReader.open(source)<br /><br />// create writer for compound index.<br />val analyzer = new StandardAnalyzer(org.apache.lucene.util.Version.LUCENE_34)<br />val writer = new org.apache.lucene.index.IndexWriter(dir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED)<br /><br />// force writer always use compound index format.<br />writer.getMergePolicy.asInstanceOf[LogByteSizeMergePolicy].setNoCFSRatio(1.0)<br /><br /><br />// add source index to dest index.<br />writer.addIndexes(reader)<br />writer.optimized<br />writer.close<br /><br />reader.close<br /></pre><br />接著，是把產生的 segment, segments_1, _0.cfs 拷到 src/res/raw 底下，讓這些檔案變成 .apk 的一部份。<br /><br /><br />接著，是要在第一次執行時，把這些 index 從 apk 中覆製到 SD 卡上或是機子上，這邊，我寫了個小工具來做這件事<br /><br /><pre class="brush: scala;">import android.content.Context<br />import android.os.Environment<br />import android.util.Log<br /><br />import com.bluetangstudio.android.disastermap.TaipeiDisasterApp.LogTag<br /><br />import org.apache.commons.io.FileUtils<br />import org.apache.lucene.store.{FSDirectory, Directory}<br /><br />import scala.collection.JavaConversions._<br />import java.io.File<br /><br />/**<br /> *  Helper class that search for lucene index directories on the device. The search order is<br /> *  external storage first then local storage. If lucene index does not exist on device, this<br /> *  class will copy the index from the apk to the device storage.<br /> *<br /> * @param context  the application context<br /> * @param path     the root folder name of the index directory to use and to look for.<br /> * @param source   the source of index resource to copy if index does not exist on the device.<br /> *                 format: Seq[(filename, resourceId)]<br /> */<br />case class LuceneOpenHelper(context: Context, path: String, source: Seq[Tuple2[String, Int]]) {<br /><br />    /**<br />     * create or open an Directory.<br />     */<br />    def open(): Option[Directory] = {<br />        val candidates = Seq(externalFolder, internalFolder).flatten<br /><br />        // find the folder with index in it.<br />        val folder = candidates.filter(f => f.exists() && f.list().length > 0).headOption<br />        val withIndex = folder.orElse(<br />            candidates.find(<br />                f => {<br />                    // ensure folder is available.<br />                    f.exists() || f.mkdirs() match {<br />                        // folder is not accessible<br />                        case false => false<br /><br />                        case _ => {<br />                            Log.d(LogTag, "Duplicating index from apk to %s...".format(f))<br />                            source.foreach(<br />                                s => {<br />                                    val is = context.getResources.openRawResource(s._2)<br />                                    try {<br />                                        FileUtils.copyInputStreamToFile(is, new File(f, s._1))<br />                                    } finally {<br />                                        is.close()<br />                                    }<br />                                }<br />                            )<br />                            true<br />                        }<br />                    }<br />                }<br />            )<br />        )<br /><br />        return withIndex.map(FSDirectory.open(_))<br />    }<br /><br />    private def externalFolder: Option[File] = {<br />        Environment.getExternalStorageState match {<br />            case Environment.MEDIA_MOUNTED => Option(context.getExternalFilesDir(path))<br />            case _ => None<br />        }<br />    }<br /><br />    private def internalFolder: Option[File] = {<br />        return Option(new File(context.getFilesDir, path))<br />    }<br /><br />}<br /></pre><br />最後，是在 *App 上加上這段<br /><br /><pre class="brush: scala;">object MyApp {<br />    private val INDEX_DIRECTORY = "idx"<br /><br />    private val INDEX_FILES = Seq(<br />        ("_0.cfs", R.raw.idx_0), <br />        ("segments", R.raw.segments), <br />        ("segments_1", R.raw.segments_1)<br />    )<br />}<br />class MyApp extends android.app.Application {<br /><br />    import MyApp._<br /><br />    private var _luceneSearcher: Option[IndexSearcher] = None<br /><br />    def luceneSearcher: Option[IndexSearcher] = {<br />        if (_luceneSearcher.isEmpty) {<br />            Log.d(LogTag, "Initializing new IndexSearcher...")<br />            _luceneSearcher = LuceneOpenHelper(this, INDEX_DIRECTORY, INDEX_FILES).open().map(new IndexSearcher(_))<br />        }<br />        _luceneSearcher<br />    }<br />   <br />    override def onLowMemory() {<br />        _luceneSearcher.foreach(s => s.close())<br />        _luceneSearcher = None<br />    }<br />}<br /></pre><br />這樣一來，就能在 Android 上面跑 lucene-core 了.</div>
 ]]></content>
   </entry>
   
