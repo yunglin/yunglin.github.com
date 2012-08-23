@@ -9,10 +9,10 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="看到 半路 分享 最近 幾間遊戲公司裁員 的新聞，不經讓我想到過去在矽谷流浪歲月所認知到
-的黑暗面，底下就是一個我親身看過的一個例子。
-許多年前，AE用三億美金買了一家flash game公司，當時我上 linkedin 看一下 CEO 的背景，一看，
-不得了了，我竟然在 linkedin &hellip;">
+  <meta name="description" content="很想寫這個主題很久了，雖然可能永遠也無法把道理完整的解釋清楚，不過，有個開頭總是好的。
+首先，先寫個嘴炮給非軟體業的人看，台灣名嘴大喊：「台灣現在要找到能殺出血路的產業，雲端計算是很
+好的機會」、「打造雲端大國，再造兆元產業」，政客名嘴喊喊口號就好，問題是，我們在這產業有什麼利
+機，能夠在 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,76 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/23/cloud-computing-and-rocket-science/">為什麼雲端產業在台灣行不通</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-23T11:26:00+08:00" pubdate data-updated="true">Aug 23<span>rd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>很想寫這個主題很久了，雖然可能永遠也無法把道理完整的解釋清楚，不過，有個開頭總是好的。</p>
+<p>首先，先寫個嘴炮給非軟體業的人看，台灣名嘴大喊：「台灣現在要找到能殺出血路的產業，雲端計算是很
+好的機會」、「打造雲端大國，再造兆元產業」，政客名嘴喊喊口號就好，問題是，我們在這產業有什麼利
+機，能夠在 <a class="reference external" href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010090268">落後歐美社會四百年</a> 的狀況下，在不懂數字管理下，一次追趕過這些差距，超英趕美？</p>
+<p>如果沒有確實的利基及施行方案， <strong>「打造雲端大國，再造兆元產業」</strong> 同樣也可以改寫成 「打造月球
+基地，開採外星綠能」、「打造火星計劃，一統太陽系」，後兩者講起來不是更威嗎？</p>
+<p>台灣有許多硬體公司在喊，雲端是未來的機會，問題是，雲端的目標是共享資源、是消減 IT 的支出，對硬
+體廠來說，是個產業危機，也是個大洗牌的機會，但是，對台灣整體來說，絕對是個不利的未來。至於某些
+公司開始喊，雲端業務已經佔公司營業而多少，我的看法是，把伺服器部門改個招牌，雲端營業額就大增了
+啊，問題是， <a class="reference external" href="http://www.wretch.cc/blog/JaguarCSIA/16236603">公司的總營收有成長嗎？</a></p>
+<p>講完了這些後，再講個小故事， 2010 年我回台灣前，公司同事問我，回台灣要做雲端嗎？我回，我不會
+在一個有 <strong>颱風、地震、洪水、土石流、及戰爭危機</strong> 的地方建資料中心。另外，台灣雖然是美國
+對亞洲網路的樞紐，但是台灣的網路流量費過高，就是另一個要面對的問題。已上幾點，就是台灣要做雲端
+資料中心地理環境上的外部問題。</p>
+<p>再來講到台灣軟體業自己內部的問題，做網路服務，同時能服務 <strong>十萬個用戶</strong> 是一個門坎， <strong>一百萬個用戶</strong>
+、 <strong>一千萬個用戶</strong> 、 <strong>一億個用戶</strong> 、 <strong>十億個用戶</strong> 都是不同的門坎，每跨過一階，整個
+系統架構跟考量的點都完全不同，十萬個用戶用 <a class="reference external" href="http://en.wikipedia.org/wiki/LAMP_(software_bundle)">LAMP</a> 一台就夠了，一百萬用戶，那就要開始做 server farm, cache 等，到了
+一千萬用戶，連 DB 都受不了用量，要找其它的解決方案( ex: <a class="reference external" href="http://en.wikipedia.org/wiki/Shard_(database_architecture)">shard</a> )，到上億用戶，你的客戶已
+經不會都是居住在同一地了，光解決 data locality 都是個大問題了，更不用講怎麼 deploy service</p>
+<p>台灣目前有超過百萬用戶的服務，大概就是 Yahoo、無名、痞客幫、PCHome，這四間了，除了這四間外，
+很少公司會有經營百萬人服務的經驗，問題是，台灣喊著要做雲端運算的，都不是這四間，而是剩下來沒有
+經營網路服務經驗的公司。</p>
+<p>為什麼這經驗很重要呢？因為，一個新架構的好壞，只有經過實際的流量摧殘才能知道，在這之前，一切只
+是工程師們用腦補的假設而已，腦補的假設越多，系統上線後要修改的地方越多，至於沒做過百萬人服務的
+工程師要怎麼用腦補來假設上億人服務的狀況，那就不是我能想像的了。</p>
+<p>美國最大的 Hosting Company <a class="reference external" href="http://dreamhost.com">DreamHost</a> 的創辦人 Sage Weil，在幾年前回去念博士，發展了
+<a class="reference external" href="http://www.ssrc.ucsc.edu/Papers/weil-osdi06.pdf">Ceph</a> 這套 distributed file system ，人家想要研究資料時，只要回 DreamHost 回去挖一挖 log 就
+有用不完的資料了，至於要驗證就更簡單了，只要把 5% 的用戶放到新架構上，就有用不完的資料可以用來
+發掘新架構的缺陷。</p>
+<p>這一點，是美國現有網路公司在跨足雲端服務的極大優勢；台灣的雲端廠商，如XX電信、XX研院、XX勢，跟本無
+法彌補這中間的差距，記得在某場 CloudTW 的會議中，某家台廠在展視他們的雲端 OS 時， <a class="reference external" href="http://pingyeh.blogspot.com/">葉博士</a> 問了一
+個問題就把這個雲端OS擊沉了，該雲端平台只能該台廠所提供的客制化OS，所有的系統 library 都是經過修改
+，不能自行更換的，於是 <a class="reference external" href="http://pingyeh.blogspot.com/">葉博士</a> 就問，「要是今天 PHP X.Y.Z 有個 security hole 那麼，他能不能
+自行補洞，還是要等台廠把整個環境更新才可把洞補上？」</p>
+<p>現實( physical) 的環境沒有優勢，在經營網路服務上，更是落後國外數十年，沒有人材、經驗上的優勢，
+這也就是為什麼 <strong>雲端產業在台灣行不通</strong> 的原因。</p></div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1541,558 +1611,6 @@ of Delivery,Targeting and Measuring Advertising over the Internet」(Patent No. 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/30/mongodb-dao/">Mongodb Scala DAO</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-30T11:50:00+08:00" pubdate data-updated="true">Apr 30<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>這篇文章將說說，我使用 MongoDB &amp; Cashbah 的一些心得，這程式的主架構是
-我從 <a class="reference external" href="https://github.com/aboisvert/simplistic">simplistic</a> 學來的。</p>
-<div class="section" id="the-abstract-dao">
-<h2>The Abstract DAO</h2>
-<p>底下是一個很簡單的 CRUD 的 MongoDB DAO. 在這邊，我們建立一個 DAO 時，我們會把這
-個 DAO 用的儲存空間 MongoCollection 傳進來，另外要注意的一點是，這個 MongoCollection 的
-WriteConcert 必需是 Strict 的。</p>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-<span class="line-number">38</span>
-<span class="line-number">39</span>
-<span class="line-number">40</span>
-<span class="line-number">41</span>
-<span class="line-number">42</span>
-<span class="line-number">43</span>
-<span class="line-number">44</span>
-<span class="line-number">45</span>
-<span class="line-number">46</span>
-<span class="line-number">47</span>
-<span class="line-number">48</span>
-<span class="line-number">49</span>
-<span class="line-number">50</span>
-<span class="line-number">51</span>
-<span class="line-number">52</span>
-<span class="line-number">53</span>
-<span class="line-number">54</span>
-<span class="line-number">55</span>
-<span class="line-number">56</span>
-<span class="line-number">57</span>
-<span class="line-number">58</span>
-<span class="line-number">59</span>
-<span class="line-number">60</span>
-<span class="line-number">61</span>
-<span class="line-number">62</span>
-<span class="line-number">63</span>
-<span class="line-number">64</span>
-<span class="line-number">65</span>
-<span class="line-number">66</span>
-<span class="line-number">67</span>
-<span class="line-number">68</span>
-<span class="line-number">69</span>
-<span class="line-number">70</span>
-<span class="line-number">71</span>
-<span class="line-number">72</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
-</span><span class="line"><span class="cm"> *  Base class for all DAO classes.</span>
-</span><span class="line"><span class="cm"> */</span>
-</span><span class="line"><span class="k">abstract</span> <span class="k">class</span> <span class="nc">AbstractDAO</span><span class="o">[</span><span class="kt">T</span>, <span class="kt">ID</span> <span class="k">&lt;:</span> <span class="kt">Serializable</span><span class="o">](</span><span class="k">protected</span><span class="o">[</span><span class="kt">locadz</span><span class="o">]</span> <span class="k">val</span> <span class="n">mongoCol</span><span class="k">:</span> <span class="kt">MongoCollection</span><span class="o">)</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">  <span class="cm">/** builder to turn mongodb object into model object */</span>
-</span><span class="line">  <span class="k">implicit</span> <span class="k">protected</span> <span class="k">val</span> <span class="n">builder</span><span class="k">:</span> <span class="kt">DBObject</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">T</span><span class="o">]</span>
-</span><span class="line">
-</span><span class="line">  <span class="cm">/** builder to turn model object into mongodb object */</span>
-</span><span class="line">  <span class="k">implicit</span> <span class="k">protected</span> <span class="k">val</span> <span class="n">extractor</span><span class="k">:</span> <span class="kt">T</span> <span class="o">=&gt;</span> <span class="nc">DBObject</span>
-</span><span class="line">
-</span><span class="line">  <span class="cm">/** this dao expects the underlying mongoCol would throw exception when error occurs. */</span>
-</span><span class="line">  <span class="n">require</span><span class="o">(</span><span class="n">mongoCol</span><span class="o">.</span><span class="n">getWriteConcern</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
-</span><span class="line">  <span class="n">require</span><span class="o">(</span><span class="n">mongoCol</span><span class="o">.</span><span class="n">getWriteConcern</span><span class="o">.</span><span class="n">getW</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="o">,</span> <span class="s">&quot;Write must be &gt;= 1, was %d&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">mongoCol</span><span class="o">.</span><span class="n">getWriteConcern</span><span class="o">.</span><span class="n">getW</span><span class="o">))</span>
-</span><span class="line">
-</span><span class="line">  <span class="cm">/** insert object into the underly*/</span>
-</span><span class="line">  <span class="k">def</span> <span class="n">insert</span><span class="o">(</span><span class="n">obj</span><span class="k">:</span> <span class="kt">T</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">ID</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">    <span class="k">try</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">val</span> <span class="n">dbObj</span><span class="k">:</span> <span class="kt">DBObject</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">(</span><span class="n">obj</span><span class="o">)</span>
-</span><span class="line">      <span class="k">val</span> <span class="n">res</span><span class="k">:</span> <span class="kt">WriteResult</span> <span class="o">=</span> <span class="n">mongoCol</span><span class="o">.</span><span class="n">insert</span><span class="o">(</span><span class="n">dbObj</span><span class="o">)</span>
-</span><span class="line">      <span class="nc">Right</span><span class="o">(</span><span class="n">dbObj</span><span class="o">.</span><span class="n">getAs</span><span class="o">[</span><span class="kt">ID</span><span class="o">](</span><span class="s">&quot;_id&quot;</span><span class="o">).</span><span class="n">get</span><span class="o">)</span>
-</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">MongoException</span>      <span class="o">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="k">new</span> <span class="nc">DataAccessException</span><span class="o">(</span><span class="n">e</span><span class="o">))</span>
-</span><span class="line">      <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">DataAccessException</span> <span class="o">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
-</span><span class="line">    <span class="o">}</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="n">save</span><span class="o">(</span><span class="n">obj</span><span class="k">:</span> <span class="kt">T</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">DataAccessException</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">    <span class="k">try</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">val</span> <span class="n">res</span> <span class="k">=</span> <span class="n">mongoCol</span><span class="o">.</span><span class="n">save</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">obj</span><span class="o">)</span>
-</span><span class="line">      <span class="nc">None</span>
-</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">MongoException</span>      <span class="o">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="k">new</span> <span class="nc">DataAccessException</span><span class="o">(</span><span class="n">e</span><span class="o">))</span>
-</span><span class="line">      <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">DataAccessException</span> <span class="o">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
-</span><span class="line">    <span class="o">}</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">ID</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">Option</span><span class="o">[</span><span class="kt">T</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">    <span class="k">try</span> <span class="o">{</span>
-</span><span class="line">      <span class="n">mongoCol</span><span class="o">.</span><span class="n">findOneByID</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
-</span><span class="line">        <span class="k">case</span> <span class="nc">None</span>        <span class="k">=&gt;</span> <span class="nc">Right</span><span class="o">(</span><span class="nc">None</span><span class="o">)</span>
-</span><span class="line">        <span class="k">case</span> <span class="nc">Some</span><span class="o">(</span><span class="n">dbObj</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">builder</span><span class="o">.</span><span class="n">apply</span><span class="o">(</span><span class="n">dbObj</span><span class="o">).</span><span class="n">right</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="nc">Option</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
-</span><span class="line">      <span class="o">}</span>
-</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">DataAccessException</span> <span class="o">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
-</span><span class="line">    <span class="o">}</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="n">delete</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">ID</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">DataAccessException</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">    <span class="k">try</span> <span class="o">{</span>
-</span><span class="line">      <span class="n">mongoCol</span><span class="o">.</span><span class="n">remove</span><span class="o">(</span><span class="nc">MongoDBObject</span><span class="o">(</span><span class="s">&quot;_id&quot;</span> <span class="o">-&gt;</span> <span class="n">id</span><span class="o">))</span>
-</span><span class="line">      <span class="nc">None</span>
-</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">MongoException</span> <span class="o">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="k">new</span> <span class="nc">DataAccessException</span><span class="o">(</span><span class="n">e</span><span class="o">))</span>
-</span><span class="line">    <span class="o">}</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="n">find</span><span class="o">[</span><span class="kt">T</span><span class="o">](</span><span class="n">dbObj</span><span class="k">:</span> <span class="kt">DBObject</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">builder</span><span class="k">:</span> <span class="o">(</span><span class="kt">DBObject</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">T</span><span class="o">])</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">Iterable</span><span class="o">[</span><span class="kt">T</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">try</span> <span class="o">{</span>
-</span><span class="line">      <span class="nc">Right</span><span class="o">(</span><span class="n">mongoCol</span><span class="o">.</span><span class="n">find</span><span class="o">(</span><span class="n">dbObj</span><span class="o">)</span>
-</span><span class="line">        <span class="o">.</span><span class="n">flatMap</span><span class="o">(</span><span class="n">found</span> <span class="k">=&gt;</span> <span class="o">{</span>
-</span><span class="line">          <span class="n">builder</span><span class="o">.</span><span class="n">apply</span><span class="o">(</span><span class="n">found</span><span class="o">).</span><span class="n">fold</span><span class="o">(</span>
-</span><span class="line">            <span class="n">e</span> <span class="k">=&gt;</span> <span class="k">throw</span> <span class="n">e</span><span class="o">,</span>
-</span><span class="line">            <span class="n">r</span> <span class="k">=&gt;</span> <span class="nc">Some</span><span class="o">(</span><span class="n">r</span><span class="o">))</span>
-</span><span class="line">        <span class="o">}).</span><span class="n">toStream</span><span class="o">)</span>
-</span><span class="line">
-</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">DataAccessException</span> <span class="o">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
-</span><span class="line">    <span class="o">}</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line"><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure><p>這邊有兩個需要被實作的東西</p>
-<ul class="simple">
-<li><cite>val builder: DBObject =&gt; Either[DataAccessException, T]</cite></li>
-<li><cite>val extractor: T =&gt; DBObject</cite></li>
-</ul>
-<p>而怎麼建立這兩個東西，就是全文的重點了。</p>
-</div>
-<div class="section" id="how-to-use-abstractdao">
-<h2>How to use AbstractDAO</h2>
-<p>先來看一個範例；實作上，在 UserDAO object 上，我們先把欄位的名稱及資料型態，一個個的定好</p>
-<ul class="simple">
-<li>&#8216;val Name = attribute(&quot;name&quot;, Conversion.String)`</li>
-<li>&#8216;val Email = attribute(&quot;email&quot;, Conversion.String)&#8217;</li>
-<li>&#8216;val CreateDate = attribute(&quot;ctime&quot;, Conversion.JodaDate)&#8217;</li>
-</ul>
-<p>而這個 attribute method 做的是，把資料名稱存起來，然後當這個 Attribute instance</p>
-<ul class="simple">
-<li>收到一個 DBObject 時，把對應的欄位取出來，並將值給轉成定義的格式</li>
-<li>收到一個 property value 時，把他轉成 (name -&gt; value) pair</li>
-</ul>
-<p>第一個用法的這個方式，用在從 <em>builder</em> 上面，一個個的把值從 DBObject 抓出來再來建立物件，
-第二個用法用在，把物件轉成 DBObject 時，及用在建立 query 時。</p>
-<div class="section" id="userdao">
-<h3>UserDAO 實作</h3>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-<span class="line-number">38</span>
-<span class="line-number">39</span>
-<span class="line-number">40</span>
-<span class="line-number">41</span>
-<span class="line-number">42</span>
-<span class="line-number">43</span>
-<span class="line-number">44</span>
-<span class="line-number">45</span>
-<span class="line-number">46</span>
-<span class="line-number">47</span>
-<span class="line-number">48</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">class</span> <span class="nc">UserDAO</span><span class="o">(</span><span class="n">mongoCol</span><span class="k">:</span> <span class="kt">MongoCollection</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">AbstractDAO</span><span class="o">[</span><span class="kt">User</span>, <span class="kt">String</span><span class="o">](</span><span class="n">mongoCol</span><span class="o">)</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">import</span> <span class="nn">UserDAO._</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">implicit</span> <span class="k">protected</span> <span class="k">val</span> <span class="n">builder</span><span class="k">:</span> <span class="o">(</span><span class="kt">DBObject</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">User</span><span class="o">]</span> <span class="k">=</span> <span class="nc">UserDAO</span><span class="o">.</span><span class="n">dbObjectToUser</span> <span class="k">_</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">implicit</span> <span class="k">protected</span> <span class="k">val</span> <span class="n">extractor</span><span class="k">:</span> <span class="o">(</span><span class="kt">User</span><span class="o">)</span> <span class="o">=&gt;</span> <span class="nc">DBObject</span> <span class="k">=</span> <span class="nc">UserDAO</span><span class="o">.</span><span class="n">userToDBObject</span> <span class="k">_</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="k">this</span><span class="o">(</span><span class="n">dbCol</span><span class="k">:</span> <span class="kt">DBCollection</span><span class="o">)</span> <span class="k">=</span> <span class="k">this</span><span class="o">(</span><span class="n">dbCol</span><span class="o">.</span><span class="n">asScala</span><span class="o">)</span>
-</span><span class="line">
-</span><span class="line"><span class="o">}</span>
-</span><span class="line">
-</span><span class="line"><span class="k">object</span> <span class="nc">UserDAO</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">import</span> <span class="nn">Attributes._</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">val</span> <span class="nc">Name</span> <span class="k">=</span> <span class="n">attribute</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">,</span> <span class="nc">Conversion</span><span class="o">.</span><span class="nc">String</span><span class="o">)</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">val</span> <span class="nc">Email</span> <span class="k">=</span> <span class="n">attribute</span><span class="o">(</span><span class="s">&quot;email&quot;</span><span class="o">,</span> <span class="nc">Conversion</span><span class="o">.</span><span class="nc">String</span><span class="o">)</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">val</span> <span class="nc">CreateDate</span> <span class="k">=</span> <span class="n">attribute</span><span class="o">(</span><span class="s">&quot;ctime&quot;</span><span class="o">,</span> <span class="nc">Conversion</span><span class="o">.</span><span class="nc">JodaDate</span><span class="o">)</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="n">dbObjectToUser</span><span class="o">(</span><span class="n">dbObj</span><span class="k">:</span> <span class="kt">DBObject</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">User</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">try</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="n">dbObj</span><span class="o">.</span><span class="n">getAs</span><span class="o">[</span><span class="kt">String</span><span class="o">](</span><span class="s">&quot;_id&quot;</span><span class="o">).</span><span class="n">get</span>
-</span><span class="line">
-</span><span class="line">      <span class="nc">Right</span><span class="o">(</span>
-</span><span class="line">        <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="n">id</span><span class="o">,</span>
-</span><span class="line">          <span class="nc">Name</span><span class="o">(</span><span class="n">dbObj</span><span class="o">),</span>
-</span><span class="line">          <span class="nc">Email</span><span class="o">(</span><span class="n">dbObj</span><span class="o">),</span>
-</span><span class="line">          <span class="nc">CreateDate</span><span class="o">(</span><span class="n">dbObj</span><span class="o">)</span>
-</span><span class="line">        <span class="o">)</span>
-</span><span class="line">      <span class="o">)</span>
-</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">case</span> <span class="n">e</span><span class="k">:</span> <span class="kt">DataAccessException</span> <span class="o">=&gt;</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span>
-</span><span class="line">    <span class="o">}</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">implicit</span> <span class="k">def</span> <span class="n">userToDBObject</span><span class="o">(</span><span class="n">user</span><span class="k">:</span> <span class="kt">User</span><span class="o">)</span><span class="k">:</span> <span class="kt">DBObject</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="nc">MongoDBObject</span><span class="o">(</span><span class="s">&quot;_id&quot;</span> <span class="o">-&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
-</span><span class="line">    <span class="n">ret</span> <span class="o">+=</span> <span class="nc">Name</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="n">externalId</span><span class="o">)</span>
-</span><span class="line">    <span class="n">ret</span> <span class="o">+=</span> <span class="nc">Email</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="n">verifiedId</span><span class="o">)</span>
-</span><span class="line">    <span class="n">ret</span> <span class="o">+=</span> <span class="nc">CreateDate</span><span class="o">(</span><span class="n">user</span><span class="o">.</span><span class="n">createDate</span><span class="o">)</span>
-</span><span class="line">    <span class="k">return</span> <span class="n">ret</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line"><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></div>
-<div class="section" id="attribute-conversion">
-<h3>Attribute &amp; Conversion 部份實作</h3>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-<span class="line-number">38</span>
-<span class="line-number">39</span>
-<span class="line-number">40</span>
-<span class="line-number">41</span>
-<span class="line-number">42</span>
-<span class="line-number">43</span>
-<span class="line-number">44</span>
-<span class="line-number">45</span>
-<span class="line-number">46</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">trait</span> <span class="nc">Attribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">]</span> <span class="o">{</span>
-</span><span class="line">  <span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span>
-</span><span class="line">  <span class="k">val</span> <span class="n">conversion</span><span class="k">:</span> <span class="kt">Conversion</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">protected</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">manifestA</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-</span><span class="line">  <span class="k">protected</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">manifestB</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
-</span><span class="line"><span class="o">}</span>
-</span><span class="line">
-</span><span class="line"><span class="k">trait</span> <span class="nc">RequiredAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">]</span> <span class="nc">extends</span> <span class="nc">Attribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Tuple2</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">    <span class="n">name</span> <span class="o">-&gt;</span> <span class="n">conversion</span><span class="o">.</span><span class="n">apply</span><span class="o">(</span><span class="n">value</span><span class="o">)</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">DBObject</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class="line">    <span class="n">value</span><span class="o">.</span><span class="n">getAs</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">name</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">b</span> <span class="k">=&gt;</span> <span class="n">conversion</span><span class="o">.</span><span class="n">unapply</span><span class="o">(</span><span class="n">b</span><span class="o">)).</span><span class="n">getOrElse</span><span class="o">(</span><span class="k">throw</span> <span class="k">new</span> <span class="nc">MissingRequiredAttributeException</span><span class="o">(</span><span class="n">name</span><span class="o">))</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line"><span class="o">}</span>
-</span><span class="line">
-</span><span class="line"><span class="k">def</span> <span class="n">attribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">](</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">dataType</span><span class="k">:</span> <span class="kt">Conversion</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">manifestA</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">manifestB</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">  <span class="k">new</span> <span class="nc">SingleValueRequiredAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">name</span><span class="o">,</span> <span class="n">dataType</span><span class="o">)</span>
-</span><span class="line"><span class="o">}</span>
-</span><span class="line">
-</span><span class="line">
-</span><span class="line"><span class="k">trait</span> <span class="nc">Conversion</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">{</span>
-</span><span class="line">  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">source</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">B</span>
-</span><span class="line">  <span class="k">def</span> <span class="n">unapply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span>
-</span><span class="line"><span class="o">}</span>
-</span><span class="line">
-</span><span class="line"><span class="k">object</span> <span class="nc">Conversion</span> <span class="o">{</span>
-</span><span class="line">  <span class="k">case</span> <span class="k">object</span> <span class="nc">String</span> <span class="k">extends</span> <span class="nc">Conversion</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">String</span><span class="o">]</span> <span class="o">{</span>
-</span><span class="line">    <span class="k">override</span> <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">source</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="n">source</span>
-</span><span class="line">    <span class="k">override</span> <span class="k">def</span> <span class="n">unapply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="n">value</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="cm">/**</span>
-</span><span class="line"><span class="cm">   * Conversion for DateTime to DateTime.</span>
-</span><span class="line"><span class="cm">   */</span>
-</span><span class="line">  <span class="k">object</span> <span class="nc">JodaDate</span> <span class="k">extends</span> <span class="nc">Conversion</span><span class="o">[</span><span class="kt">DateTime</span>, <span class="kt">DateTime</span><span class="o">]</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">    <span class="nc">RegisterJodaTimeConversionHelpers</span><span class="o">()</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">override</span> <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">source</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span><span class="k">:</span> <span class="kt">DateTime</span> <span class="o">=</span> <span class="n">source</span>
-</span><span class="line">    <span class="k">override</span> <span class="k">def</span> <span class="n">unapply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span><span class="k">:</span> <span class="kt">DateTime</span> <span class="o">=</span> <span class="n">value</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line"><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></div>
-</div>
-<div class="section" id="how-to-use-attributes-to-build-query">
-<h2>How to Use Attributes to Build Query</h2>
-<p>前面的 Attribute(s) 不只是用來產做 builder 及 extractor 用的，他們最好用的地方在於
-建立 query 時，如下</p>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">findByDateRange</span><span class="o">(</span><span class="n">start</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">,</span> <span class="n">end</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">User</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">  <span class="k">return</span> <span class="n">find</span><span class="o">(</span><span class="nc">CreateDate</span><span class="o">.</span><span class="n">name</span> <span class="nc">$gth</span> <span class="nc">CreateDate</span><span class="o">(</span><span class="n">start</span><span class="o">).</span><span class="n">_2</span>  <span class="nc">$lt</span> <span class="nc">CreateDate</span><span class="o">(</span><span class="n">range</span><span class="o">).</span><span class="n">_2</span><span class="o">)</span>
-</span><span class="line"><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure><p>這邊，我們可以看到用 Conversion 來描述資料型態的好處是，當你儲存的資料型態有變時，你不用去更
-改你的 MongoDB query ，欄位的名稱、資料型別的轉換，都被封裝起來，使用者在寫 Query 時，不用去
-記欄位的名稱，也不用去記這個欄位的型態是什麼， MongoDB 支不支援這個型態。</p>
-<p>第二個好處是， Casbah 本來只支援 java primitive type &amp; java.util.Date ，透過 Conversion ，
-我們可以支援任意的資料型態於 query 中，只要透過新的 Conversion 類別，我們就可以增加 MongoDB 可以
-支援的資料型態。</p>
-<p>例如，如果我們想增加對 <cite>java.net.URL</cite> 的支援，只要訂義以下的 Conversion 即可</p>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">case</span> <span class="k">object</span> <span class="nc">Url</span> <span class="k">extends</span> <span class="nc">Conversion</span><span class="o">[</span><span class="kt">URL</span>, <span class="kt">String</span><span class="o">]</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">override</span> <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">source</span><span class="k">:</span> <span class="kt">URL</span><span class="o">)</span> <span class="k">=</span> <span class="n">source</span><span class="o">.</span><span class="n">toExternalForm</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">override</span> <span class="k">def</span> <span class="n">unapply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">URL</span><span class="o">(</span><span class="n">value</span><span class="o">)</span>
-</span><span class="line"><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></div>
-<div class="section" id="appendix">
-<h2>Appendix:</h2>
-<div class="section" id="attribute-scala">
-<h3>Attribute.scala</h3>
-<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-<span class="line-number">38</span>
-<span class="line-number">39</span>
-<span class="line-number">40</span>
-<span class="line-number">41</span>
-<span class="line-number">42</span>
-<span class="line-number">43</span>
-<span class="line-number">44</span>
-<span class="line-number">45</span>
-<span class="line-number">46</span>
-<span class="line-number">47</span>
-<span class="line-number">48</span>
-<span class="line-number">49</span>
-<span class="line-number">50</span>
-<span class="line-number">51</span>
-<span class="line-number">52</span>
-<span class="line-number">53</span>
-<span class="line-number">54</span>
-<span class="line-number">55</span>
-<span class="line-number">56</span>
-<span class="line-number">57</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">package</span> <span class="nn">com.locadz.model.mongodb</span>
-</span><span class="line">
-</span><span class="line"><span class="k">import</span> <span class="nn">com.mongodb.DBObject</span>
-</span><span class="line"><span class="k">import</span> <span class="nn">com.mongodb.casbah._</span>
-</span><span class="line"><span class="k">import</span> <span class="nn">com.locadz.model.exception.MissingRequiredAttributeException</span>
-</span><span class="line">
-</span><span class="line"><span class="cm">/**</span>
-</span><span class="line"><span class="cm"> * Date: 2/20/12</span>
-</span><span class="line"><span class="cm"> */</span>
-</span><span class="line"><span class="k">object</span> <span class="nc">Attributes</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">trait</span> <span class="nc">Attribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">]</span> <span class="o">{</span>
-</span><span class="line">    <span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span>
-</span><span class="line">    <span class="k">val</span> <span class="n">conversion</span><span class="k">:</span> <span class="kt">Conversion</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">protected</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">manifestA</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">protected</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">manifestB</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span>
-</span><span class="line">
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">trait</span> <span class="nc">OptionalAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">]</span> <span class="nc">extends</span> <span class="nc">Attribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Tuple2</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Any</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">      <span class="k">val</span> <span class="n">v</span> <span class="k">=</span> <span class="n">value</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">conversion</span><span class="o">.</span><span class="n">apply</span><span class="o">(</span><span class="k">_</span><span class="o">)).</span><span class="n">getOrElse</span><span class="o">(</span><span class="kc">null</span><span class="o">)</span>
-</span><span class="line">      <span class="n">name</span> <span class="o">-&gt;</span> <span class="n">v</span>
-</span><span class="line">    <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">DBObject</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="n">value</span><span class="o">.</span><span class="n">getAs</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">name</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">b</span> <span class="k">=&gt;</span> <span class="n">conversion</span><span class="o">.</span><span class="n">unapply</span><span class="o">(</span><span class="n">b</span><span class="o">))</span>
-</span><span class="line">
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">trait</span> <span class="nc">RequiredAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">]</span> <span class="nc">extends</span> <span class="nc">Attribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="o">{</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">Tuple2</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">      <span class="n">name</span> <span class="o">-&gt;</span> <span class="n">conversion</span><span class="o">.</span><span class="n">apply</span><span class="o">(</span><span class="n">value</span><span class="o">)</span>
-</span><span class="line">    <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">    <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">DBObject</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span> <span class="o">{</span>
-</span><span class="line">      <span class="n">value</span><span class="o">.</span><span class="n">getAs</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">name</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">b</span> <span class="k">=&gt;</span> <span class="n">conversion</span><span class="o">.</span><span class="n">unapply</span><span class="o">(</span><span class="n">b</span><span class="o">)).</span><span class="n">getOrElse</span><span class="o">(</span><span class="k">throw</span> <span class="k">new</span> <span class="nc">MissingRequiredAttributeException</span><span class="o">(</span><span class="n">name</span><span class="o">))</span>
-</span><span class="line">    <span class="o">}</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">case</span> <span class="k">class</span> <span class="nc">SingleValueRequiredAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">](</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">conversion</span><span class="k">:</span> <span class="kt">Conversion</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">])(</span><span class="k">implicit</span> <span class="k">val</span> <span class="n">manifestA</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">manifestB</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">extends</span> <span class="nc">RequiredAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">case</span> <span class="k">class</span> <span class="nc">SingleValueOptionalAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">](</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">conversion</span><span class="k">:</span> <span class="kt">Conversion</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">])(</span><span class="k">implicit</span> <span class="k">val</span> <span class="n">manifestA</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">manifestB</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span>
-</span><span class="line">    <span class="k">extends</span> <span class="nc">OptionalAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="n">attribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">](</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">dataType</span><span class="k">:</span> <span class="kt">Conversion</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">manifestA</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">manifestB</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">    <span class="k">new</span> <span class="nc">SingleValueRequiredAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">name</span><span class="o">,</span> <span class="n">dataType</span><span class="o">)</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line">  <span class="k">def</span> <span class="n">optionalAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">](</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">dataType</span><span class="k">:</span> <span class="kt">Conversion</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">manifestA</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">manifestB</span><span class="k">:</span> <span class="kt">Manifest</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span> <span class="k">=</span> <span class="o">{</span>
-</span><span class="line">    <span class="k">new</span> <span class="nc">SingleValueOptionalAttribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">name</span><span class="o">,</span> <span class="n">dataType</span><span class="o">)</span>
-</span><span class="line">  <span class="o">}</span>
-</span><span class="line">
-</span><span class="line"><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure></div>
-</div></div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -2108,6 +1626,10 @@ WriteConcert 必需是 Strict 的。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/08/23/cloud-computing-and-rocket-science/">為什麼雲端產業在台灣行不通</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/08/23/corrupted-software-company/">關於遊戲公司裁員的感想</a>
       </li>
     
@@ -2121,10 +1643,6 @@ WriteConcert 必需是 Strict 的。</p>
     
       <li class="post">
         <a href="/blog/2012/06/27/pricing-error/">那些系統整合教我的事 &#8211; 資料錯誤</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/05/23/runtime-quality-metrics-series-3/">軟體品質指標系列(三)：軟體品質如何測量</a>
       </li>
     
   </ul>
