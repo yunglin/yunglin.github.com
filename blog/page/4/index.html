@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="花了三個禮拜，學習怎麼開發Android程式，在沒買開發機的狀況下，在模擬器上完成了我的第一個Android App - 台北積水地圖資料來源一樣是從台北市政府所來，原始資料檔可從『臺北市歷年積水紀錄圖』下載。我把資料檔的座標系轉換(TW67 -> WSG84)後， &hellip;">
+  <meta name="description" content="我用Scala有一年半左右，第一次看brianhsu介紹 case class ，就對 Scala 的簡潔著迷，當然，經過了一年半後，許多的面紗揭開後，Scala在與Java函式庫整合的小問題就跑出來了，接下來，我會寫寫怎麼用Jackson Json及Scala來設計一個Json &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/">Data Modeling With Jackson Json and Scala</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-15T17:59:00+08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+我用Scala有一年半左右，第一次看<a href="http://bone.twbbs.org.tw/blog/">brianhsu</a>介紹 case class ，就對 Scala 的簡潔著迷，當然，經過了一年半後，許多的面紗揭開後，Scala在與Java函式庫整合的小問題就跑出來了，接下來，我會寫寫怎麼用Jackson Json及Scala來設計一個Json WebService API的Model Objects.<br /><br /><h3>case class</h3><br />Scala的case class在經過Scala compiler轉換後，就會生成一個POJO，例如這樣一個簡單的case class<br /><pre class="brush: scala">case class Disaster(event: String)</pre><br />會被轉換成如下的Java Code<br /><pre class="brush: java">public class Disaster<br />    implements ScalaObject, Product, Serializable<br />{<br />    public String event()<br />    {<br />        return event;<br />    }<br />    public int hashCode()<br />    {<br />        return ScalaRunTime$.MODULE$._hashCode(this);<br />    }<br />    public String toString()<br />    {<br />        return ScalaRunTime$.MODULE$._toString(this);<br />    }<br />    public boolean equals(Object obj)<br />    {<br />        //removed<br />    }<br />    public Disaster(String event)<br />    {<br />        this.event = event;<br />        super();<br />        scala.Product.class.$init$(this);<br />    }<br />    private final String event;<br />}<br /></pre><br />這個POJO跟一般POJO的不同處在於<br /><ol><li>immutable object，沒有辦法去更改這物件的屬性</li><li>getter的命名不是Java通用的 getXxxx() 而是 xxxx()</li></ol><br />這在一般使用上，不是問題，反而是優點，然而，當於 Java binding framework 如 Jackson Json 或 JAXB 要做整合時，就變成問題了，原因在於，多數的 java binding frameworks 在將資料轉回Java Object時，多是呼叫沒代參數的default constructor，然後再呼叫setter(s)把物件的屬性傳進去。<br /><br />另一個問題則是，多數的java binding frameworks在偵側那些屬性是serializable時，要麻是用java annotation一個個屬性去標，要不然就是用 refection 去找 getXxxx() <br /><br />而好死不死的plain scala case class沒有辦法滿足上面兩個條件，因此，我們要想辦法繞過這兩個問題。第二個問題比較好解，只要在屬性上標上 @scala.reflect.BeanProperty ，Scala compiler就會自動幫你把你的屬性加上 getXxxx() 及 setXxxx(&#8230;)。<br /><br /><pre class="brush: scala">case class Disaster(@BeanProperty event: String)</pre><br />第一的問題，在Jackson Json的解法是用 @JsonCreator 去指定不代變數default constructor的替代品，然而，在這邊我們須要把每一個屬性的名稱，用 @JsonProperty(&#8220;xxx&#8221;) 標在 constructor 的參數上，這是因為，Java compiler在編譯時，會把 parameter 的名稱擦去，如 public Disaster(String event) 在經過編譯後的 bytecode 中只剩下 public Disaster(String p1)，因此我們須要用java annotation來強制幫參數取個名稱，這樣，當Jackson在把 Json String 轉成Object時，才知道該把那個json object的屬性對到java object的那個屬性之上。<br /><br /><pre class="brush: scala">case class Disaster @JsonCreator()(<br />    @BeanProperty @JsonProperty("event") event: String<br />)<br /></pre><br /><br /><hr /><br />當我們的Scala case class已經是Jackson Json Serializable後，我們要怎麼樣把scala case class object轉成json string再轉回來呢，請看底下的例子。<br /><br /><pre class="brush: scala">val disaster = new Disaster("88 typhoon")<br />val mapper = new org.codehaus.jackson.map.ObjectMapper()<br /><br />val json = mapper.writeValueAsString(disaster)<br />assert(json === """{"event": "88typhon"}"""}<br />  <br />val copy = mapper.readValue[Disaster](json, classOf[[Disaster])<br />assert(copy === disaster)<br /></pre><br />這邊我們會碰上Scala較Java語法上比較沒有那麼漂亮的地方，在Java裡，若是函式支援generic <t>且又有個Class<t>的參數，那麼，我們不用把<t>傳兩次進去這個函式，如<br /></t></t></t><br /><pre class="brush: java">Disaster copy = mapper.readValue(json, Disaster.class)<br /></pre><br />因此在Scala的這邊，我會寫個JsonSerializer來把 scala 這邊的語法弄漂亮些 <br /><br /><pre class="brush: scala">object JsonSerializer {<br />  private val mapper = new ObjectMapper<br /><br />  def fromJson[T &lt;: AnyRef](jsonString: String)(implicit m: Manifest[T]): T = {<br />    mapper.readValue(jsonString, m.erasure).asInstanceOf[T];<br />  }<br />}<br />// readValue the scala way.<br />val disaster = JsonSerializer.fromJson[Disaster](json)<br /></pre><br />最後，<code>@JsonCreator</code>不一定是要標在constructor上面，他也可以標在static method上面，這樣一來，可以讓你做到scala constructor無法做到的一些處理<br /><br /><pre class="brush: scala">case class Disaster(<br />    @BeanProperty event: String, <br />    location: Option[GeoPoint]) {<br />  <br />  /** helper method for jackson json */<br />  def getLocation = location.getOrElse(null)<br />}<br /><br />object Disaster {<br /><br />  @JsonCreator<br />  def newInstance(<br />    @Property("event") event: String,<br />    @Property("location") location: GeoPoint): Disaster = {<br />    <br />    val locationOption = if (location == null) {<br />       None<br />    } else {<br />       Some(location)<br />    } <br />    return new Disaster(event, locationOption)<br />  }<br />}<br /></pre>下一回，我們會看，如何讓Jackson Json能夠對多型的物件做處理</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -414,6 +451,10 @@ Having a good build system is like living in the heaven, and having a bad build 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/02/03/move-erp-to-cloud/">中小企業ERP系統上雲端？</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/08/23/cloud-computing-and-rocket-science/">為什麼雲端產業在台灣行不通</a>
       </li>
     
@@ -427,10 +468,6 @@ Having a good build system is like living in the heaven, and having a bad build 
     
       <li class="post">
         <a href="/blog/2012/07/11/spatial-search-with-lucene/">Spatial Search with Lucene</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/06/27/pricing-error/">那些系統整合教我的事 &#8211; 資料錯誤</a>
       </li>
     
   </ul>
@@ -479,7 +516,7 @@ alt="tumblr stats" style="border:none;"></a></section>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2012 -  -
+  Copyright &copy; 2013 -  -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
