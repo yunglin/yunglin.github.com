@@ -107,7 +107,7 @@ reading a large file (~10GB) from remote &hellip;">
 
   <div class="entry-content"><p>Last week, I was working on importing a large input file into the system. Part of the process involved with
 reading a large file (~10GB) from remote server and them sort the inputs locally.</p>
-<p>At that moment, I decided to give Scala&#8217;s new Future API a try. Within one day, I wrote a parallel external
+<p>At that moment, I decided to give Scala&#8217;s new <a class="reference external" href="http://docs.scala-lang.org/sips/pending/futures-promises.html">Future API</a> a try. Within one day, I wrote a parallel external
 merge sort that can</p>
 <blockquote>
 <ol class="arabic simple">
@@ -594,11 +594,11 @@ pool.</p>
 </span><span class="line"><span class="k">private</span> <span class="k">lazy</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">executionContext</span> <span class="k">=</span>
 </span><span class="line">  <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="nc">GLOBAL_THREAD_LIMIT</span><span class="o">))</span>
 </span><span class="line">
-</span><span class="line"><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">lines</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line"><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
 </span><span class="line">
 </span><span class="line">  <span class="c1">// open source stream</span>
 </span><span class="line">  <span class="k">val</span> <span class="n">soure</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
-</span><span class="line">  <span class="k">val</span> <span class="n">linesStream</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">lines</span><span class="o">)</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">linesStream</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">chunkSize</span><span class="o">)</span>
 </span><span class="line">  <span class="k">val</span> <span class="n">chunkCounter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
 </span><span class="line">
 </span><span class="line">  <span class="k">val</span> <span class="n">sortedFileDir</span> <span class="k">=</span> <span class="nc">Files</span><span class="o">.</span><span class="n">createTempDir</span><span class="o">()</span>
