@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="這篇的草稿躺在我的部絡格兩個月了，看來完成遙遙無期，所以先把屍體放出來好了要在美國求職，第一要務，就是先了解到，美國的求職市場是怎樣的環境。大多人在台灣的求職的方式，是上 104 找適合的工作，然後再寄信過去應徵工作；然而，很不幸的是，你把求職市場放大十倍，這種方式就變得不是很有效率了。首先， &hellip;">
+  <meta name="description" content="spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 editorial material 比不上 #rhapsody. 用 Rhapsody 時，因為 Rhapsody 內有十多位人員負責編排本週推薦的音樂， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/27/bravo-to-spotify-apps/">Bravo to Spotify Apps.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-27T16:14:00+08:00" pubdate data-updated="true">Mar 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 editorial material 比不上 #rhapsody. 用 Rhapsody 時，因為 Rhapsody 內有十多位人員負責編排本週推薦的音樂，還有客製化的播放清單及電台，所以訂閱 rhapsody 就像有 DJ 幫你找歌來聽。<br /><br />但是用 Spotify ，就只能夠聽，你已知的歌手， spotify 沒有一個好用的推薦功能可用。<br /><br />最近 spotify 的 gui client 開始可以放上第三方App的功能，馬上就把缺的地方補上，而且還更好。<br /><br />像是串入 last.fm 就有推薦清單可用，soundrop可以當線上DJ，TuneWiki可以看歌詞，歌詞還會照時間來跳到現在唱的句子；這證明了 Open API的威力，你有缺的地方，用 3rd party app 來補上，而且可以做的更好。<br /><br />其實 Rhapsody 內部早在 2005 已有這種 API ，我在 real.com 時就是做這一塊的，許多第三方的程式及硬體就是呼叫我們的API，如 sonos, sandisk sansa, 我自己也寫了隻程式給我的Nokia N82用，只是可惜不能放出來。<br /><br />Rhapsody 再不把 API 放出來，恐怕就連美國這塊市場都要開始敗退了&#8230;</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -425,43 +462,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-lazy-val/">Data Modeling With Jackson Json and Scala - Lazy Val</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-16T00:50:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個<br /><pre class="brush: java">public volatile int bitmap$0;</pre><br />若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object 中，所有的lazy val，都會仍是 null ，不會被初始化。<br /><br />這個問題，只有做好unit-testing可以避免，因為這個欄位是 public 的，所以不需要setter or constructor， Jackson 就可以直接把值設定進去，只用unit-test仔細檢查生成的，確定沒有預料之外的欄位被寫入到 json 中，才可以免去後來在 runtime 發生不可預料的問題。<br /><br />至於怎麼去除這欄位呢，只要在class上標上<code>@JsonIgnoreProperties({"bitmap$0"})</code>即可</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -479,6 +479,10 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/03/19/parallel-external-merge-sort/">parallel external merge sort</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/">為什麼 Kim DotCom/Mega 能夠提供免費的網路</a>
       </li>
     
@@ -492,10 +496,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
       <li class="post">
         <a href="/blog/2012/08/23/corrupted-software-company/">關於遊戲公司裁員的感想</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/19/introduction-to-actor-model/">[未完] Introduction to Actor Model</a>
       </li>
     
   </ul>

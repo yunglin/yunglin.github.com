@@ -9,8 +9,8 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="NOWNews 為紐西蘭提供免費光纖！盜版之王Kim Dotcom發豪語 現在，這位『網路頑童』再次放出讓人驚歎的承諾：為紐西蘭的每個人提供免費光纖服務。 引用 Dotcom 在 Twitter 上 的話就是：『The new Mega company will be based in
-NZ & &hellip;">
+  <meta name="description" content="Last week, I was working on importing a large input file into the system. Part of the process involved with
+reading a large file (~10GB) from remote &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,650 @@ NZ & &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/19/parallel-external-merge-sort/">Parallel External Merge Sort</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-19T21:43:00+08:00" pubdate data-updated="true">Mar 19<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Last week, I was working on importing a large input file into the system. Part of the process involved with
+reading a large file (~10GB) from remote server and them sort the inputs locally.</p>
+<p>At that moment, I decided to give Scala&#8217;s new Future API a try. Within one day, I wrote a parallel external
+merge sort that can</p>
+<blockquote>
+<ol class="arabic simple">
+<li>Read the file from remote server and split it into smaller chunks.</li>
+<li>Use in-memory quicksort to sort each chunk and then save chunks into files.</li>
+<li>Perform merge sort on the files generated in the previous step.</li>
+</ol>
+</blockquote>
+<p>The most amazing thing is that multiple threads could work on these tasks simultanously. While one thread is busy
+reading bytes from remote server, other threads would perform quicksort on the part that has already been read. Once,
+all of the data has been written to file system. Another thread will start to merge sort these files.</p>
+<p>Here is how I do it.</p>
+<div class="section" id="read-lines-from-inputstream">
+<h2>Read Lines From InputStream</h2>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">soure</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure><p>The above code will turn a <strong>InputStream</strong> into a <strong>Stream[String]</strong> , and then allow use to perform operation on it
+without having to fully read it into memory first. But still, this is a huge Stream. Because we are going to use
+in-memory sort, I need to split it into smaller pieces first.</p>
+<p>The following code will <strong>lift</strong> a Stream into a Stream of Stream. Again, this operation does not require read the whole
+original stream into memory. All the operation only happens logically.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Lift a Stream into a Stream of Stream. The size of each sub-stream is specified by the chunkSize</span>
+</span><span class="line"><span class="cm"> * @param stream        the origin stream.</span>
+</span><span class="line"><span class="cm"> * @param chunkSize     the size of each substream</span>
+</span><span class="line"><span class="cm"> * @tparam A</span>
+</span><span class="line"><span class="cm"> * @return              chunked stream of the original stream.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">lift</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">stream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">remaining</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">remaining</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">  <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="perform-quick-sort">
+<h2>Perform Quick Sort</h2>
+<p>After we have split <strong>InputStream</strong> into <strong>Streams</strong>, we can start to read each sub-stream into memory and perform
+quicksort on them.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">linesStream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line"><span class="k">val</span> <span class="n">chunkCounter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">sortedFileDir</span> <span class="k">=</span> <span class="nc">Files</span><span class="o">.</span><span class="n">createTempDir</span><span class="o">()</span>
+</span><span class="line"><span class="n">sortedFileDir</span><span class="o">.</span><span class="n">deleteOnExit</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// read source stream, read n entries into memory and save it to file in parallel.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">fileFutures</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="n">linesStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span>
+</span><span class="line">  <span class="n">s</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">chunk</span> <span class="k">=</span> <span class="n">chunkCounter</span><span class="o">.</span><span class="n">getAndIncrement</span>
+</span><span class="line">    <span class="nc">Future</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">sorted</span> <span class="k">=</span> <span class="n">s</span><span class="o">.</span><span class="n">sorted</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="s">&quot;%d&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">chunk</span> <span class="o">*</span> <span class="n">lines</span><span class="o">))</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">sorted</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">      <span class="n">ret</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}).</span><span class="n">toList</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="perform-merge-sort">
+<h2>Perform Merge Sort</h2>
+<p>Because I want to perform mergesort on all of results, I have to turn <strong>List[Future[File]]</strong> into <strong>Future[List[File]]</strong>
+first. So that I can instruct the <strong>Future</strong> to do merge sort once it has all the pieces.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+<span class="line-number">65</span>
+<span class="line-number">66</span>
+<span class="line-number">67</span>
+<span class="line-number">68</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">saveTmpFiles</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">fileFutures</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">ret</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="n">saveTmpFiles</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">files</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">var</span> <span class="n">merged</span> <span class="k">=</span> <span class="n">files</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">while</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">splited</span> <span class="k">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">tuple</span> <span class="k">=</span> <span class="n">splited</span><span class="o">.</span><span class="n">_1</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">splited</span><span class="o">.</span><span class="n">_2</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">val</span> <span class="n">m2</span> <span class="k">=</span> <span class="n">tuple</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">case</span> <span class="o">(</span><span class="n">f1</span><span class="o">,</span> <span class="n">f2</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">getName</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="n">f2</span><span class="o">.</span><span class="n">getName</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">val</span> <span class="n">source1</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">source2</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">          <span class="k">val</span> <span class="n">stream1</span> <span class="k">=</span> <span class="n">source1</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">          <span class="k">val</span> <span class="n">stream2</span> <span class="k">=</span> <span class="n">source2</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">          <span class="n">merge</span><span class="o">(</span><span class="n">stream1</span><span class="o">,</span> <span class="n">stream2</span><span class="o">).</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">          <span class="n">ret</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">          <span class="n">source1</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">          <span class="n">source2</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line">          <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">          <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">    <span class="n">merged</span> <span class="k">=</span> <span class="k">if</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">m2</span> <span class="o">:+</span> <span class="n">merged</span><span class="o">.</span><span class="n">last</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">m2</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="n">merged</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Merge two stream into one stream and remove duplicates from the result.</span>
+</span><span class="line"><span class="cm"> * @param streamA</span>
+</span><span class="line"><span class="cm"> * @param streamB</span>
+</span><span class="line"><span class="cm"> * @return</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">merge</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">streamA</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">streamB</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">ord</span><span class="k">:</span> <span class="kt">Ordering</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">b</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">streamA</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="n">streamB</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">if</span> <span class="o">(</span><span class="n">ord</span><span class="o">.</span><span class="n">compare</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">.</span><span class="n">tail</span><span class="o">,</span> <span class="n">streamB</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="give-this-method-a-pretty-face">
+<h2>Give this Method a Pretty Face.</h2>
+<p>So how does the method signature of this parallel external merge sort look like?</p>
+<p>In fact, it is quite simple. It takes an <strong>InputStream</strong> and returns a <strong>Future[File]</strong>. So that, everything
+happens asynchronously, nothing blocks the main thread. You can send an inputStream to this method, go to do other
+things first and then come back to wait for the result.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="limits-number-of-threads-running-at-the-same-time">
+<h2>Limits Number of Threads Running at the Same Time.</h2>
+<p>Because this parallel external mergesort is an IO and memory intense operations, we can not run too many of it
+simultaneously. We must put a constraint on the number of threads it can use at a time. Otherwise, we may receive
+OutOfMemoryError or having many threads writing to disk simultaneously.</p>
+<p>Also, this constraint must be a global constraint. No matter how many requests has been sent to this method at the
+same time, it should only use up-to <em>N</em> threads.</p>
+<p>Luckly, this is quite easy to do with Scala&#8217;s Future API. All we need to do is to provide a fixed size thread pool
+for this method. So that it won&#8217;t spawn new thread by itself, instead, it uses threads provided by this global thread
+pool.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * limits number of reading and sorting can be executed simultaneously. Because this is an IO</span>
+</span><span class="line"><span class="cm"> * bound operation, unless the inputstream is coming from a slow http connection, otherwise, 5</span>
+</span><span class="line"><span class="cm"> * is more than enough.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">val</span> <span class="nc">GLOBAL_THREAD_LIMIT</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="nc">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="o">.</span><span class="n">availableProcessors</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span class="line">  <span class="k">if</span> <span class="o">(</span><span class="n">ret</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="mi">5</span>
+</span><span class="line">  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">ret</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">private</span> <span class="k">lazy</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">executionContext</span> <span class="k">=</span>
+</span><span class="line">  <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="nc">GLOBAL_THREAD_LIMIT</span><span class="o">))</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="put-everything-alltogether">
+<h2>Put Everything Alltogether</h2>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+<span class="line-number">65</span>
+<span class="line-number">66</span>
+<span class="line-number">67</span>
+<span class="line-number">68</span>
+<span class="line-number">69</span>
+<span class="line-number">70</span>
+<span class="line-number">71</span>
+<span class="line-number">72</span>
+<span class="line-number">73</span>
+<span class="line-number">74</span>
+<span class="line-number">75</span>
+<span class="line-number">76</span>
+<span class="line-number">77</span>
+<span class="line-number">78</span>
+<span class="line-number">79</span>
+<span class="line-number">80</span>
+<span class="line-number">81</span>
+<span class="line-number">82</span>
+<span class="line-number">83</span>
+<span class="line-number">84</span>
+<span class="line-number">85</span>
+<span class="line-number">86</span>
+<span class="line-number">87</span>
+<span class="line-number">88</span>
+<span class="line-number">89</span>
+<span class="line-number">90</span>
+<span class="line-number">91</span>
+<span class="line-number">92</span>
+<span class="line-number">93</span>
+<span class="line-number">94</span>
+<span class="line-number">95</span>
+<span class="line-number">96</span>
+<span class="line-number">97</span>
+<span class="line-number">98</span>
+<span class="line-number">99</span>
+<span class="line-number">100</span>
+<span class="line-number">101</span>
+<span class="line-number">102</span>
+<span class="line-number">103</span>
+<span class="line-number">104</span>
+<span class="line-number">105</span>
+<span class="line-number">106</span>
+<span class="line-number">107</span>
+<span class="line-number">108</span>
+<span class="line-number">109</span>
+<span class="line-number">110</span>
+<span class="line-number">111</span>
+<span class="line-number">112</span>
+<span class="line-number">113</span>
+<span class="line-number">114</span>
+<span class="line-number">115</span>
+<span class="line-number">116</span>
+<span class="line-number">117</span>
+<span class="line-number">118</span>
+<span class="line-number">119</span>
+<span class="line-number">120</span>
+<span class="line-number">121</span>
+<span class="line-number">122</span>
+<span class="line-number">123</span>
+<span class="line-number">124</span>
+<span class="line-number">125</span>
+<span class="line-number">126</span>
+<span class="line-number">127</span>
+<span class="line-number">128</span>
+<span class="line-number">129</span>
+<span class="line-number">130</span>
+<span class="line-number">131</span>
+<span class="line-number">132</span>
+<span class="line-number">133</span>
+<span class="line-number">134</span>
+<span class="line-number">135</span>
+<span class="line-number">136</span>
+<span class="line-number">137</span>
+<span class="line-number">138</span>
+<span class="line-number">139</span>
+<span class="line-number">140</span>
+<span class="line-number">141</span>
+<span class="line-number">142</span>
+<span class="line-number">143</span>
+<span class="line-number">144</span>
+<span class="line-number">145</span>
+<span class="line-number">146</span>
+<span class="line-number">147</span>
+<span class="line-number">148</span>
+<span class="line-number">149</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">import</span> <span class="nn">com.google.common.io.Files</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">java.io.</span><span class="o">{</span><span class="nc">PrintWriter</span><span class="o">,</span> <span class="nc">File</span><span class="o">,</span> <span class="nc">InputStream</span><span class="o">}</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">java.util.concurrent.Executors</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">java.util.concurrent.atomic.AtomicInteger</span>
+</span><span class="line">
+</span><span class="line"><span class="k">import</span> <span class="nn">org.apache.commons.io.FileUtils</span>
+</span><span class="line">
+</span><span class="line"><span class="k">import</span> <span class="nn">scala.concurrent.</span><span class="o">{</span><span class="nc">ExecutionContext</span><span class="o">,</span> <span class="nc">Future</span><span class="o">}</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">scala.io.Source</span>
+</span><span class="line">
+</span><span class="line"><span class="k">object</span> <span class="nc">InputStreams</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * limits number of reading and sorting can be executed simultaneously. Because</span>
+</span><span class="line"><span class="cm"> * this is an IO bound operation, unless the inputstream is coming from a slow</span>
+</span><span class="line"><span class="cm"> * http connection, otherwise, 5 is more than enough.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">val</span> <span class="nc">GLOBAL_THREAD_LIMIT</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="nc">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="o">.</span><span class="n">availableProcessors</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span class="line">  <span class="k">if</span> <span class="o">(</span><span class="n">ret</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="mi">5</span>
+</span><span class="line">  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">ret</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">private</span> <span class="k">lazy</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">executionContext</span> <span class="k">=</span>
+</span><span class="line">  <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="nc">GLOBAL_THREAD_LIMIT</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">lines</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// open source stream</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">soure</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">linesStream</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">lines</span><span class="o">)</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">chunkCounter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">val</span> <span class="n">sortedFileDir</span> <span class="k">=</span> <span class="nc">Files</span><span class="o">.</span><span class="n">createTempDir</span><span class="o">()</span>
+</span><span class="line">  <span class="n">sortedFileDir</span><span class="o">.</span><span class="n">deleteOnExit</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// read source stream, read n entries into memory and save it to file in parallel.</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">saveTmpFiles</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span>
+</span><span class="line">    <span class="n">linesStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">s</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">chunk</span> <span class="k">=</span> <span class="n">chunkCounter</span><span class="o">.</span><span class="n">getAndIncrement</span>
+</span><span class="line">      <span class="nc">Future</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">sorted</span> <span class="k">=</span> <span class="n">s</span><span class="o">.</span><span class="n">sorted</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="s">&quot;%d&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">chunk</span> <span class="o">*</span> <span class="n">lines</span><span class="o">))</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">sorted</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">        <span class="n">ret</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}).</span><span class="n">toList</span>
+</span><span class="line">  <span class="o">)</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// perform merge sort.</span>
+</span><span class="line">  <span class="n">saveTmpFiles</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">files</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">var</span> <span class="n">merged</span> <span class="k">=</span> <span class="n">files</span>
+</span><span class="line">      <span class="k">while</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">splited</span> <span class="k">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">tuple</span> <span class="k">=</span> <span class="n">splited</span><span class="o">.</span><span class="n">_1</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">splited</span><span class="o">.</span><span class="n">_2</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">val</span> <span class="n">m2</span> <span class="k">=</span> <span class="n">tuple</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">          <span class="k">case</span> <span class="o">(</span><span class="n">f1</span><span class="o">,</span> <span class="n">f2</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">            <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">getName</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="n">f2</span><span class="o">.</span><span class="n">getName</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">            <span class="k">val</span> <span class="n">source1</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">            <span class="k">val</span> <span class="n">source2</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">            <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">            <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">              <span class="k">val</span> <span class="n">stream1</span> <span class="k">=</span> <span class="n">source1</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">              <span class="k">val</span> <span class="n">stream2</span> <span class="k">=</span> <span class="n">source2</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">              <span class="n">merge</span><span class="o">(</span><span class="n">stream1</span><span class="o">,</span> <span class="n">stream2</span><span class="o">).</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">              <span class="n">ret</span>
+</span><span class="line">            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">              <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">              <span class="n">source1</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">              <span class="n">source2</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line">              <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">              <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">            <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">          <span class="o">}</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">        <span class="n">merged</span> <span class="k">=</span> <span class="k">if</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">m2</span> <span class="o">:+</span> <span class="n">merged</span><span class="o">.</span><span class="n">last</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">m2</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">      <span class="n">merged</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Lift a Stream into a Stream of Stream. The size of each sub-stream is specified</span>
+</span><span class="line"><span class="cm"> * by the chunkSize.</span>
+</span><span class="line"><span class="cm"> *</span>
+</span><span class="line"><span class="cm"> * @param stream        the origin stream.</span>
+</span><span class="line"><span class="cm"> * @param chunkSize     the size of each substream</span>
+</span><span class="line"><span class="cm"> * @tparam A</span>
+</span><span class="line"><span class="cm"> * @return              chunked stream of the original stream.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">lift</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">stream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">remaining</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">remaining</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">  <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Merge two stream into one stream and remove duplicates from the result.</span>
+</span><span class="line"><span class="cm"> * @param streamA</span>
+</span><span class="line"><span class="cm"> * @param streamB</span>
+</span><span class="line"><span class="cm"> * @return</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">merge</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">streamA</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">streamB</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">ord</span><span class="k">:</span> <span class="kt">Ordering</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">b</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">streamA</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="n">streamB</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">if</span> <span class="o">(</span><span class="n">ord</span><span class="o">.</span><span class="n">compare</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">.</span><span class="n">tail</span><span class="o">,</span> <span class="n">streamB</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div></div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1396,114 +2040,6 @@ the middle attack</a> 直接把金鑰換掉。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/17/runtime-quality-metrics-series-1/">軟體品質指標系列(一)：為什麼軟體開發者需要在意軟體品質指標</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-17T11:01:00+08:00" pubdate data-updated="true">May 17<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>下個月受軟協的邀請，要跟國內發展雲端服務的廠商講一場演講，原本想講的是 Coda Hale 的 <a class="reference external" href="http://metrics.codahale.com/">metrics library</a> 的使用
-不過跟軟協的詹副秘書長聊了一聊後，決定把主題改成 <em>軟體品質</em> ，畢竟，太偏實作的東西，拿來給
-中高階主管聽，可能會睡著吧 XD</p>
-<div class="section" id="id1">
-<h2>軟體品質指標</h2>
-<p>一般我們在談軟體績效指標時，多講的是 <em>Lines Of Code</em>, <em>Number of Functions</em>, <em>Number of Classes</em>
-, <em>Cohesion and Coupling</em>, <em>Test Coverage</em> 等，但是，我今天想講的不是這些靜態分析所使
-用的指標，而是在程式運行時的評量指標 Production/Runtime Quality Metrics。</p>
-<p>這些執行階段的品質指標，讓我們了解程式在運行時的效率(performance),可靠度(reliability),可
-用度(availability),維護性(maintainability)等重要問題。</p>
-</div>
-<div class="section" id="id2">
-<h2>為什麼我們要在意這些指標</h2>
-<p>在台灣的許多軟體公司可能會問，為什麼我們需要在意這些指標？這些指標又不能拿來賣，客戶在意的
-是功能及價錢，開發客戶所需要的功能及尋找客戶，比做這些沒辦法拿來賣錢的東西重要多了。部份中小
-企業主認為，找案子跟找錢，才是軟體公司生存之道，軟體品質，是可以在案子簽下來後甚至結案時在去
-關心就好。</p>
-<img alt="/images/2012-05-17/busy_1.png" src="/images/2012-05-17/busy_1.png" />
-<img alt="/images/2012-05-17/busy_2.png" src="/images/2012-05-17/busy_2.png" />
-<p>但是，如果我們換一個角度來看，這些執行階段的指標，也可以是軟體功能的一環，可以當做銷售時期
-的功能及策略性武器來看；試想，若是有兩家小公司來賣你雲端服務，一間滿口都是功能可以做到OOXX
-，我們的服務是一條龍，什麼都做的到。另一間則是把功能的項目清楚的定意出來，同時也告訴你，他們
-的服務同時可以服務多少客戶、過去的停機維修週期是多少、他們可以保障的可靠度是多少；身為專案採
-購人員的你，會比較 <strong>信任</strong> 那一家的說法呢？</p>
-</div>
-<div class="section" id="id3">
-<h2>軟體賣的就是信任</h2>
-<p>軟體賣的就是信任，信任你的軟體，不會出問題把客戶的重要商業資料、商業流程、及客戶關係都一起毀掉。</p>
-<dl class="docutils">
-<dt>在過去單機板的軟體環境下，軟體賣的是</dt>
-<dd><ul class="first last simple">
-<li>信任軟體的功能有達到預期目標</li>
-<li>信任軟體不管跑多少次，都有一致性的輸出</li>
-<li>信任軟體的資料儲存是可靠的</li>
-<li>信任軟體的資料可以轉換到另一個昇級版本或其它軟體</li>
-</ul>
-</dd>
-</dl>
-<p>許多單機版或 2-Tier 的程式，經過時間的證明，他們的生命週期，甚至超過了開發者的生命週期，許多
-國內百貨零售業用的進銷存系統，目前仍是在用20年前的 DOS 系統就是一例。對客戶來說，他們對這些DOS版
-軟體的信任，超越了新科技所帶來的新功能需求。只要更新硬體，他們就可以繼續使用這些軟體，甚至是享受新
-硬體所帶來的更高效能。</p>
-<p><strong>信任</strong> 在雲端服務上，更是重要；在享受雲端服務的便利的另一方面，雲端服務的使用者更是需要放更多
-的信任在服務提供商上，除了上述的信任外，客戶還要信任你的服務可以隨著他的服務及你的服務一起增長。</p>
-<div class="section" id="slashdot-effect">
-<h3>Slashdot Effect</h3>
-<p>在談服務的可靠度時，我常用 <a class="reference external" href="http://en.wikipedia.org/wiki/Slashdot_effect">slashdot effect</a> 來當例子，換成中文就是「爆紅效應」，slashdot 是
-國外一個很大的科技網站，一登上 slashdot 的首頁，在短短的一天內，就可以帶來數十萬的訪問數及數萬的註
-冊會員，然而，爆紅後帶來的往往是個災難，許多的軟體在設計、佈建(deployment)時，並沒有考量到會有這麼
-大量的用戶，因此一爆紅後往往就是停機收場。</p>
-<p>overnight success turns into overnight disaster. 爆紅後，留下的是一些不滿意的負面記錄，
-讓客戶及潛在客戶，喪失了對服務的信任；在這個有 Google 等搜尋引擎的年代，過去的不良記錄將永久留
-存在網路上，因此，服務的 <a class="reference external" href="http://horicky.blogspot.com/2009/07/between-elasticity-and-scalability.html">可延展性(Scalability &amp; Elasticity)</a> 變的格外重要。</p>
-</div>
-</div>
-<div class="section" id="id5">
-<h2>如何建立信任</h2>
-<p>信任是個很抽象的名詞，你摸不到看不到，但是卻在人與人的往來，無形中慢慢的形成；信任就如宗教信仰一樣，
-你無法買到，無法強迫別人去接受、也無法一促即成，只能一步步的去建立。</p>
-<p>但是，我們是軟體工程師，我們信仰的是科學、是工程技術、是數字管理，我們善長的是透過科學的研究手法，
-一步步的去拆解問題，弄清楚什麼是已知的事實，什麼是未知的問題，面對問題，解決問題。</p>
-<p>販賣口號，不是軟體工程師所善長及該做的。</p>
-<img alt="/images/2012-05-17/we-can-do-it.jpg" src="/images/2012-05-17/we-can-do-it.jpg" />
-</div>
-<div class="section" id="id6">
-<h2>可量化的軟體品質就是信任的來源</h2>
-<p>對於中小企業及新進入雲端服務的公司，「可量化的軟體品質指標」就是可以最快取得客戶信任的方式；我希望
-在未來的某一天，我可以聽見台灣的軟體公司是這麼介紹自己的產品</p>
-<blockquote>
-我們的網路服務，能夠同時服務兩百萬上線用戶，提供 50ms 以下的即時性的反應，我們的服務，整合了超過
-40個內部及外部的開發商客戶，在過去的兩年內，我們提供了 99% availability ； Agile 的開發流程，
-讓我們有一致的服務更新週期，面對軟體 Bug 我們能夠提供客戶一個預計的修正時間，並準時將補丁上線。</blockquote>
-<p>待續&#8230;</p>
-</div></div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1519,6 +2055,10 @@ the middle attack</a> 直接把金鑰換掉。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/03/19/parallel-external-merge-sort/">parallel external merge sort</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/">為什麼 Kim DotCom/Mega 能夠提供免費的網路</a>
       </li>
     
@@ -1532,10 +2072,6 @@ the middle attack</a> 直接把金鑰換掉。</p>
     
       <li class="post">
         <a href="/blog/2012/08/23/corrupted-software-company/">關於遊戲公司裁員的感想</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/07/19/introduction-to-actor-model/">[未完] Introduction to Actor Model</a>
       </li>
     
   </ul>

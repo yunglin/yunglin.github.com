@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2013-02-04T19:58:08+08:00</updated>
+  <updated>2013-03-19T22:57:04+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,623 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[parallel external merge sort]]></title>
+    <link href="http://blog.yunglinho.com/blog/2013/03/19/parallel-external-merge-sort/"/>
+    <updated>2013-03-19T21:43:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2013/03/19/parallel-external-merge-sort</id>
+    <content type="html"><![CDATA[<p>Last week, I was working on importing a large input file into the system. Part of the process involved with
+reading a large file (~10GB) from remote server and them sort the inputs locally.</p>
+<p>At that moment, I decided to give Scala&#8217;s new Future API a try. Within one day, I wrote a parallel external
+merge sort that can</p>
+<blockquote>
+<ol class="arabic simple">
+<li>Read the file from remote server and split it into smaller chunks.</li>
+<li>Use in-memory quicksort to sort each chunk and then save chunks into files.</li>
+<li>Perform merge sort on the files generated in the previous step.</li>
+</ol>
+</blockquote>
+<p>The most amazing thing is that multiple threads could work on these tasks simultanously. While one thread is busy
+reading bytes from remote server, other threads would perform quicksort on the part that has already been read. Once,
+all of the data has been written to file system. Another thread will start to merge sort these files.</p>
+<p>Here is how I do it.</p>
+<div class="section" id="read-lines-from-inputstream">
+<h2>Read Lines From InputStream</h2>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">soure</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure><p>The above code will turn a <strong>InputStream</strong> into a <strong>Stream[String]</strong> , and then allow use to perform operation on it
+without having to fully read it into memory first. But still, this is a huge Stream. Because we are going to use
+in-memory sort, I need to split it into smaller pieces first.</p>
+<p>The following code will <strong>lift</strong> a Stream into a Stream of Stream. Again, this operation does not require read the whole
+original stream into memory. All the operation only happens logically.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Lift a Stream into a Stream of Stream. The size of each sub-stream is specified by the chunkSize</span>
+</span><span class="line"><span class="cm"> * @param stream        the origin stream.</span>
+</span><span class="line"><span class="cm"> * @param chunkSize     the size of each substream</span>
+</span><span class="line"><span class="cm"> * @tparam A</span>
+</span><span class="line"><span class="cm"> * @return              chunked stream of the original stream.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">lift</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">stream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">remaining</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">remaining</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">  <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="perform-quick-sort">
+<h2>Perform Quick Sort</h2>
+<p>After we have split <strong>InputStream</strong> into <strong>Streams</strong>, we can start to read each sub-stream into memory and perform
+quicksort on them.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">linesStream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line"><span class="k">val</span> <span class="n">chunkCounter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">sortedFileDir</span> <span class="k">=</span> <span class="nc">Files</span><span class="o">.</span><span class="n">createTempDir</span><span class="o">()</span>
+</span><span class="line"><span class="n">sortedFileDir</span><span class="o">.</span><span class="n">deleteOnExit</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// read source stream, read n entries into memory and save it to file in parallel.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">fileFutures</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="n">linesStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span>
+</span><span class="line">  <span class="n">s</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">chunk</span> <span class="k">=</span> <span class="n">chunkCounter</span><span class="o">.</span><span class="n">getAndIncrement</span>
+</span><span class="line">    <span class="nc">Future</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">sorted</span> <span class="k">=</span> <span class="n">s</span><span class="o">.</span><span class="n">sorted</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="s">&quot;%d&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">chunk</span> <span class="o">*</span> <span class="n">lines</span><span class="o">))</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">sorted</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">      <span class="n">ret</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}).</span><span class="n">toList</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="perform-merge-sort">
+<h2>Perform Merge Sort</h2>
+<p>Because I want to perform mergesort on all of results, I have to turn <strong>List[Future[File]]</strong> into <strong>Future[List[File]]</strong>
+first. So that I can instruct the <strong>Future</strong> to do merge sort once it has all the pieces.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+<span class="line-number">65</span>
+<span class="line-number">66</span>
+<span class="line-number">67</span>
+<span class="line-number">68</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">saveTmpFiles</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">fileFutures</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">ret</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="n">saveTmpFiles</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">files</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">var</span> <span class="n">merged</span> <span class="k">=</span> <span class="n">files</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">while</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">splited</span> <span class="k">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">tuple</span> <span class="k">=</span> <span class="n">splited</span><span class="o">.</span><span class="n">_1</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">splited</span><span class="o">.</span><span class="n">_2</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">val</span> <span class="n">m2</span> <span class="k">=</span> <span class="n">tuple</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">case</span> <span class="o">(</span><span class="n">f1</span><span class="o">,</span> <span class="n">f2</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">getName</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="n">f2</span><span class="o">.</span><span class="n">getName</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">val</span> <span class="n">source1</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">source2</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">          <span class="k">val</span> <span class="n">stream1</span> <span class="k">=</span> <span class="n">source1</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">          <span class="k">val</span> <span class="n">stream2</span> <span class="k">=</span> <span class="n">source2</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">          <span class="n">merge</span><span class="o">(</span><span class="n">stream1</span><span class="o">,</span> <span class="n">stream2</span><span class="o">).</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">          <span class="n">ret</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">          <span class="n">source1</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">          <span class="n">source2</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line">          <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">          <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">    <span class="n">merged</span> <span class="k">=</span> <span class="k">if</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">m2</span> <span class="o">:+</span> <span class="n">merged</span><span class="o">.</span><span class="n">last</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">m2</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="n">merged</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Merge two stream into one stream and remove duplicates from the result.</span>
+</span><span class="line"><span class="cm"> * @param streamA</span>
+</span><span class="line"><span class="cm"> * @param streamB</span>
+</span><span class="line"><span class="cm"> * @return</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">merge</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">streamA</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">streamB</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">ord</span><span class="k">:</span> <span class="kt">Ordering</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">b</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">streamA</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="n">streamB</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">if</span> <span class="o">(</span><span class="n">ord</span><span class="o">.</span><span class="n">compare</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">.</span><span class="n">tail</span><span class="o">,</span> <span class="n">streamB</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="give-this-method-a-pretty-face">
+<h2>Give this Method a Pretty Face.</h2>
+<p>So how does the method signature of this parallel external merge sort look like?</p>
+<p>In fact, it is quite simple. It takes an <strong>InputStream</strong> and returns a <strong>Future[File]</strong>. So that, everything
+happens asynchronously, nothing blocks the main thread. You can send an inputStream to this method, go to do other
+things first and then come back to wait for the result.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="limits-number-of-threads-running-at-the-same-time">
+<h2>Limits Number of Threads Running at the Same Time.</h2>
+<p>Because this parallel external mergesort is an IO and memory intense operations, we can not run too many of it
+simultaneously. We must put a constraint on the number of threads it can use at a time. Otherwise, we may receive
+OutOfMemoryError or having many threads writing to disk simultaneously.</p>
+<p>Also, this constraint must be a global constraint. No matter how many requests has been sent to this method at the
+same time, it should only use up-to <em>N</em> threads.</p>
+<p>Luckly, this is quite easy to do with Scala&#8217;s Future API. All we need to do is to provide a fixed size thread pool
+for this method. So that it won&#8217;t spawn new thread by itself, instead, it uses threads provided by this global thread
+pool.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * limits number of reading and sorting can be executed simultaneously. Because this is an IO</span>
+</span><span class="line"><span class="cm"> * bound operation, unless the inputstream is coming from a slow http connection, otherwise, 5</span>
+</span><span class="line"><span class="cm"> * is more than enough.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">val</span> <span class="nc">GLOBAL_THREAD_LIMIT</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="nc">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="o">.</span><span class="n">availableProcessors</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span class="line">  <span class="k">if</span> <span class="o">(</span><span class="n">ret</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="mi">5</span>
+</span><span class="line">  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">ret</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">private</span> <span class="k">lazy</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">executionContext</span> <span class="k">=</span>
+</span><span class="line">  <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="nc">GLOBAL_THREAD_LIMIT</span><span class="o">))</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="put-everything-alltogether">
+<h2>Put Everything Alltogether</h2>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+<span class="line-number">65</span>
+<span class="line-number">66</span>
+<span class="line-number">67</span>
+<span class="line-number">68</span>
+<span class="line-number">69</span>
+<span class="line-number">70</span>
+<span class="line-number">71</span>
+<span class="line-number">72</span>
+<span class="line-number">73</span>
+<span class="line-number">74</span>
+<span class="line-number">75</span>
+<span class="line-number">76</span>
+<span class="line-number">77</span>
+<span class="line-number">78</span>
+<span class="line-number">79</span>
+<span class="line-number">80</span>
+<span class="line-number">81</span>
+<span class="line-number">82</span>
+<span class="line-number">83</span>
+<span class="line-number">84</span>
+<span class="line-number">85</span>
+<span class="line-number">86</span>
+<span class="line-number">87</span>
+<span class="line-number">88</span>
+<span class="line-number">89</span>
+<span class="line-number">90</span>
+<span class="line-number">91</span>
+<span class="line-number">92</span>
+<span class="line-number">93</span>
+<span class="line-number">94</span>
+<span class="line-number">95</span>
+<span class="line-number">96</span>
+<span class="line-number">97</span>
+<span class="line-number">98</span>
+<span class="line-number">99</span>
+<span class="line-number">100</span>
+<span class="line-number">101</span>
+<span class="line-number">102</span>
+<span class="line-number">103</span>
+<span class="line-number">104</span>
+<span class="line-number">105</span>
+<span class="line-number">106</span>
+<span class="line-number">107</span>
+<span class="line-number">108</span>
+<span class="line-number">109</span>
+<span class="line-number">110</span>
+<span class="line-number">111</span>
+<span class="line-number">112</span>
+<span class="line-number">113</span>
+<span class="line-number">114</span>
+<span class="line-number">115</span>
+<span class="line-number">116</span>
+<span class="line-number">117</span>
+<span class="line-number">118</span>
+<span class="line-number">119</span>
+<span class="line-number">120</span>
+<span class="line-number">121</span>
+<span class="line-number">122</span>
+<span class="line-number">123</span>
+<span class="line-number">124</span>
+<span class="line-number">125</span>
+<span class="line-number">126</span>
+<span class="line-number">127</span>
+<span class="line-number">128</span>
+<span class="line-number">129</span>
+<span class="line-number">130</span>
+<span class="line-number">131</span>
+<span class="line-number">132</span>
+<span class="line-number">133</span>
+<span class="line-number">134</span>
+<span class="line-number">135</span>
+<span class="line-number">136</span>
+<span class="line-number">137</span>
+<span class="line-number">138</span>
+<span class="line-number">139</span>
+<span class="line-number">140</span>
+<span class="line-number">141</span>
+<span class="line-number">142</span>
+<span class="line-number">143</span>
+<span class="line-number">144</span>
+<span class="line-number">145</span>
+<span class="line-number">146</span>
+<span class="line-number">147</span>
+<span class="line-number">148</span>
+<span class="line-number">149</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">import</span> <span class="nn">com.google.common.io.Files</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">java.io.</span><span class="o">{</span><span class="nc">PrintWriter</span><span class="o">,</span> <span class="nc">File</span><span class="o">,</span> <span class="nc">InputStream</span><span class="o">}</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">java.util.concurrent.Executors</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">java.util.concurrent.atomic.AtomicInteger</span>
+</span><span class="line">
+</span><span class="line"><span class="k">import</span> <span class="nn">org.apache.commons.io.FileUtils</span>
+</span><span class="line">
+</span><span class="line"><span class="k">import</span> <span class="nn">scala.concurrent.</span><span class="o">{</span><span class="nc">ExecutionContext</span><span class="o">,</span> <span class="nc">Future</span><span class="o">}</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">scala.io.Source</span>
+</span><span class="line">
+</span><span class="line"><span class="k">object</span> <span class="nc">InputStreams</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * limits number of reading and sorting can be executed simultaneously. Because</span>
+</span><span class="line"><span class="cm"> * this is an IO bound operation, unless the inputstream is coming from a slow</span>
+</span><span class="line"><span class="cm"> * http connection, otherwise, 5 is more than enough.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">val</span> <span class="nc">GLOBAL_THREAD_LIMIT</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="nc">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="o">.</span><span class="n">availableProcessors</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span class="line">  <span class="k">if</span> <span class="o">(</span><span class="n">ret</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="mi">5</span>
+</span><span class="line">  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">ret</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">private</span> <span class="k">lazy</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">executionContext</span> <span class="k">=</span>
+</span><span class="line">  <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="nc">GLOBAL_THREAD_LIMIT</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">lines</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// open source stream</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">soure</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">linesStream</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">lines</span><span class="o">)</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">chunkCounter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">val</span> <span class="n">sortedFileDir</span> <span class="k">=</span> <span class="nc">Files</span><span class="o">.</span><span class="n">createTempDir</span><span class="o">()</span>
+</span><span class="line">  <span class="n">sortedFileDir</span><span class="o">.</span><span class="n">deleteOnExit</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// read source stream, read n entries into memory and save it to file in parallel.</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">saveTmpFiles</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span>
+</span><span class="line">    <span class="n">linesStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">s</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">chunk</span> <span class="k">=</span> <span class="n">chunkCounter</span><span class="o">.</span><span class="n">getAndIncrement</span>
+</span><span class="line">      <span class="nc">Future</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">sorted</span> <span class="k">=</span> <span class="n">s</span><span class="o">.</span><span class="n">sorted</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="s">&quot;%d&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">chunk</span> <span class="o">*</span> <span class="n">lines</span><span class="o">))</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">sorted</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">        <span class="n">ret</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}).</span><span class="n">toList</span>
+</span><span class="line">  <span class="o">)</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// perform merge sort.</span>
+</span><span class="line">  <span class="n">saveTmpFiles</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">files</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">var</span> <span class="n">merged</span> <span class="k">=</span> <span class="n">files</span>
+</span><span class="line">      <span class="k">while</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">splited</span> <span class="k">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">tuple</span> <span class="k">=</span> <span class="n">splited</span><span class="o">.</span><span class="n">_1</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">splited</span><span class="o">.</span><span class="n">_2</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">val</span> <span class="n">m2</span> <span class="k">=</span> <span class="n">tuple</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">          <span class="k">case</span> <span class="o">(</span><span class="n">f1</span><span class="o">,</span> <span class="n">f2</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">            <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">getName</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="n">f2</span><span class="o">.</span><span class="n">getName</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">            <span class="k">val</span> <span class="n">source1</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">            <span class="k">val</span> <span class="n">source2</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">            <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">            <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">              <span class="k">val</span> <span class="n">stream1</span> <span class="k">=</span> <span class="n">source1</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">              <span class="k">val</span> <span class="n">stream2</span> <span class="k">=</span> <span class="n">source2</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">              <span class="n">merge</span><span class="o">(</span><span class="n">stream1</span><span class="o">,</span> <span class="n">stream2</span><span class="o">).</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">              <span class="n">ret</span>
+</span><span class="line">            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">              <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">              <span class="n">source1</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">              <span class="n">source2</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line">              <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">              <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">            <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">          <span class="o">}</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">        <span class="n">merged</span> <span class="k">=</span> <span class="k">if</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">m2</span> <span class="o">:+</span> <span class="n">merged</span><span class="o">.</span><span class="n">last</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">m2</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">      <span class="n">merged</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Lift a Stream into a Stream of Stream. The size of each sub-stream is specified</span>
+</span><span class="line"><span class="cm"> * by the chunkSize.</span>
+</span><span class="line"><span class="cm"> *</span>
+</span><span class="line"><span class="cm"> * @param stream        the origin stream.</span>
+</span><span class="line"><span class="cm"> * @param chunkSize     the size of each substream</span>
+</span><span class="line"><span class="cm"> * @tparam A</span>
+</span><span class="line"><span class="cm"> * @return              chunked stream of the original stream.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">lift</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">stream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">remaining</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">remaining</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">  <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Merge two stream into one stream and remove duplicates from the result.</span>
+</span><span class="line"><span class="cm"> * @param streamA</span>
+</span><span class="line"><span class="cm"> * @param streamB</span>
+</span><span class="line"><span class="cm"> * @return</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">merge</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">streamA</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">streamB</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">ord</span><span class="k">:</span> <span class="kt">Ordering</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">b</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">streamA</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="n">streamB</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">if</span> <span class="o">(</span><span class="n">ord</span><span class="o">.</span><span class="n">compare</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">.</span><span class="n">tail</span><span class="o">,</span> <span class="n">streamB</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[為什麼 Kim DotCom/Mega 能夠提供免費的網路]]></title>
@@ -2935,16 +3552,6 @@ Touch Event，或者是其它程式或者是系統底層的事件，如 Intent �
     <id>http://blog.yunglinho.com/blog/2012/03/27/-service-how-to-debian-ize-your-web-application</id>
     <content type="html"><![CDATA[<div class='post'>
 在布建一個Web Application時，用.war來佈屬服務，算是最沒有效率的一種方式，因為，這樣無法把web container所需要的設定檔一起佈建出去，同時，也無法板本控製你的應用程式；本文接下來會敘述，如何用maven & jetty & debian來佈屬你的Web Application。<br /><br />首先，先講講我的需求，我的需求如下<br /><ul><li>Web Application的版本必需能夠簡單被管理，要能簡單的就知道目前安裝的版本，並且輕鬆的昇級到新版</li><li>Web Application被佈建時，要連Web Container及設定擋包在一起</li><li>Debian Box開關機時，要能自動開關Web Container</li></ul><br />這些需求，我是靠 unix-maven-plugin ，幫我把我的 web application 包成一個 .deb 來做到的，包成 .deb 的好處是，在 debian 上可以簡單的安裝，若是公司有架 debian package repository, 那麼，打個 apt-get install <app> 就可以安裝或昇級到最新版，同時間，可以透過 debian 安裝的機制，來把些 script 掛入 rc.*<br /><br />由於 unix-maven-plugin 已被原作者遺棄，所以需要從 <a href="https://github.com/yunglin/unix-maven-plugin">github</a>下載並安裝後人修改過的版本。<br /><br />然後依<a href="#appendix">附錄</a>的方式，增修你的設定檔，需要增修的檔案有<br /><ul><li>pom.xml: 加入 unix-maven-plugin 及服務的名稱及PORT</li><li>src/main/unix/resources/default/${service.user} : 給 jetty 用的 default 設定值，在這邊你可以修改 JAVA_OPTIONS 及 NO_START</li><li>src/main/unix/resources/etc/jetty.conf</li><li>src/main/unix/resources/etc/start.conf</li><li>src/main/unix/resources/scripts/${service.user} : 給 debian 用的 init script</li><li>src/main/unix/resources/scripts/post-install post-remove pre-install pre-remove : debian 在安裝及昇級 .deb 時會跑的 script</li></ul><br />將這些檔案設定好後，在 debian 的機器上打 mvn package deploy ,就可以自動生成 .deb 的檔案，並且上傳到你的 maven repository 上去，如果貴公司有架 debian package repository　的話，還可以加一段程式碼把 .deb 傳到 debian package repository 去。<br /><br />接著，打 dpkg -i xxxx.deb 就可以把你的 web application 當成一個 debian service 安裝到你的 debain machine 上去。<br /><br />查詢目前安裝的板本則是打 dpkg -l xxxx 即可<br /><br /><pre class="brush: shell;">||/ Name           Version        Description<br />+++-==============-==============-============================================<br />ii  backend       1.2.0-20120327.143115          backend<br /></pre><br /><br /><a name="appendix"><h3>附錄</h3></a><br /><br />把底下的這段，加入你的 pom.xml <br /><br /><pre class="brush: xml;"><project xmlns="http://maven.apache.org/POM/4.0.0" <br />         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" <br />         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0<br />         http://maven.apache.org/xsd/maven-4.0.0.xsd"><br />  <modelversion>4.0.0</modelVersion><br />  <groupid>com.locadz</groupId><br />  <artifactid>backend</artifactId><br />  <packaging>war</packaging><br />  <description>backend</description><br />  <version>1.2.0-SNAPSHOT</version><br />  <name>backend</name><br />  <properties><br />    <version.maven.unix.plugin>1.0-alpha-6.1</version.maven.unix.plugin><br />    <version.jetty>7.4.5.v20110725</version.jetty><br /><br />    <service.name>Locadz Backend</service.name><br />    <service.home>/var/lib/bluetang/locadz-backend</service.home><br />    <service.user>locadz-backend</service.user><br />    <service.port>9080</service.port><br />  </properties><br />  <profiles><br />    <profile><br />      <id>debian-package</id><br />      <activation><br />        <os><br />          <family>unix</family><br />          <name>linux</name><br />        </os><br />      </activation><br />      <build><br />        <plugins><br />          <plugin><br />            <artifactid>maven-resources-plugin</artifactId><br />            <version>2.5</version><br />            <executions><br />              <execution><br />                <id>copy-resources</id><br />                <!-- here the phase you need --><br />                <phase>process-resources</phase><br />                <goals><br />                  <goal>copy-resources</goal><br />                </goals><br />                <configuration><br />                  <outputdirectory>${basedir}/target</outputDirectory><br />                  <resources><br />                    <resource><br />                      <directory>src/main/unix</directory><br />                      <targetpath>unix</targetPath><br />                      <includes><br />                        <include>**/*</include><br />                      </includes><br />                      <filtering>true</filtering><br />                    </resource><br />                  </resources><br />                </configuration><br />              </execution><br />            </executions><br />          </plugin><br /><br />          <!-- build .deb --><br />          <plugin><br />            <groupid>org.mortbay.jetty.toolchain</groupId><br />            <artifactid>unix-maven-plugin</artifactId><br />            <version>${version.maven.unix.plugin}</version><br />            <extensions>true</extensions><br />            <executions><br />              <execution><br />                <phase>package</phase><br />                <goals><br />                  <goal>package-deb-attached</goal><br />                </goals><br />              </execution><br />            </executions><br />            <configuration><br />              <!-- debug mode should be always enable on this plugin. cause the info it<br />                  provided is not sufficient when things goes wrong. Also, it does not<br />                  take the maven standard debug flag '-X'.<br />              --><br />              <debug>true</debug><br />              <contact>yho@bluetangstudio.com</contact><br />              <contactemail>yho@bluetangstudio.com</contactEmail><br />              <defaults><br />                <fileattributes><br />                  <user>${service.user}</user><br />                  <group>adm</group><br />                </fileAttributes><br />                <directoryattributes><br />                  <user>${service.user}</user><br />                  <group>adm</group><br />                </directoryAttributes><br />              </defaults><br />              <deb><br />                <section>bluetang</section><br />                <priority>extra</priority><br />              </deb><br />              <assembly><br /><br />                <!-- extract jetty first --><br />                <extract-artifact><br />                  <artifact>org.eclipse.jetty:jetty-distribution:zip</artifact><br />                  <to>${service.home}</to><br />                  <pattern>/jetty-distribution-${version.jetty}(.*)</pattern><br />                  <replacement>$1</replacement><br />                  <excludes><br />                    <!-- Exclude all default contexts and web application, no need for them --><br />                    <exclude>*/contexts/**</exclude><br />                    <exclude>*/contexts-available/**</exclude><br />                    <exclude>*/webapps/**</exclude><br />                    <exclude>*/javadoc/**</exclude><br />                    <exclude>*/LICENSES/**</exclude><br />                    <exclude>*/logs/**</exclude><br />                    <exclude>**/win32/**</exclude><br />                  </excludes><br />                </extract-artifact><br />                <!-- put war file on the top of jetty --><br />                <copyfile><br />                  <path>${project.build.directory}/${project.build.finalName}.${project.packaging}<br />                  </path><br />                  <tofile>${service.home}/webapps/ROOT.war</toFile><br />                </copyFile><br />                <copyfile><br />                  <path>${basedir}/target/unix/resources/default/${service.user}</path><br />                  <todir>/etc/default</toDir><br />                </copyFile><br />                <copydirectory><br />                  <from>${basedir}/target/unix/resources/etc</from><br />                  <to>/etc/bluetang/${service.user}</to><br />                </copyDirectory><br />                <copyfile><br />                  <path>${basedir}/target/unix/scripts/${service.user}</path><br />                  <todir>/etc/init.d</toDir><br />                  <attributes><br />                    <mode>0754</mode><br />                    <user>${service.user}</user><br />                    <group>admin</group><br />                  </attributes><br />                </copyFile><br />              </assembly><br />            </configuration><br />          </plugin><br />        </plugins><br />      </build><br /><br />    </profile><br />  </profiles><br /><br />  <dependencies><br />    <!-- because of a bug in unix-maven-plugin, it can not pickup dependency from<br />                   plguin-dependencies. As a result, we put jetty-distribution here.<br />            --><br />    <dependency><br />      <groupid>org.eclipse.jetty</groupId><br />      <artifactid>jetty-distribution</artifactId><br />      <version>${version.jetty}</version><br />      <type>zip</type><br />      <!-- SC-57: dirty hack to excludes all child dependencies --><br />      <exclusions><br />        <exclusion><br />          <groupid>*</groupId><br />          <artifactid>*</artifactId><br />        </exclusion><br />      </exclusions><br />    </dependency><br />  </dependencies><br /></project><br /></pre><br />然後把下面這塊存成 src/main/unix/resources/default/${service.user}<br /><br /><pre class="brush: shell;"># Defaults for jetty see /etc/${service.user}/jetty for more<br /><br /># change to 0 to allow Jetty to start<br />NO_START=0<br /><br /># change to 'no' or uncomment to use the default setting in /etc/default/rcS<br />VERBOSE=yes<br /><br /># Run Jetty as this user ID (default: jetty)<br /># Set this to an empty string to prevent Jetty from starting automatically<br />JETTY_USER=${service.user}<br /><br /># Listen to connections from this network host<br /># Use 0.0.0.0 as host to accept all connections.<br /># Uncomment to restrict access to localhost<br />#JETTY_HOST=$(uname -n)<br />JETTY_HOST=0.0.0.0<br /><br /># The network port used by Jetty<br />JETTY_PORT=${service.port}<br /><br /># Timeout in seconds for the shutdown of all webapps<br />#JETTY_SHUTDOWN=30<br /><br /># Additional arguments to pass to Jetty<br />#JETTY_ARGS=<br /><br /># Extra options to pass to the JVM<br />JAVA_OPTIONS="-Xmx256m -Djava.awt.headless=true -Duser.timezone=UTC"<br /><br /># Home of Java installation.<br />#JAVA_HOME=<br /><br /># The first existing directory is used for JAVA_HOME (if JAVA_HOME is not<br /># defined in /etc/default/jetty). Should contain a list of space separated directories.<br />#JDK_DIRS="/usr/lib/jvm/default-java /usr/lib/jvm/java-6-sun"<br /><br /># Java compiler to use for translating JavaServer Pages (JSPs). You can use all<br /># compilers that are accepted by Ant's build.compiler property.<br />#JSP_COMPILER=jikes<br /><br /># Jetty uses a directory to store temporary files like unpacked webapps<br />JETTY_TMP=/var/cache/bluetang/jetty<br /><br /># Jetty uses a config file to setup its boot classpath<br />JETTY_START_CONFIG=/etc/bluetang/${service.user}/start.config<br /><br /># Default for number of days to keep old log files in /var/log/jetty/<br />#LOGFILE_DAYS=14<br /></pre><br /><br />然後把下面這塊存成 src/main/unix/resources/ect/jetty.conf<br /><br /><pre class="brush: shell;"># list of jetty configuration and property files<br />/var/lib/bluetang/${service.user}/etc/jetty-logging.xml<br /></pre><br /><br />然後把下面這塊存成 src/main/unix/resources/etc/start.conf<br /><br /><pre class="brush: shell;"># This file controls what file are to be put on classpath or command line.<br />#<br /># Format is as follows:<br /># Each line contains entry for one JAR file.<br /># Format of line:<br />#<br />#  SUBJECT [ [!] CONDITION [AND|OR] ]*<br />#<br /># where SUBJECT:<br />#   ends with ".class" is the Main class to run.<br />#   ends with ".xml" is a configuration file for the command line<br />#   ends with "/" is a directory from which to add all jar and zip files.<br />#   ends with "/*" is a directory from which to add all unconsidered jar and zip files.<br />#   ends with "/**" is a directory from which to recursively add all unconsidered jar and zip files.<br />#   Containing = are used to assign system properties.<br />#   all other subjects are treated as files to be added to the classpath.<br />#<br /># Subjects may include system properties with $(propertyname) syntax.<br />#<br /># Files starting with "/" are considered absolute, all others are relative to<br /># the home directory.<br />#<br /># CONDITION is one of:<br />#   always<br />#   never<br />#   available classname        # true if class on classpath<br />#   property name              # true of set<br />#   java OPERATOR version      # java version compared to literal<br />#   nargs OPERATOR number      # number of command line args compared to literal<br />#   OPERATOR := one of "<",">","<=",">=","==","!="<br />#<br /># CONDITIONS can be combined with AND OR or !, with AND being the assume<br /># operator for a list of CONDITIONS.<br /># Classpath operations are evaluated on the fly, so once a class or jar is<br /># added to the classpath, subsequent available conditions will see that class.<br />#<br /><br />$(jetty.class.path)                              always<br />$(jetty.lib)/**                                  exists $(jetty.lib)<br /><br />jetty.home=/var/lib/bluetang/${service.user}                      always<br /><br /># The main class to run<br />org.mortbay.xml.XmlConfiguration.class<br /><br /># The default configuration files<br />$(jetty.home)/etc/jetty.xml                      nargs == 0<br /><br />/usr/share/java/servlet-api-2.5.jar<br />/usr/share/java/slf4j-api.jar<br /><br /># Optional stuff for libjetty-extra-java<br />/usr/share/java/gnumail.jar<br />/usr/share/java/activation.jar<br />/usr/share/java/ant.jar<br /><br /># Set the jetty classpath<br />/usr/share/jetty/lib/**<br /><br /># Add a resources directory if it is there<br />$(jetty.home)/resources/<br /><br /></pre><br /><br /><br />然後把下面這塊存成 src/main/unix/scripts/${service.user}<br /><br /><pre class="brush: shell;">#!/bin/bash  <br />### BEGIN INIT INFO<br /># Provides:          ${service.user}<br /># Required-Start:<br /># Required-Stop:<br /># Default-Start:     2 3 4 5<br /># Default-Stop:      0 1 6<br /># Short-Description: Start daemon at boot time<br /># Description:       Enable service provided by daemon.<br />### END INIT INFO<br />#<br /># Startup script for jetty under *nix systems (it works under NT/cygwin too).<br />#<br /># Configuration files<br />#<br /># /etc/default/${service.user}<br />#   If it exists, this is read at the start of script. It may perform any <br />#   sequence of shell commands, like setting relevant environment variables.<br />#<br /># /etc/bluetang/${service.user}/jetty.conf<br />#   If found, and no configurations were given on the command line,<br />#   the file will be used as this script's configuration. <br />#   Each line in the file may contain:<br />#     - A comment denoted by the pound (#) sign as first non-blank character.<br />#     - The path to a regular file, which will be passed to jetty as a <br />#       config.xml file.<br />#     - The path to a directory. Each *.xml file in the directory will be<br />#       passed to jetty as a config.xml file.<br />#<br />#   The files will be checked for existence before being passed to jetty.<br />#<br /># $JETTY_HOME/etc/jetty.xml<br />#   If found, used as this script's configuration file, but only if<br />#   /etc/bluetang/${service.user}/jetty.conf was not present. See above.<br />#   <br /># Configuration variables<br />#<br /># JAVA<br />#   Command to invoke Java. If not set, java (from the PATH) will be used.<br />#<br /># JAVA_OPTIONS<br />#   Extra options to pass to the JVM<br />#<br /># JETTY_HOME<br />#   Where Jetty is installed. If not set, the script will try go<br />#   guess it by first looking at the invocation path for the script,<br />#   and then by looking in standard locations as $HOME/opt/jetty<br />#   and /opt/jetty. The java system property "jetty.home" will be<br />#   set to this value for use by configure.xml files, f.e.:<br />#<br />#    <arg><systemproperty name="jetty.home" default="."/>/webapps/jetty.war</Arg><br />#<br /># JETTY_PORT<br />#   Override the default port for Jetty servers. If not set then the<br />#   default value in the xml configuration file will be used. The java<br />#   system property "jetty.port" will be set to this value for use in<br />#   configure.xml files. For example, the following idiom is widely<br />#   used in the demo config files to respect this property in Listener<br />#   configuration elements:<br />#<br />#    <set name="Port"><systemproperty name="jetty.port" default="8080"/></Set><br />#<br />#   Note: that the config file could ignore this property simply by saying:<br />#<br />#    <set name="Port">8080</Set><br />#<br /># JETTY_RUN<br />#   Where the jetty.pid file should be stored. It defaults to the<br />#   first available of /var/run, /usr/var/run, and /tmp if not set.<br />#  <br /># JETTY_PID<br />#   The Jetty PID file, defaults to $JETTY_RUN/jetty.pid<br />#   <br /># JETTY_ARGS<br />#   The default arguments to pass to jetty.<br />#<br /># JETTY_USER<br />#   if set, then used as a username to run the server as<br />#<br />JETTY_HOME=${service.home}<br />JETTY_USER=${service.user}<br />JETTY_PID=$JETTY_RUN/${service.user}.pid<br />usage()<br />{<br />    echo "Usage: ${0##*/} [-d] {start|stop|run|restart|check|supervise} [ CONFIGS ... ] "<br />    exit 1<br />}<br /><br />[ $# -gt 0 ] || usage<br /><br /><br />##################################################<br /># Some utility functions<br />##################################################<br />findDirectory()<br />{<br />  local L OP=$1<br />  shift<br />  for L in "$@"; do<br />    [ "$OP" "$L" ] || continue<br />    printf %s "$L"<br />    break<br />  done<br />}<br /><br />running()<br />{<br />  local PID=$(cat "$1" 2>/dev/null) || return 1<br />  kill -0 "$PID" 2>/dev/null<br />}<br /><br />readConfig()<br />{<br />  (( DEBUG )) && echo "Reading $1.."<br />  source "$1"<br />}<br /><br /><br /><br />##################################################<br /># Get the action & configs<br />##################################################<br />CONFIGS=()<br />NO_START=0<br />DEBUG=0<br /><br />while [[ $1 = -* ]]; do<br />  case $1 in<br />    -d) DEBUG=1 ;;<br />  esac<br />  shift<br />done<br />ACTION=$1<br />shift<br /><br />##################################################<br /># See if there's a default configuration file<br />##################################################<br />if [ -f /etc/default/${service.user} ] ; then<br />  . /etc/default/${service.user}<br />fi<br /><br /><br />##################################################<br /># Set tmp if not already set.<br />##################################################<br />TMPDIR=${TMPDIR:-/tmp}<br /><br />##################################################<br /># Jetty's hallmark<br />##################################################<br />JETTY_INSTALL_TRACE_FILE="etc/jetty.xml"<br /><br /><br />##################################################<br /># Try to determine JETTY_HOME if not set<br />##################################################<br />if [ -z "$JETTY_HOME" ] <br />then<br />  JETTY_SH=$0<br />  case "$JETTY_SH" in<br />    /*)   ;;<br />    ./*)  ;;<br />    *)    JETTY_SH=./$JETTY_SH ;;<br />  esac<br />  JETTY_HOME=${JETTY_SH%/*/*}<br /><br />  if [ ! -f "${JETTY_SH%/*/*}/$JETTY_INSTALL_TRACE_FILE" ]<br />  then<br />    JETTY_HOME=<br />  fi<br />fi<br /><br /><br /><br />##################################################<br /># if no JETTY_HOME, search likely locations.<br />##################################################<br />if [ -z "$JETTY_HOME" ] ; then<br />  STANDARD_LOCATIONS=(<br />        "/usr/share"<br />        "/usr/share/java"<br />        "${HOME}"<br />        "${HOME}/src"<br />        "${HOME}/opt"<br />        "/opt"<br />        "/java"<br />        "/usr/local"<br />        "/usr/local/share"<br />        "/usr/local/share/java"<br />        "/home"<br />        )<br />  JETTY_DIR_NAMES=(<br />        "jetty-7"<br />        "jetty7"<br />        "jetty-7.*"<br />        "jetty"<br />        "Jetty-7"<br />        "Jetty7"<br />        "Jetty-7.*"<br />        "Jetty"<br />        )<br /><br />  for L in "${STANDARD_LOCATIONS[@]}"<br />  do<br />    for N in "${JETTY_DIR_NAMES[@]}"<br />    do<br />      POSSIBLE_JETTY_HOME=("$L/"$N)<br />      if [ ! -d "$POSSIBLE_JETTY_HOME" ]<br />      then<br />        # Not a directory. skip.<br />        unset POSSIBLE_JETTY_HOME<br />      elif [ ! -f "$POSSIBLE_JETTY_HOME/$JETTY_INSTALL_TRACE_FILE" ]<br />      then<br />        # Trace file not found. skip.<br />        unset POSSIBLE_JETTY_HOME<br />      else<br />        # Good hit, Use it<br />        JETTY_HOME=$POSSIBLE_JETTY_HOME<br />        # Break out of JETTY_DIR_NAMES loop<br />        break<br />      fi<br />    done<br />    if [ -n "$POSSIBLE_JETTY_HOME" ]<br />    then<br />      # We have found our JETTY_HOME<br />      # Break out of STANDARD_LOCATIONS loop<br />      break<br />    fi<br />  done<br />fi<br /><br /><br />##################################################<br /># No JETTY_HOME yet? We're out of luck!<br />##################################################<br />if [ -z "$JETTY_HOME" ]; then<br />  echo "** ERROR: JETTY_HOME not set, you need to set it or install in a standard location"<br />  exit 1<br />fi<br /><br />cd "$JETTY_HOME"<br />JETTY_HOME=$PWD<br /><br /><br />#####################################################<br /># Check that jetty is where we think it is<br />#####################################################<br />if [ ! -r "$JETTY_HOME/$JETTY_INSTALL_TRACE_FILE" ]<br />then<br />  echo "** ERROR: Oops! Jetty doesn't appear to be installed in $JETTY_HOME"<br />  echo "** ERROR:  $JETTY_HOME/$JETTY_INSTALL_TRACE_FILE is not readable!"<br />  exit 1<br />fi<br /><br />##################################################<br /># Try to find this script's configuration file,<br /># but only if no configurations were given on the<br /># command line.<br />##################################################<br />if [ -z "$JETTY_CONF" ] <br />then<br />  if [ -f /etc/bluetang/${service.user}/jetty.conf ]<br />  then<br />     JETTY_CONF=/etc/bluetang/${service.user}/jetty.conf<br />  elif [ -f "${JETTY_HOME}/etc/jetty.conf" ]<br />  then<br />     JETTY_CONF="${JETTY_HOME}/etc/jetty.conf"<br />  fi<br />fi<br /><br />##################################################<br /># Get the list of config.xml files from jetty.conf<br />##################################################<br />if [ -z "$CONFIGS" ] && [ -f "$JETTY_CONF" ] && [ -r "$JETTY_CONF" ]<br />then<br />  while read -r CONF<br />  do<br />    if expr "$CONF" : '#' >/dev/null ; then<br />      continue<br />    fi<br /><br />    if [ -d "$CONF" ]<br />    then<br />      # assume it's a directory with configure.xml files<br />      # for example: /etc/jetty.d/<br />      # sort the files before adding them to the list of CONFIGS<br />      for file in "$CONF/"*.xml<br />      do<br />        if [ -r "$FILE" ] && [ -f "$FILE" ]<br />        then<br />          CONFIGS+=("$FILE")<br />        else<br />          echo "** WARNING: Cannot read '$FILE' specified in '$JETTY_CONF'"<br />        fi<br />      done<br />    else<br />      # assume it's a command line parameter (let start.jar deal with its validity)<br />      CONFIGS+=("$CONF")<br />    fi<br />  done < "$JETTY_CONF"<br />fi<br /><br />#####################################################<br /># Find a location for the pid file<br />#####################################################<br />if [ -z "$JETTY_RUN" ]<br />then<br />  JETTY_RUN=$(findDirectory -w /var/run /usr/var/run /tmp)<br />fi<br /><br />#####################################################<br /># Find a PID for the pid file<br />#####################################################<br />if [ -z "$JETTY_PID" ]<br />then<br />  JETTY_PID="$JETTY_RUN/jetty.pid"<br />fi<br /><br />##################################################<br /># Setup JAVA if unset<br />##################################################<br />if [ -z "$JAVA" ]<br />then<br />  JAVA=$(which java)<br />fi<br /><br />if [ -z "$JAVA" ]<br />then<br />  echo "Cannot find a Java JDK. Please set either set JAVA or put java (>=1.5) in your PATH." 2>&2<br />  exit 1<br />fi<br /><br />#####################################################<br /># See if JETTY_PORT is defined<br />#####################################################<br />if [ "$JETTY_PORT" ]<br />then<br />  JAVA_OPTIONS+=("-Djetty.port=$JETTY_PORT")<br />fi<br /><br />#####################################################<br /># See if JETTY_LOGS is defined<br />#####################################################<br />if [ "$JETTY_LOGS" ]<br />then<br />  JAVA_OPTIONS+=("-Djetty.logs=$JETTY_LOGS")<br />fi<br /><br />#####################################################<br /># Are we running on Windows? Could be, with Cygwin/NT.<br />#####################################################<br />case "`uname`" in<br />CYGWIN*) PATH_SEPARATOR=";";;<br />*) PATH_SEPARATOR=":";;<br />esac<br /><br /><br />#####################################################<br /># Add jetty properties to Java VM options.<br />#####################################################<br />JAVA_OPTIONS+=("-Djetty.home=$JETTY_HOME" "-Djava.io.tmpdir=$TMPDIR")<br /><br />[ -f "$JETTY_HOME/etc/start.config" ] && JAVA_OPTIONS=("-DSTART=$JETTY_HOME/etc/start.config" "${JAVA_OPTIONS[@]}")<br /><br />#####################################################<br /># This is how the Jetty server will be started<br />#####################################################<br /><br />JETTY_START=$JETTY_HOME/start.jar<br />[ ! -f "$JETTY_START" ] && JETTY_START=$JETTY_HOME/lib/start.jar<br /><br />START_INI=$(dirname $JETTY_START)/start.ini<br />[ -r "$START_INI" ] || START_INI=""<br /><br />RUN_ARGS=(${JAVA_OPTIONS[@]} -jar "$JETTY_START" $JETTY_ARGS "${CONFIGS[@]}")<br />RUN_CMD=("$JAVA" ${RUN_ARGS[@]})<br /><br />#####################################################<br /># Comment these out after you're happy with what <br /># the script is doing.<br />#####################################################<br />if (( DEBUG ))<br />then<br />  echo "JETTY_HOME     =  $JETTY_HOME"<br />  echo "JETTY_CONF     =  $JETTY_CONF"<br />  echo "JETTY_RUN      =  $JETTY_RUN"<br />  echo "JETTY_PID      =  $JETTY_PID"<br />  echo "JETTY_ARGS     =  $JETTY_ARGS"<br />  echo "CONFIGS        =  ${CONFIGS[*]}"<br />  echo "JAVA_OPTIONS   =  ${JAVA_OPTIONS[*]}"<br />  echo "JAVA           =  $JAVA"<br />  echo "RUN_CMD        =  ${RUN_CMD}"<br />fi<br /><br />##################################################<br /># Do the action<br />##################################################<br />case "$ACTION" in<br />  start)<br />    echo -n "Starting ${service.name}: "<br /><br />    if (( NO_START )); then<br />      echo "Not starting ${service.user} - NO_START=1";<br />      exit<br />    fi<br /><br /><br />    if type start-stop-daemon > /dev/null 2>&1<br />    then<br />      unset CH_USER<br />      if [ -n "$JETTY_USER" ]<br />      then<br />        CH_USER="-c$JETTY_USER"<br />      fi<br />      if start-stop-daemon -S -p"$JETTY_PID" $CH_USER -d"$JETTY_HOME" -b -m -a "$JAVA" -- "${RUN_ARGS[@]}" --daemon<br />      then<br />        sleep 1<br />        if running "$JETTY_PID"<br />        then<br />          echo "OK"<br />        else<br />          echo "FAILED"<br />        fi<br />      fi<br /><br />    else<br /><br />      if [ -f "$JETTY_PID" ]<br />      then<br />        if running $JETTY_PID<br />        then<br />          echo "Already Running!"<br />          exit 1<br />        else<br />          # dead pid file - remove<br />          rm -f "$JETTY_PID"<br />        fi<br />      fi<br /><br />      if [ "$JETTY_USER" ]<br />      then<br />        touch "$JETTY_PID"<br />        chown "$JETTY_USER" "$JETTY_PID"<br />        # FIXME: Broken solution: wordsplitting, pathname expansion, arbitrary command execution, etc.<br />        su - "$JETTY_USER" -c "<br />          ${RUN_CMD[*]} --daemon &<br />          disown \$!<br />          echo \$! > '$JETTY_PID'"<br />      else<br />        "${RUN_CMD[@]}" &<br />        disown $!<br />        echo $! > "$JETTY_PID"<br />      fi<br /><br />      echo "STARTED ${service.name} `date`"<br />    fi<br /><br />    ;;<br /><br />  stop)<br />    echo -n "Stopping ${service.name}: "<br />    if type start-stop-daemon > /dev/null 2>&1; then<br />      start-stop-daemon -K -p"$JETTY_PID" -d"$JETTY_HOME" -a "$JAVA" -s HUP<br /><br />      TIMEOUT=30<br />      while running "$JETTY_PID"; do<br />        if (( TIMEOUT-- == 0 )); then<br />          start-stop-daemon -K -p"$JETTY_PID" -d"$JETTY_HOME" -a "$JAVA" -s KILL<br />        fi<br /><br />        sleep 1<br />      done<br /><br />      rm -f "$JETTY_PID"<br />      echo OK<br />    else<br />      PID=$(cat "$JETTY_PID" 2>/dev/null)<br />      kill "$PID" 2>/dev/null<br /><br />      TIMEOUT=30<br />      while running $JETTY_PID; do<br />        if (( TIMEOUT-- == 0 )); then<br />          kill -KILL "$PID" 2>/dev/null<br />        fi<br /><br />        sleep 1<br />      done<br /><br />      rm -f "$JETTY_PID"<br />      echo OK<br />    fi<br /><br />    ;;<br /><br />  restart)<br />    JETTY_SH=$0<br />    if [ ! -f $JETTY_SH ]; then<br />      if [ ! -f $JETTY_HOME/bin/jetty.sh ]; then<br />        echo "$JETTY_HOME/bin/jetty.sh does not exist."<br />        exit 1<br />      fi<br />      JETTY_SH=$JETTY_HOME/bin/jetty.sh<br />    fi<br /><br />    "$JETTY_SH" stop "$@"<br />    "$JETTY_SH" start "$@"<br /><br />    ;;<br /><br />  supervise)<br />    #<br />    # Under control of daemontools supervise monitor which<br />    # handles restarts and shutdowns via the svc program.<br />    #<br />    exec "${RUN_CMD[@]}"<br /><br />    ;;<br /><br />  run|demo)<br />    echo "Running Jetty: "<br /><br />    if [ -f "$JETTY_PID" ]<br />    then<br />      if running "$JETTY_PID"<br />      then<br />        echo "Already Running!"<br />        exit 1<br />      else<br />        # dead pid file - remove<br />        rm -f "$JETTY_PID"<br />      fi<br />    fi<br /><br />    exec "${RUN_CMD[@]}"<br /><br />    ;;<br /><br />  check)<br />    echo "Checking arguments to Jetty: "<br />    echo "JETTY_HOME     =  $JETTY_HOME"<br />    echo "JETTY_CONF     =  $JETTY_CONF"<br />    echo "JETTY_RUN      =  $JETTY_RUN"<br />    echo "JETTY_PID      =  $JETTY_PID"<br />    echo "JETTY_PORT     =  $JETTY_PORT"<br />    echo "JETTY_LOGS     =  $JETTY_LOGS"<br />    echo "START_INI      =  $START_INI"<br />    echo "CONFIGS        =  ${CONFIGS[*]}"<br />    echo "JAVA_OPTIONS   =  ${JAVA_OPTIONS[*]}"<br />    echo "JAVA           =  $JAVA"<br />    echo "CLASSPATH      =  $CLASSPATH"<br />    echo "RUN_CMD        =  ${RUN_CMD[*]}"<br />    echo<br /><br />    if [ -f "$JETTY_RUN/jetty.pid" ]<br />    then<br />      echo "Jetty running pid=$(< "$JETTY_RUN/jetty.pid")"<br />      exit 0<br />    fi<br />    exit 1<br /><br />    ;;<br /><br />  *)<br />    usage<br /><br />    ;;<br />esac<br /><br />exit 0<br /><br /></pre>然後把下面這塊存成 src/main/unix/scripts/post-install，並修改 USER=locadz-backend 這一行成跟你 ${service.user} 一樣的值<pre class="brush: shell;">#!/bin/sh<br />set -e<br /><br />USER=locadz-backend<br /><br />case "$1" in<br />    configure)<br />        if ! id $USER > /dev/null 2>&1 ; then<br />            adduser --system --home /var/lib/bluetang/$USER --no-create-home \<br />                --group --disabled-password --shell /bin/false \<br />                $USER<br />        fi<br /><br />        if [ ! -e /var/log/bluetang ]<br />        then<br />            mkdir -p /var/log/bluetang<br />        fi<br />        if [ ! -e /var/log/bluetang/$USER/ ]<br />        then<br />            ln -s /var/lib/bluetang/$USER/logs /var/log/bluetang/$USER<br />        fi<br />        if [ ! -e /var/cache/bluetang/$USER ]<br />        then<br />            mkdir -p /var/cache/bluetang/$USER<br />        fi<br /><br /><br />        chown -R $USER:adm /var/cache/bluetang/$USER /var/log/bluetang/$USER /var/lib/bluetang/$USER<br />        chmod 0744 /etc/init.d/$USER<br />        update-rc.d $USER defaults<br /><br />    ;;<br /><br />    abort-upgrade|abort-remove|abort-deconfigure)<br />    ;;<br /><br />    *)<br />        echo "$0 called with unknown argument \`$1'" >&2<br />        exit 1<br />    ;;<br />esac<br /><br /></pre>然後把下面這塊存成 src/main/unix/scripts/post-remove，並修改 USER=locadz-backend 這一行成跟你 ${service.user} 一樣的值<pre class="brush: shell;">#!/bin/sh<br />set -e<br /><br />USER=locadz-backend<br /><br />#DEBHELPER#<br /><br /># Remove cached files<br />rm -rf /var/cache/blutang/$USER/*<br /><br />case "$1" in<br />    remove)<br />        # Remove ROOT webapp if not modified<br />        RWLOC="/var/lib/bluetang/$USER/webapps/root"<br />        RWFILES="$RWLOC/index.html $RWLOC/jetty_banner.gif"<br />        if [ "`(cat $RWFILES | md5sum -) 2>/dev/null | cut -d ' ' -f 1`" \<br />                            = "12471c4b3020defb7ebd30ef84c0f9dd" ] ; then<br />            rm $RWFILES<br />            rmdir --ignore-fail-on-non-empty \<br />                /var/lib/bluetang/$USER/webapps/root \<br />                /var/lib/bluetang/$USER/webapps \<br />                /var/lib/bluetang/$USER || true<br />        fi<br />        if [ -d "/var/cache/bluetang/$USER" ] ; then<br />            rm -rf /var/cache/bluetang/$USER<br />        fi<br />    ;;<br /><br />    purge)<br />        # Remove user/group and log files (don't remove everything under<br />        # /var/lib/jetty because there might be user-installed webapps)<br />        deluser jetty || true<br />        rm -rf /var/log/bluetang/$USER<br />        if [ -d "/var/lib/bluetang/$USER" ] ; then<br />            rmdir --ignore-fail-on-non-empty /var/lib/bluetang/$USER || true<br />        fi<br />        rmdir --ignore-fail-on-non-empty /etc/bluetang/$USER/contexts /etc/bluetang/$USER || true<br />    ;;<br /><br />    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)<br />        # Nothing to do here<br />    ;;<br /><br />    *)<br />        echo "$0 called with unknown argument \`$1'" >&2<br />        exit 1<br />    ;;<br />esac<br /></pre>然後把下面這塊存成 src/main/unix/scripts/pre-install，並修改 USER=locadz-backend 這一行成跟你 ${service.user} 一樣的值<pre class="brush: shell;">#!/bin/sh<br />#<br /># This is the preinst script for the Blue Tang Servers<br />#<br /># Written by Yung-Lin Ho yho@bluetangstudio.com<br /><br />set -e<br />USER=locadz-backend<br />SCRIPT=/etc/init.d/$USER<br /><br /><br />case "$1" in<br />    upgrade|remove|purge)<br />        $SCRIPT stop<br />        ;;<br />    install|failed-upgrade|abort-install|abort-upgrade|disappear)<br />        ;;<br />    *)<br />        echo "preinst called with unknown argument \`$1'" >&2<br />        ;;<br />esac<br /><br />exit 0<br /></pre>下面這塊存成 src/main/unix/scripts/pre-remove，並修改 USER=locadz-backend 這一行成跟你 ${service.user} 一樣的值<pre class="brush: shell;">#!/bin/sh<br />#<br /># This is the prerm script for the Blue Tang Servers<br />#<br /># Written by Yung-Lin Ho yho@bluetangstudio.com<br /><br />set -e<br />USER=locadz-backend<br />SCRIPT=/etc/init.d/$USER<br /><br />case "$1" in<br />    upgrade)<br />        ;;<br />    remove|purge)<br />        $SCRIPT stop<br />        ;;<br />    failed-upgrade|abort-install|abort-upgrade|disappear)<br />        ;;<br />    *)<br />        echo "prerm called with unknown argument \`$1'" >&2<br />        ;;<br />esac<br /><br />exit 0<br /></pre></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Bravo to Spotify Apps.]]></title>
-    <link href="http://blog.yunglinho.com/blog/2012/03/27/bravo-to-spotify-apps/"/>
-    <updated>2012-03-27T16:14:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2012/03/27/bravo-to-spotify-apps</id>
-    <content type="html"><![CDATA[<div class='post'>
-spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 editorial material 比不上 #rhapsody. 用 Rhapsody 時，因為 Rhapsody 內有十多位人員負責編排本週推薦的音樂，還有客製化的播放清單及電台，所以訂閱 rhapsody 就像有 DJ 幫你找歌來聽。<br /><br />但是用 Spotify ，就只能夠聽，你已知的歌手， spotify 沒有一個好用的推薦功能可用。<br /><br />最近 spotify 的 gui client 開始可以放上第三方App的功能，馬上就把缺的地方補上，而且還更好。<br /><br />像是串入 last.fm 就有推薦清單可用，soundrop可以當線上DJ，TuneWiki可以看歌詞，歌詞還會照時間來跳到現在唱的句子；這證明了 Open API的威力，你有缺的地方，用 3rd party app 來補上，而且可以做的更好。<br /><br />其實 Rhapsody 內部早在 2005 已有這種 API ，我在 real.com 時就是做這一塊的，許多第三方的程式及硬體就是呼叫我們的API，如 sonos, sandisk sansa, 我自己也寫了隻程式給我的Nokia N82用，只是可惜不能放出來。<br /><br />Rhapsody 再不把 API 放出來，恐怕就連美國這塊市場都要開始敗退了&#8230;</div>
 ]]></content>
   </entry>
   
