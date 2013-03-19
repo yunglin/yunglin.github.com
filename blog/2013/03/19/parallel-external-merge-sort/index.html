@@ -121,7 +121,7 @@ all of the data has been written to file system. Another thread will start to me
 <h2>Read Lines From InputStream</h2>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">soure</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
-</span></code></pre></td></tr></table></div></figure><p>The above code will turn a <strong>InputStream</strong> into a <strong>Stream[String]</strong> , and then allow use to perform operation on it
+</span></code></pre></td></tr></table></div></figure><p>The above code will turn a <strong>InputStream</strong> into a <strong>Stream[Int]</strong> , and then allow us to perform operation on it
 without having to fully read it into memory first. But still, this is a huge Stream. Because we are going to use
 in-memory sort, I need to split it into smaller pieces first.</p>
 <p>The following code will <strong>lift</strong> a Stream into a Stream of Stream. Again, this operation does not require read the whole
