@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2013-03-19T23:41:53+08:00</updated>
+  <updated>2013-03-20T11:23:57+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -251,7 +251,7 @@ first. So that I can instruct the <strong>Future</strong> to do merge sort once 
 </span><span class="line">
 </span><span class="line">
 </span><span class="line"><span class="cm">/**</span>
-</span><span class="line"><span class="cm"> * Merge two stream into one stream and remove duplicates from the result.</span>
+</span><span class="line"><span class="cm"> * Merge two streams into one stream.</span>
 </span><span class="line"><span class="cm"> * @param streamA</span>
 </span><span class="line"><span class="cm"> * @param streamB</span>
 </span><span class="line"><span class="cm"> * @return</span>
@@ -604,7 +604,7 @@ pool.</p>
 </span><span class="line">
 </span><span class="line">
 </span><span class="line"><span class="cm">/**</span>
-</span><span class="line"><span class="cm"> * Merge two stream into one stream and remove duplicates from the result.</span>
+</span><span class="line"><span class="cm"> * Merge two streams into one stream.</span>
 </span><span class="line"><span class="cm"> * @param streamA</span>
 </span><span class="line"><span class="cm"> * @param streamB</span>
 </span><span class="line"><span class="cm"> * @return</span>
