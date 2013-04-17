@@ -104,7 +104,7 @@ reading a large file (~10GB) from remote &hellip;">
 
 <div class="entry-content"><p>Last week, I was working on importing a large input file into the system. Part of the process involved with
 reading a large file (~10GB) from remote server and them sort the inputs locally.</p>
-<p>At that moment, I decided to give Scala&#8217;s new <a class="reference external" href="http://docs.scala-lang.org/sips/pending/futures-promises.html">Future API</a> a try. Within one day, I wrote a parallel external
+<p>At that moment, I decided to give Scala's new <a class="reference external" href="http://docs.scala-lang.org/sips/pending/futures-promises.html">Future API</a> a try. Within one day, I wrote a parallel external
 merge sort that can</p>
 <blockquote>
 <ol class="arabic simple">
@@ -375,8 +375,8 @@ simultaneously. We must put a constraint on the number of threads it can use at 
 OutOfMemoryError or having many threads writing to disk simultaneously.</p>
 <p>Also, this constraint must be a global constraint. No matter how many requests has been sent to this method at the
 same time, it should only use up-to <em>N</em> threads.</p>
-<p>Luckly, this is quite easy to do with Scala&#8217;s Future API. All we need to do is to provide a fixed size thread pool
-for this method. So that it won&#8217;t spawn new thread by itself, instead, it uses threads provided by this global thread
+<p>Luckly, this is quite easy to do with Scala's Future API. All we need to do is to provide a fixed size thread pool
+for this method. So that it won't spawn new thread by itself, instead, it uses threads provided by this global thread
 pool.</p>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
