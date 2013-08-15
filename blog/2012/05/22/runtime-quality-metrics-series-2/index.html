@@ -9,7 +9,10 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="">
+  <meta name="description" content="接下來，我們就來探討，軟體品質指標有那些種類 可用度 Availability
+一個服務的可用度，是由很多環節組合起來的，某些環節是掌控在開發者手中，某些環節則是
+在使用者手中的；對使用者來說，一個服務的可用度，是由底下幾個環節的總合： 軟體本身的可用度
+IT/Cloud 架構本身的可用度 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,7 +104,163 @@
   </header>
 
 
-<div class="entry-content"></div>
+<div class="entry-content"><p>接下來，我們就來探討，軟體品質指標有那些種類</p>
+<div class="section" id="availability">
+<h2>可用度 Availability</h2>
+<p>一個服務的可用度，是由很多環節組合起來的，某些環節是掌控在開發者手中，某些環節則是
+在使用者手中的；對使用者來說，一個服務的可用度，是由底下幾個環節的總合：</p>
+<ul class="simple">
+<li>軟體本身的可用度</li>
+<li>IT/Cloud 架構本身的可用度</li>
+<li>服務提供者端的網路環境</li>
+<li>外部服務的可用度</li>
+<li>使用者端的網路環境</li>
+</ul>
+<p>在計算 Availability 時，是把上面幾個因素相乘起來，便是你服務的可用度，假設你的IT架構
+本身只能提供 99.99% 的可用度，那你的服務本身的可用度將會小於 99.99% 。當然，你可以透
+過 Multi-Host 的方式，將服務布建在多個不同 Data Center，此時你的服務可用度，將可超
+過單一平台可以提供的可用度。</p>
+<blockquote>
+假設 Cloud A 可以提供的可用度是 99% ， Cloud B 可以提供的可用度是 98% ，而你將服
+務同部布建在兩者之上，那麼兩者一起停機的機會是 (1-99%)*(1-98%) = 0.02% ，因此可靠
+度提昇為 99.98% 。</blockquote>
+<p>然而，為了提高可靠到而佈建到 Multi-Host 時，不只要把 Presentation Layer / Frontend 放
+到多個平台上面去，同時，使用者的資料也要同步到多個平台去，這樣，才能夠必免單一IT平台停機的
+問題。但是這麼一來，當停機的平台再次上線時，如何處理資料的不一致問題，便成了另一難題。因此
+，多數的服務提供者只會把服務佈建在單一平台上。</p>
+<div class="section" id="id1">
+<h3>服務提供者端的網路環境</h3>
+<p>目前，多數的雲端服務商仍是把主機設立在海外，在台灣沒有 Data Center ，因此，當台灣對外的海
+纜出了問題時，雖然服務本身在海外仍是可用的，但是在台灣就連不上線，這一點，也是台灣的開發者
+在選用雲端平台時需要考慮進去的。</p>
+<p>過去幾年來，台灣對外的海纜，幾乎每兩年都會斷線超過一天。</p>
+<blockquote>
+<ul class="simple">
+<li>2001/02/09 中美海纜遭魚船勾破，數據傳輸容量遽減至原來的四成。HiNet, SeedNet, TaNet 均受影響</li>
+<li>2003/10/02 中美海纜遭魚船勾破</li>
+<li>2006/12/26 恆春地震造成四條國際海纜中美海纜、法新歐亞三號、亞太光纜一號二號網絡斷線，
+影響到台灣對中國、香港、新加坡等東南亞國家和地區，以及上述地區對外的國際通信。耗時三週修複。</li>
+<li>2009/08/13 莫拉克颱風造成對外海纜斷線，影響台灣往中國大陸汕頭及東南亞地區，包括新加坡、菲律
+賓及香港等地之通信。影響時間超過一週</li>
+<li>2010/03/04 高雄甲仙地震造成中美海纜斷線，影響時間超過一個月</li>
+<li>2011/11/14 ~ 2012/21/26 海纜進行維修，將造成HiNet連線中國之部份連網服務傳輸延遲時間變長。</li>
+</ul>
+</blockquote>
+<p>若是你服務的對像是以亞洲為主，還是建議放在台灣或日本，若是服務對像以全球為目標，建議還是就放在美國吧。</p>
+</div>
+<div class="section" id="soa-in-reality">
+<h3>外部服務的可用度 / SOA in Reality</h3>
+<img alt="/images/2012-05-22/cloud-farm.jpg" src="/images/2012-05-22/cloud-farm.jpg" style="width: 400px;" />
+<p>在幾年前，流行的系統架構是 SOA ，讓每一個團隊專注在單一面向功能的服務，將服務透
+過SOAP/Restful API供內部及外部的使用者來使用。這樣的好處是，可以增快服務更新的速度減少
+測試的範圍，在組織上，也可讓組織將重點放在核心服務上，而將其它的需求委由外部服務處理。</p>
+<p>如此一來，對使用者來說，多重 SOA 子服務組合而成的服務，看起來就像是在雲端運行的一台大電
+腦，跟舊式的服務並沒有差異。</p>
+<img alt="/images/2012-05-22/cloud-server.png" src="/images/2012-05-22/cloud-server.png" style="width: 400px;" />
+<p>然而經過幾年的經驗後，大家發現實際上的經驗並不是那麼的美好；如同開頭所說的，服務的可用度，
+是所有子服務的總合，單一服務的問題，將會把整體的可用度都拉低。</p>
+<p>在我的實務經驗上， SOA 架構，反而變成無止境的 finger pointing ，最後變成，需要對所有外
+部服務的可用度做長期的追縱，評估他實際上的可用度。另外，在委外給外部服務時，只會把可以離線
+處理的服務委外給外部服務，需要線上即時處理的，還是自行開發較好。</p>
+<img alt="/images/2012-05-22/finger-pointing.png" src="/images/2012-05-22/finger-pointing.png" style="width: 400px;" />
+</div>
+<div class="section" id="service-level-agreement-term-of-service">
+<h3>Service Level Agreement / Term of Service</h3>
+<p>TBD</p>
+</div>
+</div>
+<div class="section" id="manageability">
+<h2>可維護性 Manageability</h2>
+<p>可維護性指的是，一個服務在運行時，留下了多少的資料，供 admin 做為判斷服務狀況的依據。一
+個線上的服務，除了基本的 log 檔外，還需提供底下的特性</p>
+<ul class="simple">
+<li>Configurability: 提供設定檔，讓 admin / tester 能夠在不修改程式碼本身，而對軟體的
+功能做調整。</li>
+<li>Monitorability : 提供開放性的介面，讓 admin 可以很容易的去追縱服務本身的建康狀態及用
+量，供 admin 來判斷，是否需要增加硬體的來分散線上伺服器的負擔。</li>
+</ul>
+<div class="section" id="monitoring-is-must">
+<h3>Monitoring is Must</h3>
+<p>在提供一個服務時，我們一定要監控服務本身的狀況，並且要把這份資料與外部分享，減少本身溝通的
+成本及增加客戶對服務的信任。</p>
+<p>不管是設計多麼精良的服務，各個軟體平台商仍免不了會發生大型的災難，如：</p>
+<ul class="simple">
+<li>Amazon AWS 於 2008, 2010, 2011 各發生過數小時的問題，造成 EBS 使用上的問題，導
+制 reddit, zynga 等下遊廠商的服務問題</li>
+<li>Google Gamil 於 2009 年發生過大形的停機，耖造成拳體用戶無法使用 Gmail 兩個半小時。</li>
+<li>Azure 於 2012/02/29 ，由於時間同步的問題，造成用戶無法開啟新的 VM instance.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="performance">
+<h2>Performance</h2>
+<p>效能，算是個最常用的品質指標了，在講效能時我們通常會分成兩塊來講，一塊是反應時間(Response Time)，
+另一塊是處理量(throughput)，前者只的是服務單一需求所要花的時間，後者則是單位時間內，可同
+時服務的總需求數量。</p>
+<p>影響效能的因素有很多，在多數的系統中，往往處理量增加的結果就是反應時間也一起增加，因此在系
+統設計的初期，這些就要納入規格中，變成設計的一環；那麼，什麼是好的效能呢？在反應時間這邊有
+個很好的指標，就是跟人互動的UI程式，如果反應時間能壓在 100ms 以下，那麼人們的認知就會覺的
+這個程式是即時使用的，如果反應時間拉到 200ms 以上，就會開始覺得頓頓的。</p>
+<p>對於網頁程式來說，反應時間不只是從 Web Server 這一端出去的時間，還要算上網路傳輸的時間以
+及流覽器繪製畫面的時間，因此能留給網站主機的反應時間只剩下 50ms 上下；如果你的程式還有呼叫
+其於的外部程式，那麼每多一層，反應時間至少增加 20ms ，或者是說少 20ms 給你的程式使用。</p>
+</div>
+<div class="section" id="reliability">
+<h2>Reliability</h2>
+<p>可靠度(Reliability)跟可用度(Availability)是兩個常被弄混的名詞，Availability講的是，
+在一段長的時間內，系統可被使用的時間(Up Time)，Reliability則講的是在單位時間內，系統出
+錯的次數。一個線上服務，可能是可用的(Available)但是他的輸出結果是有問題的(Unreliable)</p>
+<p>Reliability 的評量指標有</p>
+<ul class="simple">
+<li>單位時間內，回傳錯誤訊息或者是無回應的次數。</li>
+<li>單位時間內，輸出結果是錯誤的次數。</li>
+</ul>
+<p>Reliability的問題，往往是系統內的 Bug ，只是在使用量大時，才會凸顯他的存在，因此軟體開發
+者不可忽略這微小的訊號。</p>
+</div>
+<div class="section" id="scalability">
+<h2>Scalability</h2>
+<p>Scalability 講的是你的服務能不能夠隨著用戶數的增長，而跟著成長，服務的可延展性可以分為
+， <strong>直向擴充 Scale Up</strong> 及 <strong>橫向擴充 Scale Out</strong> ，兩者都可以幫你增加可同時服務的
+線上用戶數，但是後者的可擴充的程度，仍是遠高過前者的。</p>
+<p>Scalability 讓我們動態的依事件配置不同數量的伺服器數量，以防止 Slashdot Effect 的發生
+，如總統大選或報稅截止日等事件，往往會在一日內擁入超過平日百倍的用戶數，如何讓服務正常運做
+，是軟體品質極重要的一環。</p>
+<p>而 Scalability 對 Application Service Provider 更是重要，因為 Cloud Based ERP or CRM 系
+統，較一般的網頁更有黏著性，一個有數萬個用戶的中型網站，同時間上線的用戶可能只有數百個，而
+於他們的 Session 中存的資料也只有數 kilo bytes。然而對企業用戶來說 Cloud Based ERP, CRM ，
+在上班時間，可是一直在使用的，一間 200 人公司用的 ERP 系統，可能就會有 200 active sessions ，每
+個 Session 又存了許多正在處理中的表格資料。</p>
+<p>如何 scale up/out database intensive application 變成 ASP 提供者不得不面對的難題。</p>
+</div>
+<div class="section" id="security">
+<h2>Security</h2>
+<p>網路服務的安全性問題，常常是個被誤會且忽略的問題，台灣許多主流的 Hosting Company 及 Billing Provider 的網站都出
+過問題；他們的問題是，某本常用的軟體手冊的程式碼，在教導如何實作使用者認證時，只有在首頁
+有檢查帳號，等帳號檢查過了，就會被導到內部的網頁去，然而，在內部網頁這邊，卻沒有檢查使用
+者有沒有登入。</p>
+<p>變成，只要得知內部網業的網址(form target)就可以直接存取內部的資料，因此，許多網站就
+被 Search Engine Crawler 長驅直入，把所有的使用者資料都放在搜尋結果中公開了。至於實際
+的例子我就不多舉了。</p>
+<p>另外我有寫過一篇 <a class="reference external" href="/blog/2012/01/03/how-to-protect-a-webservice/">專文</a> 討論，該如合保護一個 WebService ，台灣的政府及民間網站，常常
+用一些沒有被認可的電子簽證來做 https 的安全通訊，然而 https 的金鑰交換，在第一次是不安
+全的，因此，若是你的金鑰是沒有經過第三方簽核的，那麼再交換金鑰時可能會受到 <a class="reference external" href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in
+the middle attack</a> 直接把金鑰換掉。</p>
+<p>使用 https 時，必需遵守幾個使用規範，這樣子通訊才會是安全的。</p>
+<p>回到正題，服務的安全性可以分為幾塊</p>
+<ul class="simple">
+<li>通訊的安全性。</li>
+<li>身份的認可查核</li>
+<li>資料的安全性及使用權限</li>
+<li>資料的使用及變更的計錄追蹤</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>待續</h2>
+<p>在下一篇，我將講述，如何把這些概念，轉換成實際的數值指標。</p>
+</div>
+
+</div>
 
 
   <footer>
@@ -170,6 +329,10 @@
       </li>
     
       <li class="post">
+        <a href="/blog/2013/03/19/clean-future-api-design-sort.rst/">Clean Future API Design</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/">為什麼 Kim DotCom/Mega 能夠提供免費的網路</a>
       </li>
     
@@ -179,10 +342,6 @@
     
       <li class="post">
         <a href="/blog/2012/08/23/cloud-computing-and-rocket-science/">為什麼雲端產業在台灣行不通</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/23/corrupted-software-company/">關於遊戲公司裁員的感想</a>
       </li>
     
   </ul>
