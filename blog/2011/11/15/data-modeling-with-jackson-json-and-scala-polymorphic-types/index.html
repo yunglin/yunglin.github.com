@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>如何在Mac OSX上，讀取台北市政府放出來的地圖資料 - 碎碎唸</title>
+  <title>Data Modeling With Jackson Json and Scala - Polymorphic Types - 碎碎唸</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="台北市政府把一些地圖資訊，用shapefile的格式放出來了，玩了兩天，總算把這檔案開了起來。為了造福後人，就把過程寫下來了1. 安裝QGIS2. 下載里界圖，並解壓縮開起QGIS，從選單上選 Layer -&gt; Add Vector Layer -&gt; Encoding = BIG5 &hellip;">
+  <meta name="description" content="關於 Jackson Json 對多型的支援，原開發者已經有一篇 blog 很清楚的解釋該怎麼做，因此，我只寫下在 scala 上面要注意的眉角。首先，我先寫下理想中，Jackson在Scala上該怎麼使用，在來談，為什麼不能這麼用@JsonTypeInfo(use = JsonTypeInfo &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/09/07/-mac-osx">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -78,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">如何在Mac OSX上，讀取台北市政府放出來的地圖資料</h1>
+      <h1 class="entry-title">Data Modeling With Jackson Json and Scala - Polymorphic Types</h1>
     
     
       <p class="meta">
@@ -94,7 +94,7 @@
   
 
 
-<time datetime="2011-09-07T14:39:00+08:00" pubdate data-updated="true">Sep 7<span>th</span>, 2011</time>
+<time datetime="2011-11-15T08:21:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
         
       </p>
     
@@ -102,7 +102,7 @@
 
 
 <div class="entry-content"><div class='post'>
-台北市政府把一些地圖資訊，用<a href="http://en.wikipedia.org/wiki/Shapefile">shapefile</a>的格式放出來了，玩了兩天，總算把這檔案開了起來。為了造福後人，就把過程寫下來了<br /><br />1. 安裝<a href="http://www.qgis.org/wiki/Download#MacOS_X">QGIS</a><br />2. 下載<a href="http://data.taipei.gov.tw/ct.asp?xItem=3448999&amp;ctNode=45112&amp;mp=datataipei">里界圖</a>，並解壓縮<br /><br />開起QGIS，從選單上選 Layer -&gt; Add Vector Layer -&gt; Encoding = BIG5, Dataset = 解開的檔案<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s1600/no-label.png" imageanchor="1" style=""><img border="0" src="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s400/no-label.png" /></a></div><br /><br />一開始開啟的檔案，並沒有把文字資料一起顯示出來，所以，接著我們要把這資料打開來。從Layers中點選『台北市里界圖』並選Labels，Display labels勾起來，然後Field選PTVAME，然後按OK<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s1600/layer_properties.png" imageanchor="1" style=""><img border="0" src="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s400/layer_properties.png" /></a></div><br />這樣，文字資料就跑出來了<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s1600/with_label.png" imageanchor="1" style=""><img border="0" src="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s400/with_label.png" /></a></div><br /><br />接下來的兩週，我會把Geometric search的功能，加到我公司的<a href="http://www.searchcloudapp.com">產品</a>中，讓你直接能後匯入多邊型的地理資料，並且能夠做一些簡單的搜尋功能</div>
+關於 Jackson Json 對多型的支援，原開發者已經有一篇 <a href="http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html">blog</a> 很清楚的解釋該怎麼做，因此，我只寫下在 scala 上面要注意的眉角。<br /><br />首先，我先寫下理想中，Jackson在Scala上該怎麼使用，在來談，為什麼不能這麼用<br /><pre class="brush: scala">@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")<br />@JsonSubTypes(Array(<br />     new JsonSubTypes.Type(name = "flood", value = classOf[Flood]),<br />     new JsonSubTypes.Type(name = "mountainslide", value = classOf[MountainSlide])<br />)) <br />trait Disaster {}<br /><br />case class Flood @JsonCreator()(<br />    @BeanProperty @JsonProperty("event") event: String,<br />    @BeanProperty @JsonProperty("address") address: String<br />) extends Disaster<br /><br />case class MountainSlide @JsonCreator()(<br />    @BeanProperty @JsonProperty("event") event: String,<br />    @BeanProperty @JsonProperty("landmark") landmark: String<br />) extends Disaster<br /><br /></pre><br />在 scala 2.8.0 上面，我碰上的問題是<a href="https://issues.scala-lang.org/browse/SI-2764">不能在annotation內使用 java enum</a> 如： <code>use = JsonTypeInfo.Id.NAME</code> <br /><br />在 scala 2.9.1 上，上面的問題消失了，不過碰上另一個問題，當一個 annotation 上面有兩個 java enum，scala compiler 及 java compiler 都不會吐出錯誤，但是annotations從bytecode中消失了，<a href="https://issues.scala-lang.org/browse/SI-5165">SI-5165</a>中紀錄了這問題。<br /><br />不管怎樣，在現在這時間，若是你想用Jackson + Scala來處理多型，那麼，最頂層類別，一定要用Java來寫，才不會碰上上述兩個問題。</div>
 </div>
 
 
@@ -125,7 +125,7 @@
   
 
 
-<time datetime="2011-09-07T14:39:00+08:00" pubdate data-updated="true">Sep 7<span>th</span>, 2011</time>
+<time datetime="2011-11-15T08:21:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
       
 
 
@@ -133,7 +133,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/09/07/-mac-osx/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/09/07/-mac-osx/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -144,10 +144,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011/09/05/" title="Previous Post: 關於北市府開放資料授權方式的一些想法">&laquo; 關於北市府開放資料授權方式的一些想法</a>
+        <a class="basic-alignment left" href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/" title="Previous Post: Data Modeling With Jackson Json and Scala">&laquo; Data Modeling With Jackson Json and Scala</a>
       
       
-        <a class="basic-alignment right" href="/blog/2011/10/06/" title="Next Post: 轉換台北市政府公開資料的格式">轉換台北市政府公開資料的格式 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val/" title="Next Post: Data Modeling With Jackson Json and Scala - lazy val">Data Modeling With Jackson Json and Scala - lazy val &raquo;</a>
       
     </p>
   </footer>
