@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Having a good build system is like living in the heaven, and having a bad..... - 碎碎唸</title>
+  <title>關於北市府開放資料授權方式的一些想法 - 碎碎唸</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="<!-- ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved. --> Having a good build system is like living in the heaven, and having a bad &hellip;">
+  <meta name="description" content="在某些人士運作之下，中華民國政府及台北市政府，示範性值的，開放了一些資料出來，開放出來的資料及品質，大家自己去看就好，我懶得去說了。我比較有意見的是，這些開放資料的授權方式。目前北市府網站已故障，找不到合約。跟據我的印象，第二條是寫『資料的使用必須要就有公益性的部份，提供免費版』&nbsp; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/09/01/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/09/05">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -78,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">Having a Good Build System Is Like Living in the Heaven, and Having a Bad.....</h1>
+      <h1 class="entry-title">關於北市府開放資料授權方式的一些想法</h1>
     
     
       <p class="meta">
@@ -94,30 +94,15 @@
   
 
 
-<time datetime="2011-09-01T11:09:00-07:00" pubdate data-updated="true">Sep 1<span>st</span>, 2011</time>
+<time datetime="2011-09-05T14:05:00+08:00" pubdate data-updated="true">Sep 5<span>th</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><!--
-  ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved.
-  -->
-
-<div class='post'>
-Having a good build system is like living in the heaven, and having a bad build system is like living in the hell. I am just tired of dealing with all kind of build system. In short, all build systems are either suck or sucks more.<br /><br />Yesterday, I spent 4 hours to help a coworker to deal with library projects in Android. It wasn&#8217;t a pleasure experience. Today, I spent another 4 hours to figure out how to configure an integration-test phase in SBT.<br /><br />Just to save you some time, here is how to do it with SBT&#8217;s quick configuration DSL, build.sbt.<br /><br /><pre>import sbt._
-<br />
-<br />{
-<br />    lazy val IntegrationTest = config("it") extend(Test) extend(Provided) extend(Optional)
-<br />    lazy val itSettings: Seq[Project.Setting[_]] =
-<br />        inConfig(IntegrationTest)(Defaults.testSettings) ++
-<br />        Seq(
-<br />             ivyConfigurations += IntegrationTest
-<br />        )
-<br />    seq(itSettings : _*)
-<br />}
-<br /></pre><br />That is all you need. The first line in the block defines a new configuration, it. The &#8216;it&#8217; configuration extends all the dependencies from &#8216;Test&#8217;. And the fifth line exposes this configuration to ivy and sbt.<br /><br /></div>
+<div class="entry-content"><div class='post'>
+在某些人士運作之下，中華民國政府及台北市政府，示範性值的，開放了一些資料出來，開放出來的資料及品質，大家自己去看就好，我懶得去說了。<br /><br />我比較有意見的是，這些開放資料的授權方式。目前北市府網站已故障，找不到合約。跟據我的印象，第二條是寫『資料的使用必須要就有公益性的部份，提供免費版』&nbsp;很明顯，這個條約是個蠢左派公務員定的，當大家都是喝空氣過活當神仙。<br /><br />公益性，是個很好打嘴砲的東西，但是，什麼叫公益性質呢？簡單說來就是，『當一個人把自己的勞力或財產，無償供應其它人使用』就變成有公益性；例如，我無償打掃公司外路口的走道，叫有公益性，我無償把土地借出來讓大家開會，也叫有公益性，問題在於，若是那一天我開始收費，同一個行為就變成無公益性了。<br /><br />不知你有看出來這授權問題了嗎？只要有人跳出來說，某程式很多人用不應該收費，那開發商馬上要變成做白工，這種授權方式，會有認真的開發商想跳下去嗎？當然是沒有。<br /><br />所以我說，這授權方式是蠢左派定的，再者，公益性跟營利並不起衝突阿；若是有衝突，那，負責收集這些資料的公務員，可不可以也不支薪來做事啊。</div>
 </div>
 
 
@@ -140,7 +125,7 @@ Having a good build system is like living in the heaven, and having a bad build 
   
 
 
-<time datetime="2011-09-01T11:09:00-07:00" pubdate data-updated="true">Sep 1<span>st</span>, 2011</time>
+<time datetime="2011-09-05T14:05:00+08:00" pubdate data-updated="true">Sep 5<span>th</span>, 2011</time>
       
 
 
@@ -148,7 +133,7 @@ Having a good build system is like living in the heaven, and having a bad build 
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/09/01/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/09/01/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/09/05/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/09/05/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -159,10 +144,10 @@ Having a good build system is like living in the heaven, and having a bad build 
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011/06/30/-apple-google/" title="Previous Post: 為什麼Apple辦得到，Google辦不到">&laquo; 為什麼Apple辦得到，Google辦不到</a>
+        <a class="basic-alignment left" href="/blog/2011/09/02/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/" title="Previous Post: Having a good build system is like living in the heaven, and having a bad.....">&laquo; Having a good build system is like living in the heaven, and having a bad.....</a>
       
       
-        <a class="basic-alignment right" href="/blog/2011/09/04/" title="Next Post: 關於北市府開放資料授權方式的一些想法">關於北市府開放資料授權方式的一些想法 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2011/09/07/-mac-osx/" title="Next Post: 如何在Mac OSX上，讀取台北市政府放出來的地圖資料">如何在Mac OSX上，讀取台北市政府放出來的地圖資料 &raquo;</a>
       
     </p>
   </footer>
@@ -175,6 +160,10 @@ Having a good build system is like living in the heaven, and having a bad build 
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/09/12/us-trip/">美國出差行</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/03/19/parallel-external-merge-sort/">parallel external merge sort</a>
@@ -190,10 +179,6 @@ Having a good build system is like living in the heaven, and having a bad build 
     
       <li class="post">
         <a href="/blog/2013/02/03/move-erp-to-cloud/">中小企業ERP系統上雲端？</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/23/cloud-computing-and-rocket-science/">為什麼雲端產業在台灣行不通</a>
       </li>
     
   </ul>

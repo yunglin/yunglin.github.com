@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="關於Proguard，官方的網頁是這麼自述的：ProGuard is a free Java class file shrinker, optimizer, obfuscator, and preverifier. It detects and removes unused classes, &hellip;">
+  <meta name="description" content="用Scala開發Android，是個滿有趣的經驗，大致上來因為我切入的時間點較晚，所以大部份的問題已經被前人所解決，就用 https://github.com/jberkel/android-plugin 把專案用 sbt 開好後，就可以開始寫 android.我用的 IDE 是 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,7 +81,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-proguard/">Data Modeling With Jackson Json and Scala - Proguard</a></h1>
+      <h1 class="entry-title"><a href="/blog/2011/11/16/my-experience-with-scala-on-android/">My Experience With Scala on Android</a></h1>
     
     
       <p class="meta">
@@ -97,7 +97,52 @@
   
 
 
-<time datetime="2011-11-15T19:32:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+<time datetime="2011-11-16T16:53:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+用Scala開發Android，是個滿有趣的經驗，大致上來因為我切入的時間點較晚，所以大部份的問題已經被前人所解決，就用 https://github.com/jberkel/android-plugin 把專案用 sbt 開好後，就可以開始寫 android.<br /><br />我用的 IDE 是 intellij 11 EAP，用 sbt-idea 把 idea project 設好後，把預設的 asset pa th 從 .idea_module 改成 src/main ，就可以開始開發了。<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" imageanchor="1" style=""><img border="0" width="600" src="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" /></a></div><br />在開發上，除了前一回碰上的<a href="http://blog.yunglinho.com/2011/11/data-modeling-with-jackson-json-and_5795.html">proguard問題</a>外，我還碰上另一個比較嚴重的問題－不能在Scala裡寫 AsyncTask<br /><br />這問題跟<a href="https://issues.scala-lang.org/browse/SI-3622">SI-3622</a> <a href="https://issues.scala-lang.org/browse/SI-3494">SI-3494</a>有關，看來是在 Scala 2.8解掉的問題，2.9又跑回來了，我這邊看到的狀況是<br /><br /><pre class="brush: scala">override protected def doInBackground(params: Params*): Result<br /></pre><br />會被Scala compiler專換成<br /><pre class="brush: java">public Result doInBackground(Seq params)<br />    public Result doInBackground(Params[] params)<br /></pre><br /><br />而底下的code，則是scala compiler會吐出 overides nothing.<br /><pre class="brush: scala">override protected def doInBackground(params: Array[Params]): Result<br /></pre><br />不管怎樣，都跟Android要求的<code>protected Result doInBackground(Params[] params)</code>不同，所以在runtime時會跑出NoSuchMethodError.<br /><br />解決方法是在 java 裡寫個 bridge interface ，幫 scala compiler 搞不定的東西，在這個 interface 裡定意好<br /><br /><pre class="brush: java">public abstract class SAsyncTask&lt;Params, Progress, Result> extends AsyncTask&lt;Params, Progress, Result> {<br /><br />    protected abstract Result doInBackground(Seq&lt;Params> params);<br /><br />    @Override<br />    protected Result doInBackground(Params... paramses) {<br />        return doInBackground(JavaConversions.asScalaBuffer(Arrays.asList(paramses)));<br />    }<br />}<br /></pre></div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>yunglin</div>
+<div class='content'>
+多補幾個有關repeated parameters的討論，看來是Spec本身有問題，然後實作時一改再改，一路從2.7開始修修補補過來<br /><br />https://issues.scala-lang.org/browse/SI-1342<br />https://issues.scala-lang.org/browse/SI-1459<br />http://stackoverflow.com/questions/5512402/overriding-a-repeated-class-parameter-in-scala</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard/">Data Modeling With Jackson Json and Scala - Proguard</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T11:32:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
         
       </p>
     
@@ -118,7 +163,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val/">Data Modeling With Jackson Json and Scala - Lazy Val</a></h1>
+      <h1 class="entry-title"><a href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-lazy-val/">Data Modeling With Jackson Json and Scala - Lazy Val</a></h1>
     
     
       <p class="meta">
@@ -134,7 +179,7 @@
   
 
 
-<time datetime="2011-11-15T08:50:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+<time datetime="2011-11-16T00:50:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
         
       </p>
     
@@ -155,7 +200,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types/">Data Modeling With Jackson Json and Scala - Polymorphic Types</a></h1>
+      <h1 class="entry-title"><a href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-polymorphic-types/">Data Modeling With Jackson Json and Scala - Polymorphic Types</a></h1>
     
     
       <p class="meta">
@@ -171,7 +216,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   
 
 
-<time datetime="2011-11-15T08:21:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+<time datetime="2011-11-16T00:21:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
         
       </p>
     
@@ -208,7 +253,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   
 
 
-<time datetime="2011-11-15T01:59:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+<time datetime="2011-11-15T17:59:00+08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
         
       </p>
     
@@ -245,7 +290,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   
 
 
-<time datetime="2011-11-15T01:49:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+<time datetime="2011-11-15T17:49:00+08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
         
       </p>
     
@@ -266,7 +311,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/10/17/">台北市政府公開資料（二）- 按地理位址搜尋資料</a></h1>
+      <h1 class="entry-title"><a href="/blog/2011/10/18/">台北市政府公開資料（二）- 按地理位址搜尋資料</a></h1>
     
     
       <p class="meta">
@@ -282,7 +327,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   
 
 
-<time datetime="2011-10-17T20:29:00-07:00" pubdate data-updated="true">Oct 17<span>th</span>, 2011</time>
+<time datetime="2011-10-18T11:29:00+08:00" pubdate data-updated="true">Oct 18<span>th</span>, 2011</time>
         
       </p>
     
@@ -319,7 +364,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   
 
 
-<time datetime="2011-10-06T02:01:00-07:00" pubdate data-updated="true">Oct 6<span>th</span>, 2011</time>
+<time datetime="2011-10-06T17:01:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2011</time>
         
       </p>
     
@@ -340,7 +385,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/09/06/-mac-osx/">如何在Mac OSX上，讀取台北市政府放出來的地圖資料</a></h1>
+      <h1 class="entry-title"><a href="/blog/2011/09/07/-mac-osx/">如何在Mac OSX上，讀取台北市政府放出來的地圖資料</a></h1>
     
     
       <p class="meta">
@@ -356,7 +401,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   
 
 
-<time datetime="2011-09-06T23:39:00-07:00" pubdate data-updated="true">Sep 6<span>th</span>, 2011</time>
+<time datetime="2011-09-07T14:39:00+08:00" pubdate data-updated="true">Sep 7<span>th</span>, 2011</time>
         
       </p>
     
@@ -377,7 +422,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/09/04/">關於北市府開放資料授權方式的一些想法</a></h1>
+      <h1 class="entry-title"><a href="/blog/2011/09/05/">關於北市府開放資料授權方式的一些想法</a></h1>
     
     
       <p class="meta">
@@ -393,7 +438,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   
 
 
-<time datetime="2011-09-04T23:05:00-07:00" pubdate data-updated="true">Sep 4<span>th</span>, 2011</time>
+<time datetime="2011-09-05T14:05:00+08:00" pubdate data-updated="true">Sep 5<span>th</span>, 2011</time>
         
       </p>
     
@@ -402,58 +447,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
 
   <div class="entry-content"><div class='post'>
 在某些人士運作之下，中華民國政府及台北市政府，示範性值的，開放了一些資料出來，開放出來的資料及品質，大家自己去看就好，我懶得去說了。<br /><br />我比較有意見的是，這些開放資料的授權方式。目前北市府網站已故障，找不到合約。跟據我的印象，第二條是寫『資料的使用必須要就有公益性的部份，提供免費版』&nbsp;很明顯，這個條約是個蠢左派公務員定的，當大家都是喝空氣過活當神仙。<br /><br />公益性，是個很好打嘴砲的東西，但是，什麼叫公益性質呢？簡單說來就是，『當一個人把自己的勞力或財產，無償供應其它人使用』就變成有公益性；例如，我無償打掃公司外路口的走道，叫有公益性，我無償把土地借出來讓大家開會，也叫有公益性，問題在於，若是那一天我開始收費，同一個行為就變成無公益性了。<br /><br />不知你有看出來這授權問題了嗎？只要有人跳出來說，某程式很多人用不應該收費，那開發商馬上要變成做白工，這種授權方式，會有認真的開發商想跳下去嗎？當然是沒有。<br /><br />所以我說，這授權方式是蠢左派定的，再者，公益性跟營利並不起衝突阿；若是有衝突，那，負責收集這些資料的公務員，可不可以也不支薪來做事啊。</div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/01/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/">Having a Good Build System Is Like Living in the Heaven, and Having a Bad&#8230;..</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-01T11:09:00-07:00" pubdate data-updated="true">Sep 1<span>st</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><!--
-  ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved.
-  -->
-
-<div class='post'>
-Having a good build system is like living in the heaven, and having a bad build system is like living in the hell. I am just tired of dealing with all kind of build system. In short, all build systems are either suck or sucks more.<br /><br />Yesterday, I spent 4 hours to help a coworker to deal with library projects in Android. It wasn&#8217;t a pleasure experience. Today, I spent another 4 hours to figure out how to configure an integration-test phase in SBT.<br /><br />Just to save you some time, here is how to do it with SBT&#8217;s quick configuration DSL, build.sbt.<br /><br /><pre>import sbt._
-<br />
-<br />{
-<br />    lazy val IntegrationTest = config("it") extend(Test) extend(Provided) extend(Optional)
-<br />    lazy val itSettings: Seq[Project.Setting[_]] =
-<br />        inConfig(IntegrationTest)(Defaults.testSettings) ++
-<br />        Seq(
-<br />             ivyConfigurations += IntegrationTest
-<br />        )
-<br />    seq(itSettings : _*)
-<br />}
-<br /></pre><br />That is all you need. The first line in the block defines a new configuration, it. The &#8216;it&#8217; configuration extends all the dependencies from &#8216;Test&#8217;. And the fifth line exposes this configuration to ivy and sbt.<br /><br /></div>
 </div>
   
   
@@ -478,6 +471,10 @@ Having a good build system is like living in the heaven, and having a bad build 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/12/us-trip/">美國出差行</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/19/parallel-external-merge-sort/">parallel external merge sort</a>
       </li>
     
@@ -491,10 +488,6 @@ Having a good build system is like living in the heaven, and having a bad build 
     
       <li class="post">
         <a href="/blog/2013/02/03/move-erp-to-cloud/">中小企業ERP系統上雲端？</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/23/cloud-computing-and-rocket-science/">為什麼雲端產業在台灣行不通</a>
       </li>
     
   </ul>

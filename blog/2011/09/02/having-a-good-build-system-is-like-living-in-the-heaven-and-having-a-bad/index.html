@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Data Modeling With Jackson Json and Scala - lazy val - 碎碎唸</title>
+  <title>Having a good build system is like living in the heaven, and having a bad..... - 碎碎唸</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個public volatile int bitmap$0;若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object &hellip;">
+  <meta name="description" content="<!-- ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved. --> Having a good build system is like living in the heaven, and having a bad &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/09/02/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -78,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">Data Modeling With Jackson Json and Scala - Lazy Val</h1>
+      <h1 class="entry-title">Having a Good Build System Is Like Living in the Heaven, and Having a Bad.....</h1>
     
     
       <p class="meta">
@@ -94,15 +94,30 @@
   
 
 
-<time datetime="2011-11-15T08:50:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+<time datetime="2011-09-02T02:09:00+08:00" pubdate data-updated="true">Sep 2<span>nd</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><div class='post'>
-Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個<br /><pre class="brush: java">public volatile int bitmap$0;</pre><br />若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object 中，所有的lazy val，都會仍是 null ，不會被初始化。<br /><br />這個問題，只有做好unit-testing可以避免，因為這個欄位是 public 的，所以不需要setter or constructor， Jackson 就可以直接把值設定進去，只用unit-test仔細檢查生成的，確定沒有預料之外的欄位被寫入到 json 中，才可以免去後來在 runtime 發生不可預料的問題。<br /><br />至於怎麼去除這欄位呢，只要在class上標上<code>@JsonIgnoreProperties({"bitmap$0"})</code>即可</div>
+<div class="entry-content"><!--
+  ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved.
+  -->
+
+<div class='post'>
+Having a good build system is like living in the heaven, and having a bad build system is like living in the hell. I am just tired of dealing with all kind of build system. In short, all build systems are either suck or sucks more.<br /><br />Yesterday, I spent 4 hours to help a coworker to deal with library projects in Android. It wasn&#8217;t a pleasure experience. Today, I spent another 4 hours to figure out how to configure an integration-test phase in SBT.<br /><br />Just to save you some time, here is how to do it with SBT&#8217;s quick configuration DSL, build.sbt.<br /><br /><pre>import sbt._
+<br />
+<br />{
+<br />    lazy val IntegrationTest = config("it") extend(Test) extend(Provided) extend(Optional)
+<br />    lazy val itSettings: Seq[Project.Setting[_]] =
+<br />        inConfig(IntegrationTest)(Defaults.testSettings) ++
+<br />        Seq(
+<br />             ivyConfigurations += IntegrationTest
+<br />        )
+<br />    seq(itSettings : _*)
+<br />}
+<br /></pre><br />That is all you need. The first line in the block defines a new configuration, it. The &#8216;it&#8217; configuration extends all the dependencies from &#8216;Test&#8217;. And the fifth line exposes this configuration to ivy and sbt.<br /><br /></div>
 </div>
 
 
@@ -125,7 +140,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   
 
 
-<time datetime="2011-11-15T08:50:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
+<time datetime="2011-09-02T02:09:00+08:00" pubdate data-updated="true">Sep 2<span>nd</span>, 2011</time>
       
 
 
@@ -133,7 +148,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/09/02/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/09/02/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -144,10 +159,10 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types/" title="Previous Post: Data Modeling With Jackson Json and Scala - Polymorphic Types">&laquo; Data Modeling With Jackson Json and Scala - Polymorphic Types</a>
+        <a class="basic-alignment left" href="/blog/2011/07/01/-apple-google/" title="Previous Post: 為什麼Apple辦得到，Google辦不到">&laquo; 為什麼Apple辦得到，Google辦不到</a>
       
       
-        <a class="basic-alignment right" href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-proguard/" title="Next Post: Data Modeling With Jackson Json and Scala - Proguard">Data Modeling With Jackson Json and Scala - Proguard &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2011/09/05/" title="Next Post: 關於北市府開放資料授權方式的一些想法">關於北市府開放資料授權方式的一些想法 &raquo;</a>
       
     </p>
   </footer>
@@ -160,6 +175,10 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/09/12/us-trip/">美國出差行</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/03/19/parallel-external-merge-sort/">parallel external merge sort</a>
@@ -175,10 +194,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
       <li class="post">
         <a href="/blog/2013/02/03/move-erp-to-cloud/">中小企業ERP系統上雲端？</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/23/cloud-computing-and-rocket-science/">為什麼雲端產業在台灣行不通</a>
       </li>
     
   </ul>

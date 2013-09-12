@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="講一下我理解中，為什麼Apple 辦得到（合乎中華民國消保法）Google 辦不到的原因。要知道，在AppStore &amp; Android Market上交易，可不是只有Apple/Google與消費者，交易的過程中，還有軟體開發商這單位。Google面對的不是只有消費者這塊， &hellip;">
+  <meta name="description" content="<!-- ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved. --> Having a good build system is like living in the heaven, and having a bad &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,7 +81,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/06/30/-apple-google/">為什麼Apple辦得到，Google辦不到</a></h1>
+      <h1 class="entry-title"><a href="/blog/2011/09/02/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/">Having a Good Build System Is Like Living in the Heaven, and Having a Bad&#8230;..</a></h1>
     
     
       <p class="meta">
@@ -97,7 +97,59 @@
   
 
 
-<time datetime="2011-06-30T12:08:00-07:00" pubdate data-updated="true">Jun 30<span>th</span>, 2011</time>
+<time datetime="2011-09-02T02:09:00+08:00" pubdate data-updated="true">Sep 2<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><!--
+  ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved.
+  -->
+
+<div class='post'>
+Having a good build system is like living in the heaven, and having a bad build system is like living in the hell. I am just tired of dealing with all kind of build system. In short, all build systems are either suck or sucks more.<br /><br />Yesterday, I spent 4 hours to help a coworker to deal with library projects in Android. It wasn&#8217;t a pleasure experience. Today, I spent another 4 hours to figure out how to configure an integration-test phase in SBT.<br /><br />Just to save you some time, here is how to do it with SBT&#8217;s quick configuration DSL, build.sbt.<br /><br /><pre>import sbt._
+<br />
+<br />{
+<br />    lazy val IntegrationTest = config("it") extend(Test) extend(Provided) extend(Optional)
+<br />    lazy val itSettings: Seq[Project.Setting[_]] =
+<br />        inConfig(IntegrationTest)(Defaults.testSettings) ++
+<br />        Seq(
+<br />             ivyConfigurations += IntegrationTest
+<br />        )
+<br />    seq(itSettings : _*)
+<br />}
+<br /></pre><br />That is all you need. The first line in the block defines a new configuration, it. The &#8216;it&#8217; configuration extends all the dependencies from &#8216;Test&#8217;. And the fifth line exposes this configuration to ivy and sbt.<br /><br /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/01/-apple-google/">為什麼Apple辦得到，Google辦不到</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-01T03:08:00+08:00" pubdate data-updated="true">Jul 1<span>st</span>, 2011</time>
         
       </p>
     
@@ -126,7 +178,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2011/06/30/-google-android-market/">對於北市府開罰Google Android Market的一些感想</a></h1>
+      <h1 class="entry-title"><a href="/blog/2011/07/01/-google-android-market/">對於北市府開罰Google Android Market的一些感想</a></h1>
     
     
       <p class="meta">
@@ -142,7 +194,7 @@
   
 
 
-<time datetime="2011-06-30T11:11:00-07:00" pubdate data-updated="true">Jun 30<span>th</span>, 2011</time>
+<time datetime="2011-07-01T02:11:00+08:00" pubdate data-updated="true">Jul 1<span>st</span>, 2011</time>
         
       </p>
     
@@ -177,6 +229,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/12/us-trip/">美國出差行</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/19/parallel-external-merge-sort/">parallel external merge sort</a>
       </li>
     
@@ -190,10 +246,6 @@
     
       <li class="post">
         <a href="/blog/2013/02/03/move-erp-to-cloud/">中小企業ERP系統上雲端？</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/08/23/cloud-computing-and-rocket-science/">為什麼雲端產業在台灣行不通</a>
       </li>
     
   </ul>
