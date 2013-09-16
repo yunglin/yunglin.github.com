@@ -186,7 +186,25 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
   </ul>
 </section>
 
-Include file 'asides/facebook.html asides/twitter.html' contains invalid characters or sequencesIncluded file 'asides/facebook.html asides/twitter.html' not found in _includes directory
+<div class="fb-follow" data-href="https://www.facebook.com/zuck" data-width="260" data-show-faces="true"></div>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("yunglinho", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/yunglinho" class="twitter-follow-button" data-show-count="false">Follow @yunglinho</a>
+  
+</section>
+
+
 
 <section class="googleplus">
   <h1>

@@ -288,7 +288,25 @@ Having a good build system is like living in the heaven, and having a bad build 
   </ul>
 </section>
 
-Include file &#8216;asides/facebook.html asides/twitter.html&#8217; contains invalid characters or sequencesIncluded file &#8216;asides/facebook.html asides/twitter.html&#8217; not found in _includes directory
+<div class="fb-follow" data-href="https://www.facebook.com/zuck" data-width="260" data-show-faces="true"></div>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("yunglinho", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/yunglinho" class="twitter-follow-button" data-show-count="false">Follow @yunglinho</a>
+  
+</section>
+
+
 
 <section class="googleplus">
   <h1>
