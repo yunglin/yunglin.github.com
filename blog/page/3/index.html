@@ -9,8 +9,8 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="把 Blog System 從 blogger.com 換成 Octopress ，用 reStructuredText 寫技術文件還是比較簡單。
-轉換中，若文章顯示有問題，請到舊站 http://yunglinho.blogspot.com 看 ">
+  <meta name="description" content="這是 4/23 要在 Scala Taiepi Meeting 3 用的講稿，先打出來放這。 Dependency Injection &amp; Inversion of Control
+Dependency Injection &amp; Inversion of Control 是 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,651 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/22/dependency-injection-in-scala/">Dependency Injection in Scala</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-22T22:44:00+08:00" pubdate data-updated="true">Apr 22<span>nd</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>這是 4/23 要在 Scala Taiepi Meeting 3 用的講稿，先打出來放這。</p>
+<div class="section" id="dependency-injection-inversion-of-control">
+<h2>Dependency Injection &amp; Inversion of Control</h2>
+<p><a class="reference external" href="http://martinfowler.com/articles/injection.html">Dependency Injection &amp; Inversion of Control</a> 是 Martin Fowler 在 2004 年所
+提出來的一個的概念，Martin Fowler在這篇文章中指出，DI可以三種型式來實作，這觀念後來由 Spring
+Source 及 Google 實做出來，變成 Java Enterprise 應用中，不可或缺的一塊。</p>
+<p>在 Ioc 觀念的出現前，物件相依的元件(Component)，多是於物件建立時，就帶入(binding)的，Martin
+的供獻在於，IoC把物件對元件的相依性拆出來，變成可以替換的實作。</p>
+<p>底下是 Martin 所舉的例子，接著我們會看到用 DI 改進的方式</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span> <span class="o">{</span>
+</span><span class="line">  <span class="kd">private</span> <span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">;</span>
+</span><span class="line">  <span class="kd">public</span> <span class="nf">MovieLister</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">finder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ColonDelimitedMovieFinder</span><span class="o">(</span><span class="s">&quot;movies1.txt&quot;</span><span class="o">);</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure><p>Martin 提出的 DI 型式分別是 Constructor Injection, Setter Injection, and Interface Injection.</p>
+<div class="section" id="constructor-injection">
+<h3>Constructor Injection</h3>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span><span class="o">...</span>
+</span><span class="line">  <span class="kd">public</span> <span class="nf">MovieLister</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">this</span><span class="o">.</span><span class="na">finder</span> <span class="o">=</span> <span class="n">finder</span><span class="o">;</span>
+</span><span class="line">  <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="setter-injection">
+<h3>Setter Injection</h3>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span><span class="o">...</span>
+</span><span class="line">  <span class="kd">private</span> <span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFinder</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">this</span><span class="o">.</span><span class="na">finder</span> <span class="o">=</span> <span class="n">finder</span><span class="o">;</span>
+</span><span class="line">   <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="interface-injection">
+<h3>Interface Injection</h3>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">InjectFinder</span> <span class="o">{</span>
+</span><span class="line">  <span class="kt">void</span> <span class="nf">injectFinder</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">);</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span> <span class="kd">implements</span> <span class="n">InjectFinder</span><span class="o">...</span>
+</span><span class="line">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">injectFinder</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">this</span><span class="o">.</span><span class="na">finder</span> <span class="o">=</span> <span class="n">finder</span><span class="o">;</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="kd">class</span> <span class="nc">Tester</span><span class="o">...</span>
+</span><span class="line">  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">registerComponents</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">container</span><span class="o">.</span><span class="na">registerComponent</span><span class="o">(</span><span class="s">&quot;MovieLister&quot;</span><span class="o">,</span> <span class="n">MovieLister</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class="line">    <span class="n">container</span><span class="o">.</span><span class="na">registerComponent</span><span class="o">(</span><span class="s">&quot;MovieFinder&quot;</span><span class="o">,</span> <span class="n">ColonMovieFinder</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">  <span class="kd">private</span> <span class="kt">void</span> <span class="nf">registerInjectors</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">container</span><span class="o">.</span><span class="na">registerInjector</span><span class="o">(</span><span class="n">InjectFinder</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">container</span><span class="o">.</span><span class="na">lookup</span><span class="o">(</span><span class="s">&quot;MovieFinder&quot;</span><span class="o">));</span>
+</span><span class="line">    <span class="n">container</span><span class="o">.</span><span class="na">registerInjector</span><span class="o">(</span><span class="n">InjectFinderFilename</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="k">new</span> <span class="n">FinderFilenameInjector</span><span class="o">());</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="jsr-330-annotation">
+<h3><a class="reference external" href="http://docs.oracle.com/javaee/6/api/javax/inject/package-summary.html">JSR-330</a> Annotation</h3>
+<p>而後，這些 DI 的用法，也被 J2EE 給採用，變成 <a class="reference external" href="http://docs.oracle.com/javaee/6/api/javax/inject/package-summary.html">JSR-330</a> 標準，用法如下</p>
+<div class="section" id="id2">
+<h4>Constructor Injection</h4>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span><span class="o">...</span>
+</span><span class="line">  <span class="nd">@Inject</span> <span class="kd">public</span> <span class="n">MovieLister</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">this</span><span class="o">.</span><span class="na">finder</span> <span class="o">=</span> <span class="n">finder</span><span class="o">;</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">MovieFinder</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">List</span> <span class="nf">findAll</span><span class="o">();</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="property-injection">
+<h4>Property Injection</h4>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span> <span class="o">{</span>
+</span><span class="line">  <span class="nd">@Inject</span> <span class="kd">private</span> <span class="n">MoveFinder</span> <span class="n">finder</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+</div>
+</div>
+<div class="section" id="dependency-injection-in-scala">
+<h2>Dependency Injection in Scala</h2>
+<p>花了許久時間解釋 DI 於 Java 的演進，我們總算可以進入本文的正題 Dependency Injection in Scala。在 Scala 中
+實做 DI 的方式有有那些呢，接下來我們要談的就是 DI in Scala 的幾個選擇。</p>
+<ul class="simple">
+<li><a class="reference external" href="http://docs.oracle.com/javaee/6/api/javax/inject/package-summary.html">JSR-330</a></li>
+<li>Cake Pattern</li>
+<li>SubCut</li>
+<li>Functional DI - Reader Monad</li>
+</ul>
+<div class="section" id="id3">
+<h3><a class="reference external" href="http://docs.oracle.com/javaee/6/api/javax/inject/package-summary.html">JSR-330</a></h3>
+<p>由於 Scala 本身在編譯時，會被編成 Java Byte Code ，所以可以直接套用支源 <a class="reference external" href="http://docs.oracle.com/javaee/6/api/javax/inject/package-summary.html">JSR-330</a> 的
+框架，但是在使用上有一些小眉角，就是，若是使用 Constructor Injection 時，需要用 <cite>&#64;Inject()</cite> 標
+在 class 定義之前，使用 Property Injection 時，由於 Scala 的 <cite>val</cite> 被定義成 final 的，所以不
+能夠被用在 Property Injection 之上，在這時候，只能用 <cite>var</cite> 來做。</p>
+<p>為了達到 immutable 的效果，我通常都是用 Constructor Injection 的。( 另一個原因是我不喜歡 AOP )</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">case</span> <span class="k">class</span> <span class="nc">@Inject</span><span class="o">()</span> <span class="nc">MovieLister</span><span class="o">(</span><span class="n">finder</span><span class="k">:</span> <span class="kt">MovieFinder</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">class</span> <span class="nc">MovieLister2</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">var</span> <span class="n">finder</span><span class="k">:</span> <span class="kt">MovieFinder</span> <span class="o">=</span> <span class="k">_</span>
+</span><span class="line">
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="cake-pattern">
+<h3>Cake Pattern</h3>
+<p>Cake Pattern 大概是除了 JSR-330 外，最常被提到在 Scala 下的實作 DI 的方式了，Cake Pattern 是由
+Scala 之父 Martin Odersky 的一篇論文 <a class="reference external" href="http://lamp.epfl.ch/~odersky/papers/ScalableComponent.pdf">Scalable Component Abstractions</a> 中提到，不過大
+多數人看過的版本，應該是 Jonas Bonér 的 <a class="reference external" href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di/">Real-World Scala: Dependency Injection (DI)</a></p>
+<p>Cake Pattern 是利用 Scala Mixin 的功能，讓物件被創造時，才把相依的元件，透過 Mixin 的方式綁在一起。</p>
+<p>接下來，我們就看看要怎麼樣用 Cake Pattern 重新實作上面的 MovieFinder 的例子</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">trait</span> <span class="nc">MovieFinderComponent</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">finder</span><span class="k">:</span> <span class="kt">MovieFinder</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">trait</span> <span class="nc">MovieFinder</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">def</span> <span class="n">findAll</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Movie</span><span class="o">]</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">trait</span> <span class="nc">NilMovieFinderComponent</span> <span class="k">extends</span> <span class="nc">MovieFinderComponent</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">val</span> <span class="n">finder</span><span class="k">:</span> <span class="kt">MovieFinder</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">NilMovieFinder</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">class</span> <span class="nc">NilMovieFinder</span> <span class="k">extends</span> <span class="nc">MovieFinder</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">def</span> <span class="n">findAll</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Movie</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">      <span class="nc">Nil</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">abstract</span> <span class="k">class</span> <span class="nc">MovieLister</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">this:</span> <span class="kt">MovieFinderComponent</span> <span class="o">=&gt;</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">findByAuthor</span><span class="o">(</span><span class="n">author</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Movie</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">finder</span><span class="o">.</span><span class="n">findAll</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="n">m</span> <span class="k">=&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">author</span> <span class="o">==</span> <span class="n">author</span><span class="o">)</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure><p>上面便是一個使用 Cake Pattern 實作 MovieFinder 所需要的程式碼；首先，我們要把所需的
+元件，包在一個 Component trait (MovieFinderComponent) 裡頭，再把這個原元件的規格，
+寫在 Component trait 中的另一個 trait 中(MovieFinder)，最後，再是訂一個取存這元件的
+method <cite>def finder: MovieFinder</cite>.</p>
+<p>在被注入的這一方 (MovieLister) ，我們使用 self-type annotation 來宣告，當要生成一個
+MovieLister instance 時，我們必需要提供 MovieFinderComponent 的實作，同時，在MovieLister
+內，我們可以透過 <cite>finder</cite> 這個 method 來呼叫 MovieFinder 的實作 ；這邊的寫法是</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">movieLister</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MovieLister</span> <span class="k">extends</span> <span class="nc">NilMovieFinderComponent</span>
+</span></code></pre></td></tr></table></div></figure><div class="section" id="component-registry">
+<h4>Component Registry</h4>
+<p>在應用上，由於我們的系統可能包含不只一個元件，而一個物件，可能須要多個不同的元件，因此，
+Jonas建議我們，如　Guice 用 Module 來定義所有元件的實作類別，在Cake Pattern上，我們
+可以用一個 ComponentRegistry Object 來把所有的實作類別指定好。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">object</span> <span class="nc">ComponentRegistry</span> <span class="k">extends</span>
+</span><span class="line">  <span class="nc">MyMovieFinderComponent</span> <span class="k">with</span>
+</span><span class="line">  <span class="nc">MyAuthorFinderComponent</span> <span class="k">with</span>
+</span><span class="line">  <span class="nc">MyUserRepositoryComponent</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="k">object</span> <span class="nc">TestEnvironment</span> <span class="k">extends</span>
+</span><span class="line">  <span class="nc">MockMovieFinderComponent</span> <span class="k">with</span>
+</span><span class="line">  <span class="nc">MockAuthorFinderComponent</span> <span class="k">with</span>
+</span><span class="line">  <span class="nc">MockUserRepositoryComponent</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="k">class</span> <span class="nc">Test</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">def</span> <span class="n">testList</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">new</span> <span class="n">lister</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MovieLister</span> <span class="k">extends</span> <span class="nc">TestEnvironment</span>
+</span><span class="line">    <span class="c1">// testing code.</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure><div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">一個動動腦的時間，在使用 ComponentRegistry 時，我們要怎麼寫，才會讓某一個 Component 的實作變成 Singleton</p>
+</div>
+</div>
+<div class="section" id="pros-and-cons-of-cake-pattern">
+<h4>Pros and Cons of Cake Pattern</h4>
+<dl class="docutils">
+<dt>Pros</dt>
+<dd><ul class="first last simple">
+<li>no framework required, using only language features</li>
+<li>type safe – a missing dependency is found at compile-time</li>
+<li>powerful – “assisted inject”, scoping possible by implementing the dependency-providing method appropriately</li>
+</ul>
+</dd>
+<dt>Cons</dt>
+<dd><ul class="first last simple">
+<li>lot of boilerplate code</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="problem-of-cake-pattern">
+<h4>Problem of Cake Pattern</h4>
+<p>然而，從我的使用經驗來講， Cake Pattern 有個缺點，讓我不推薦各位來使用 Cake Pattern ，缺點是， Cake Pattern
+只能使用在第一層相依性的元件上，造成實作上的程式碼的不一致性，以及可重用性的問題。</p>
+<p>今天，假設我們電影的數量一直成長，所以我們開始分門別類來存放這些電影的類別，而我們在找作者時，只在各個子類別下
+找；為了這個變更，我們不只需要新增一些元件，我們連舊有的 MovieLister 都需要更改他的實作才行。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">trait</span> <span class="nc">CategorizedMovieFinderFactoryComponent</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">trait</span>  <span class="nc">CategorizedMovieFinderFactory</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">def</span> <span class="n">create</span><span class="o">(</span><span class="n">category</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">MovieFinder</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">abstract</span> <span class="k">class</span> <span class="nc">MovieListerFactory</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">this:</span> <span class="kt">CategorizedMovieFinderComponent</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">create</span><span class="o">(</span><span class="n">category</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">MovieLister</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MovieLister</span><span class="o">(</span><span class="n">finder</span><span class="o">)</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// WTF, the implementation has to change here?!</span>
+</span><span class="line"><span class="k">case</span> <span class="k">class</span> <span class="nc">MovieLister</span><span class="o">(</span><span class="n">finder</span><span class="k">:</span> <span class="kt">MovieFinder</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">def</span> <span class="n">findByAuthor</span><span class="o">(</span><span class="n">author</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Movie</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">finder</span><span class="o">.</span><span class="n">findAll</span><span class="o">.</span><span class="n">filter</span><span class="o">(</span><span class="n">m</span> <span class="k">=&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">author</span> <span class="o">==</span> <span class="n">author</span><span class="o">)</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+</div>
+</div>
+<div class="section" id="subcut">
+<h2><a class="reference external" href="https://github.com/dickwall/subcut/blob/master/GettingStarted.md">SubCut</a></h2>
+<p><a class="reference external" href="https://github.com/dickwall/subcut/blob/master/GettingStarted.md">SubCut</a> 是由 Dick Wall 這位 Java Posse Podcaster 所完成的專案，由於我個人並沒有實際使用的經驗
+，所以只能就他所提供的文件做個概述。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">object</span> <span class="nc">SomeModule</span> <span class="k">extends</span> <span class="nc">NewBindingModule</span><span class="o">({</span> <span class="k">implicit</span> <span class="n">module</span> <span class="k">=&gt;</span>
+</span><span class="line">  <span class="k">import</span> <span class="nn">module._</span>  <span class="c1">// optional but convenient</span>
+</span><span class="line">
+</span><span class="line">  <span class="n">bind</span> <span class="o">[</span><span class="kt">ServiceA</span><span class="o">]</span> <span class="n">toSingle</span> <span class="n">Y</span>
+</span><span class="line">  <span class="n">bind</span> <span class="o">[</span><span class="kt">Z</span><span class="o">]</span> <span class="n">toProvider</span> <span class="o">{</span> <span class="n">codeToGetInstanceOfZ</span><span class="o">()</span> <span class="o">}</span>
+</span><span class="line"><span class="o">})</span>
+</span><span class="line">
+</span><span class="line"><span class="k">class</span> <span class="nc">SomeService</span><span class="o">(</span><span class="n">param1</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">param2</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)(</span><span class="k">implicit</span> <span class="k">val</span> <span class="n">bindingModule</span><span class="k">:</span> <span class="kt">BindingModule</span><span class="o">)</span>
+</span><span class="line">    <span class="k">extends</span> <span class="nc">SomeTrait</span> <span class="k">with</span> <span class="nc">Injectable</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">val</span> <span class="n">service1</span> <span class="k">=</span> <span class="n">inject</span> <span class="o">[</span><span class="kt">ServiceA</span><span class="o">]</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure><p>在 SubCut 中，是讓需要被注入的元件庫，使用 implicit variable 的方式，從執行環境中帶入，然後直接讓
+SomeService對整個 Module 做存取。</p>
+<p>然而，因為 SubCut 的這一個缺陷，我個人是不用去使用 SubCut 的，這個缺點，在 Martin Fowler 文中被稱
+做 <a class="reference external" href="http://martinfowler.com/articles/injection.html#ServiceLocatorVsDependencyInjection">Service Locator</a> ，使用 Service Locator Pattern 的缺點是，你把整個環境都傳給了需要被注入的物
+件，讓物件自己在環境中去挖寶；這正好就把把 Inversion of Control 的拿交出的控制權又還給了物件本身；
+除了去閱讀程式碼外，你無法單看 class constructor 就可以了解到，某一個物件到底是相依在那些元件之上。</p>
+<p>好不容易爭來的控制權，又還了一大半回去</p>
+</div>
+<div class="section" id="reader-monad">
+<h2>Reader Monad</h2>
+<p>跳脫了從 OO 出發而來的 DI 方式， Runar Oli 在 Northeast Scala Symposium 2012上 ，提出了一個
+純用 <a class="reference external" href="http://www.youtube.com/watch?v=ZasXwtTRkio">Functional Programming 的 DI 實作</a> (<a class="reference external" href="http://dl.dropbox.com/u/4588997/Runar-NEScala-DI.pdf">slides</a>)</p>
+<p>Runar 用的例子是一個使用 JDBC 的範例</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">setUserPwd</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+</span><span class="line">               <span class="n">pwd</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+</span><span class="line">               <span class="n">c</span><span class="k">:</span> <span class="kt">Connection</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">stmt</span> <span class="k">=</span> <span class="n">c</span><span class="o">.</span><span class="n">prepareStatement</span><span class="o">(</span>
+</span><span class="line">    <span class="s">&quot;update users set pwd = ? where id = ?&quot;</span><span class="o">)</span>
+</span><span class="line">  <span class="n">stmt</span><span class="o">.</span><span class="n">setString</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">pwd</span><span class="o">)</span>
+</span><span class="line">  <span class="n">stmt</span><span class="o">.</span><span class="n">setString</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span>
+</span><span class="line">  <span class="n">stmt</span><span class="o">.</span><span class="n">executeUpdate</span>
+</span><span class="line">  <span class="n">stmt</span><span class="o">.</span><span class="n">close</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure><p>上面的程式碼，我們可以用 Functional Way 改寫成底下的方式，讓 <cite>setUserPwd</cite> 改成
+回傳一個 (Connection =&gt; Unit) 的函式，這個函式，收進一個 DB Connection 然後對
+這個 Connection 做一些操作。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">setUserPwd</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+</span><span class="line">               <span class="n">pwd</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=&gt;</span> <span class="nc">Unit</span> <span class="k">=</span>
+</span><span class="line">  <span class="n">c</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=&gt;</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">stmt</span> <span class="k">=</span> <span class="n">c</span><span class="o">.</span><span class="n">prepareStatement</span><span class="o">(</span>
+</span><span class="line">      <span class="s">&quot;update users set pwd = ? where id = ?&quot;</span><span class="o">)</span>
+</span><span class="line">    <span class="n">stmt</span><span class="o">.</span><span class="n">setString</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="n">pwd</span><span class="o">)</span>
+</span><span class="line">    <span class="n">stmt</span><span class="o">.</span><span class="n">setString</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span>
+</span><span class="line">    <span class="n">stmt</span><span class="o">.</span><span class="n">executeUpdate</span>
+</span><span class="line">    <span class="n">stmt</span><span class="o">.</span><span class="n">close</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure><p>接著，我們可以用一個 DB Monad 把所有 DB Operation 都抽像化，讓這些 DB Operation 可
+以堆疊起來。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">case</span> <span class="k">class</span> <span class="nc">DB</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">g</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">Connection</span><span class="o">)</span> <span class="k">=</span> <span class="n">g</span><span class="o">(</span><span class="n">c</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+</span><span class="line">    <span class="nc">DB</span><span class="o">(</span><span class="n">c</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">g</span><span class="o">(</span><span class="n">c</span><span class="o">)))</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">DB</span><span class="o">[</span><span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
+</span><span class="line">    <span class="nc">DB</span><span class="o">(</span><span class="n">c</span> <span class="k">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">g</span><span class="o">(</span><span class="n">c</span><span class="o">))(</span><span class="n">c</span><span class="o">))</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="n">pure</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="kt">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span><span class="nc">DB</span><span class="o">(</span><span class="n">c</span> <span class="k">=&gt;</span> <span class="n">a</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">implicit</span> <span class="k">def</span> <span class="n">db</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span><span class="o">(</span><span class="n">f</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure><p>底下是堆疊起來的成果，透過 scala <a class="reference external" href="http://stackoverflow.com/questions/1052476/can-someone-explain-scalas-yield">for comprehension</a> 把 getUserPwd, setUserPwd 堆
+疊起來，變成一個 changePwd method ，這一步步的把函式加成，符合了 Functional Programming 中
+的 no side-effect ，在函式加成的過程中，我們並沒有去執行任何有 side effect 的呼叫，只是單純的
+把函式加乘起來，等到最後再來選定執行環境。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">changePwd</span><span class="o">(</span><span class="n">userid</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+</span><span class="line">              <span class="n">oldPwd</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+</span><span class="line">              <span class="n">newPwd</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="k">=</span>
+</span><span class="line"><span class="k">for</span> <span class="o">{</span>
+</span><span class="line">  <span class="n">pwd</span> <span class="k">&lt;-</span> <span class="n">getUserPwd</span><span class="o">(</span><span class="n">userid</span><span class="o">)</span>
+</span><span class="line">  <span class="n">eq</span> <span class="k">&lt;-</span> <span class="k">if</span> <span class="o">(</span><span class="n">pwd</span> <span class="o">==</span> <span class="n">oldPwd</span><span class="o">)</span> <span class="k">for</span> <span class="o">{</span>
+</span><span class="line">          <span class="k">_</span> <span class="k">&lt;-</span> <span class="n">setUserPwd</span><span class="o">(</span><span class="n">userid</span><span class="o">,</span> <span class="n">newPwd</span><span class="o">)</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">yield</span> <span class="kc">true</span>
+</span><span class="line">        <span class="k">else</span> <span class="n">pure</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+</span><span class="line"><span class="o">}</span> <span class="k">yield</span> <span class="n">eq</span>
+</span></code></pre></td></tr></table></div></figure><p>那 DI 在這個 DB Monad 中要怎麼使用呢？</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">abstract</span> <span class="k">class</span> <span class="nc">ConnProvider</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">A</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="n">mkProvider</span><span class="o">(</span><span class="n">driver</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">url</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="k">=</span>
+</span><span class="line">  <span class="k">new</span> <span class="nc">ConnProvider</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span> <span class="o">{</span>
+</span><span class="line">      <span class="nc">Class</span><span class="o">.</span><span class="n">forName</span><span class="o">(</span><span class="n">driver</span><span class="o">)</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">conn</span> <span class="k">=</span> <span class="nc">DriverManager</span><span class="o">.</span><span class="n">getConnection</span><span class="o">(</span><span class="n">url</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">try</span> <span class="o">{</span> <span class="n">f</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span> <span class="o">}</span>
+</span><span class="line">      <span class="k">finally</span> <span class="o">{</span> <span class="n">conn</span><span class="o">.</span><span class="n">close</span> <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">lazy</span> <span class="k">val</span> <span class="n">sqliteTestDB</span> <span class="k">=</span>
+</span><span class="line">  <span class="n">mkProvider</span><span class="o">(</span><span class="s">&quot;org.sqlite.JDBC&quot;</span><span class="o">,</span> <span class="s">&quot;jdbc:sqlite::memory:&quot;</span><span class="o">)</span>
+</span><span class="line"><span class="k">lazy</span> <span class="k">val</span> <span class="n">mysqlProdDB</span> <span class="k">=</span>
+</span><span class="line">  <span class="n">mkProvider</span><span class="o">(</span><span class="s">&quot;org.gjt.mm.mysql.Driver&quot;</span><span class="o">,</span>
+</span><span class="line">    <span class="s">&quot;jdbc:mysql://prod:3306/?user=one&amp;password=two&quot;</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure><p>Runar 是把 DB Connection 的建立用 ConnProvider 抽像化，透過這樣，
+我鍆可以簡單的定意兩種不同的執行環境，一組是 MySQL 另一組是測試用的 SQLite，</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">runInTest</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">ConnProvider</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span>
+</span><span class="line">  <span class="n">f</span><span class="o">(</span><span class="n">sqliteTestDB</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="n">runInProduction</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">ConnProvider</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span>
+</span><span class="line">  <span class="n">f</span><span class="o">(</span><span class="n">mysqlProdDB</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="n">myProgram</span><span class="o">(</span><span class="n">userid</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">ConnProvider</span> <span class="o">=&gt;</span> <span class="nc">Unit</span> <span class="k">=</span>
+</span><span class="line">  <span class="n">r</span><span class="k">:</span> <span class="kt">ConnProvider</span> <span class="o">=&gt;</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Enter old password&quot;</span><span class="o">)</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">oldPwd</span> <span class="k">=</span> <span class="n">readLine</span>
+</span><span class="line">    <span class="n">println</span><span class="o">(</span><span class="s">&quot;Enter new password&quot;</span><span class="o">)</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">newPwd</span> <span class="k">=</span> <span class="n">readLine</span>
+</span><span class="line">    <span class="n">r</span><span class="o">(</span><span class="n">changePwd</span><span class="o">(</span><span class="n">userid</span><span class="o">,</span> <span class="n">oldPwd</span><span class="o">,</span> <span class="n">newPwd</span><span class="o">))</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="n">main</span><span class="o">(</span><span class="n">args</span><span class="k">:</span> <span class="kt">Array</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=</span>
+</span><span class="line">  <span class="n">runInTest</span><span class="o">(</span><span class="n">myProgram</span><span class="o">(</span><span class="n">args</span><span class="o">(</span><span class="mi">0</span><span class="o">)))</span>
+</span></code></pre></td></tr></table></div></figure><p>以上就是如何用 DB Monad 來達到 DB DI 的功用，這樣做的好處是</p>
+<ul class="simple">
+<li>Dead-simple. Just function composition.</li>
+<li>Explicit, type-safe dependencies.</li>
+<li>Lift any function.</li>
+<li>No frameworks, annotations, or XML.</li>
+<li>No initialization step.</li>
+<li>Doesn’t rely on esoteric language features.</li>
+</ul>
+<div class="section" id="more-useful-monad">
+<h3>More Useful Monad</h3>
+<p>上面的 DB Monad ，只能對 DB 來做 DB ，然而，若是我們再多抽像化一層，把 DB Connection 變成
+一個 <strong>type parameter</strong> ，那麼，我們就有一個 Reader Monad ，可以套用在許多不同應用上，
+至於實際的用法， <a class="reference external" href="http://www.youtube.com/watch?v=ZasXwtTRkio">Runar 的演講</a> 有給一個範例，請大家移步去看。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">case</span> <span class="k">class</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">C</span>, <span class="kt">A</span><span class="o">](</span><span class="n">g</span><span class="k">:</span> <span class="kt">C</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">import</span> <span class="nn">Reader._</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">C</span><span class="o">)</span> <span class="k">=</span> <span class="n">g</span><span class="o">(</span><span class="n">c</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">C</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">c</span><span class="k">:</span> <span class="kt">C</span> <span class="o">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">g</span><span class="o">(</span><span class="n">c</span><span class="o">))</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">flatMap</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">C</span>, <span class="kt">B</span><span class="o">])</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">C</span>, <span class="kt">B</span><span class="o">]</span>  <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">c</span><span class="k">:</span> <span class="kt">C</span> <span class="o">=&gt;</span> <span class="n">f</span><span class="o">(</span><span class="n">g</span><span class="o">(</span><span class="n">c</span><span class="o">))(</span><span class="n">c</span><span class="o">)</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">object</span> <span class="nc">Reader</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">implicit</span> <span class="k">def</span> <span class="n">reader</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">Reader</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Reader</span><span class="o">(</span><span class="n">f</span><span class="o">)</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+</div>
+<div class="section" id="id5">
+<h2>總結</h2>
+<p>There is no silver bullet, choose your solution wisely.</p>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -730,43 +1375,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/12/08/lucene-on-android/">Lucene on Android</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-08T18:20:00+08:00" pubdate data-updated="true">Dec 8<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。<br /><br />Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說，無法把 index files 放在 apk 中直接讀取，一定要存放在 device or external storage 上，才能夠使用；或者是自己弄個虛擬目錄出來，不過，這會耗用過多的計憶體空間。<br /><br />我是選用把 index 放在 &#8216;src/res/raw&#8217; 底下，讓他變成 apk 的一部份，省去在網路上找個空間來放置 index 的問題，當要更新 index 時，就重編個 apk 叫使用者更新就好。<br /><br />在放 lucene index 時，如果你想用 compound format 的話，可以用底下的指令，把多個 index files 包裹成單一檔案 .cfs <br /><br /><pre class="brush: scala;">// run REPL with 'scala -cp luke-3.4.0_1-all.jar'<br /><br />import org.apache.lucene.store.FSDirectory<br />import org.apache.lucene.index._<br />import org.apache.lucene.analysis.standard._<br /><br />val source = FSDirectory.open(new java.io.File("source"))<br />val dest = FSDirectory.open(new java.io.File("dest"))<br /><br />// open source index<br />val reader = IndexReader.open(source)<br /><br />// create writer for compound index.<br />val analyzer = new StandardAnalyzer(org.apache.lucene.util.Version.LUCENE_34)<br />val writer = new org.apache.lucene.index.IndexWriter(dir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED)<br /><br />// force writer always use compound index format.<br />writer.getMergePolicy.asInstanceOf[LogByteSizeMergePolicy].setNoCFSRatio(1.0)<br /><br /><br />// add source index to dest index.<br />writer.addIndexes(reader)<br />writer.optimized<br />writer.close<br /><br />reader.close<br /></pre><br />接著，是把產生的 segment, segments_1, _0.cfs 拷到 src/res/raw 底下，讓這些檔案變成 .apk 的一部份。<br /><br /><br />接著，是要在第一次執行時，把這些 index 從 apk 中覆製到 SD 卡上或是機子上，這邊，我寫了個小工具來做這件事<br /><br /><pre class="brush: scala;">import android.content.Context<br />import android.os.Environment<br />import android.util.Log<br /><br />import com.bluetangstudio.android.disastermap.TaipeiDisasterApp.LogTag<br /><br />import org.apache.commons.io.FileUtils<br />import org.apache.lucene.store.{FSDirectory, Directory}<br /><br />import scala.collection.JavaConversions._<br />import java.io.File<br /><br />/**<br /> *  Helper class that search for lucene index directories on the device. The search order is<br /> *  external storage first then local storage. If lucene index does not exist on device, this<br /> *  class will copy the index from the apk to the device storage.<br /> *<br /> * @param context  the application context<br /> * @param path     the root folder name of the index directory to use and to look for.<br /> * @param source   the source of index resource to copy if index does not exist on the device.<br /> *                 format: Seq[(filename, resourceId)]<br /> */<br />case class LuceneOpenHelper(context: Context, path: String, source: Seq[Tuple2[String, Int]]) {<br /><br />    /**<br />     * create or open an Directory.<br />     */<br />    def open(): Option[Directory] = {<br />        val candidates = Seq(externalFolder, internalFolder).flatten<br /><br />        // find the folder with index in it.<br />        val folder = candidates.filter(f => f.exists() && f.list().length > 0).headOption<br />        val withIndex = folder.orElse(<br />            candidates.find(<br />                f => {<br />                    // ensure folder is available.<br />                    f.exists() || f.mkdirs() match {<br />                        // folder is not accessible<br />                        case false => false<br /><br />                        case _ => {<br />                            Log.d(LogTag, "Duplicating index from apk to %s...".format(f))<br />                            source.foreach(<br />                                s => {<br />                                    val is = context.getResources.openRawResource(s._2)<br />                                    try {<br />                                        FileUtils.copyInputStreamToFile(is, new File(f, s._1))<br />                                    } finally {<br />                                        is.close()<br />                                    }<br />                                }<br />                            )<br />                            true<br />                        }<br />                    }<br />                }<br />            )<br />        )<br /><br />        return withIndex.map(FSDirectory.open(_))<br />    }<br /><br />    private def externalFolder: Option[File] = {<br />        Environment.getExternalStorageState match {<br />            case Environment.MEDIA_MOUNTED => Option(context.getExternalFilesDir(path))<br />            case _ => None<br />        }<br />    }<br /><br />    private def internalFolder: Option[File] = {<br />        return Option(new File(context.getFilesDir, path))<br />    }<br /><br />}<br /></pre><br />最後，是在 *App 上加上這段<br /><br /><pre class="brush: scala;">object MyApp {<br />    private val INDEX_DIRECTORY = "idx"<br /><br />    private val INDEX_FILES = Seq(<br />        ("_0.cfs", R.raw.idx_0), <br />        ("segments", R.raw.segments), <br />        ("segments_1", R.raw.segments_1)<br />    )<br />}<br />class MyApp extends android.app.Application {<br /><br />    import MyApp._<br /><br />    private var _luceneSearcher: Option[IndexSearcher] = None<br /><br />    def luceneSearcher: Option[IndexSearcher] = {<br />        if (_luceneSearcher.isEmpty) {<br />            Log.d(LogTag, "Initializing new IndexSearcher...")<br />            _luceneSearcher = LuceneOpenHelper(this, INDEX_DIRECTORY, INDEX_FILES).open().map(new IndexSearcher(_))<br />        }<br />        _luceneSearcher<br />    }<br />   <br />    override def onLowMemory() {<br />        _luceneSearcher.foreach(s => s.close())<br />        _luceneSearcher = None<br />    }<br />}<br /></pre><br />這樣一來，就能在 Android 上面跑 lucene-core 了.</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -784,6 +1392,10 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/09/23/california-legalize-ridesharing/">加州公共事務委員會通過共乘法案</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/09/17/on-hr/">談人力資源主管</a>
       </li>
     
@@ -797,10 +1409,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
     
       <li class="post">
         <a href="/blog/2013/03/19/parallel-external-merge-sort/">parallel external merge sort</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/19/clean-future-api-design-sort.rst/">Clean Future API Design</a>
       </li>
     
   </ul>
