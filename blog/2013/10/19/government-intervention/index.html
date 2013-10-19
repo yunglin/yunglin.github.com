@@ -5,11 +5,14 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>My experience with Scala on Android - 碎碎唸</title>
+  <title>談政府干預摧毀了台灣的軟體業 - 碎碎唸</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="用Scala開發Android，是個滿有趣的經驗，大致上來因為我切入的時間點較晚，所以大部份的問題已經被前人所解決，就用 https://github.com/jberkel/android-plugin 把專案用 sbt 開好後，就可以開始寫 android.我用的 IDE 是 &hellip;">
+  <meta name="description" content="<!-- raw::html Post by 揭露22K. &#8211;>
+看到今天大家又再吵無薪實習，把前一陣子在 FB 上寫的貼過來
+我舉個台灣軟體業被政府消滅的例子，來讓各位體會到，政府幫企業找人，是件多麼可怕的事。
+台灣20年前，台灣有軟體產業，有自製中文系統、排板軟體、繪圖軟體、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +21,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/11/16/my-experience-with-scala-on-android">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2013/10/19/government-intervention">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -78,7 +81,7 @@
   
   <header>
     
-      <h1 class="entry-title">My Experience With Scala on Android</h1>
+      <h1 class="entry-title">談政府干預摧毀了台灣的軟體業</h1>
     
     
       <p class="meta">
@@ -94,23 +97,29 @@
   
 
 
-<time datetime="2011-11-16T16:53:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+<time datetime="2013-10-19T18:27:00+08:00" pubdate data-updated="true">Oct 19<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><div class='post'>
-用Scala開發Android，是個滿有趣的經驗，大致上來因為我切入的時間點較晚，所以大部份的問題已經被前人所解決，就用 https://github.com/jberkel/android-plugin 把專案用 sbt 開好後，就可以開始寫 android.<br /><br />我用的 IDE 是 intellij 11 EAP，用 sbt-idea 把 idea project 設好後，把預設的 asset pa th 從 .idea_module 改成 src/main ，就可以開始開發了。<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" imageanchor="1" style=""><img border="0" width="600" src="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" /></a></div><br />在開發上，除了前一回碰上的<a href="http://blog.yunglinho.com/2011/11/data-modeling-with-jackson-json-and_5795.html">proguard問題</a>外，我還碰上另一個比較嚴重的問題－不能在Scala裡寫 AsyncTask<br /><br />這問題跟<a href="https://issues.scala-lang.org/browse/SI-3622">SI-3622</a> <a href="https://issues.scala-lang.org/browse/SI-3494">SI-3494</a>有關，看來是在 Scala 2.8解掉的問題，2.9又跑回來了，我這邊看到的狀況是<br /><br /><pre class="brush: scala">override protected def doInBackground(params: Params*): Result<br /></pre><br />會被Scala compiler專換成<br /><pre class="brush: java">public Result doInBackground(Seq params)<br />    public Result doInBackground(Params[] params)<br /></pre><br /><br />而底下的code，則是scala compiler會吐出 overides nothing.<br /><pre class="brush: scala">override protected def doInBackground(params: Array[Params]): Result<br /></pre><br />不管怎樣，都跟Android要求的<code>protected Result doInBackground(Params[] params)</code>不同，所以在runtime時會跑出NoSuchMethodError.<br /><br />解決方法是在 java 裡寫個 bridge interface ，幫 scala compiler 搞不定的東西，在這個 interface 裡定意好<br /><br /><pre class="brush: java">public abstract class SAsyncTask&lt;Params, Progress, Result> extends AsyncTask&lt;Params, Progress, Result> {<br /><br />    protected abstract Result doInBackground(Seq&lt;Params> params);<br /><br />    @Override<br />    protected Result doInBackground(Params... paramses) {<br />        return doInBackground(JavaConversions.asScalaBuffer(Arrays.asList(paramses)));<br />    }<br />}<br /></pre></div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>yunglin</div>
-<div class='content'>
-多補幾個有關repeated parameters的討論，看來是Spec本身有問題，然後實作時一改再改，一路從2.7開始修修補補過來<br /><br />https://issues.scala-lang.org/browse/SI-1342<br />https://issues.scala-lang.org/browse/SI-1459<br />http://stackoverflow.com/questions/5512402/overriding-a-repeated-class-parameter-in-scala</div>
-</div>
-</div>
+<div class="entry-content"><!-- raw::html
+
+<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-post" data-href="https://www.facebook.com/photo.php?fbid=207806502725706&amp;set=a.123958594443831.22510.123957401110617&amp;type=1" data-width="550"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?fbid=207806502725706&amp;set=a.123958594443831.22510.123957401110617&amp;type=1">Post</a> by <a href="https://www.facebook.com/ilove22K">揭露22K</a>.</div></div> &#8211;>
+<p>看到今天大家又再吵無薪實習，把前一陣子在 FB 上寫的貼過來</p>
+<p>我舉個台灣軟體業被政府消滅的例子，來讓各位體會到，政府幫企業找人，是件多麼可怕的事。</p>
+<p>台灣20年前，台灣有軟體產業，有自製中文系統、排板軟體、繪圖軟體、資料庫等，但是在12,13年前，被國防役制度，把整個軟體產業給摧毀了。</p>
+<p>研發替代役，是下一個將摧毀台灣新興產業的政策，朋友問，台灣startup請新鮮人要多少薪水？我直接丟核彈，講：不用想了，因為研發替代役政策，小公司跟本不要想說招的到有能力的新鮮人，因為，有能力的，都去大公司上班當替代役，不能申請替代役的小公司，跟本不用去想招社會新鮮人這個問題。</p>
+<p>台灣最近一年研發替代役的名額是 7500 人，約是理工科大學畢業生的一成(目前是碩士才能申請替代役但是明年是大學就可以了)，差不多就是有即戰力的人數。除非是大公司的篩選機制出了漏網之魚，或者是因個人生涯規劃不申請，要不然，大多數的即戰力，就這樣被政府，趕鴨子似的，送給了大企業</p>
+<p>而這些大企業是怎麼使用這些人材的呢？既然把人材綁著四年，年年都有新人進來，所以台灣的產業都把案子弄的很專案導向，能夠在短期內做完就好，沒有人會去想長期性的投資。反正有簡單的路走，為什麼要捨易求難呢？</p>
+<p>所以，各家公司就是一堆新人在走，反而不見公司投資在長期的流程改善及工程方法論當中。資深的員工，在台商薪水也上不來，只能逃到外商去。</p>
+<!-- raw::html
+
+<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+<div class="fb-post" data-href="https://www.facebook.com/shihjieh.hsu/posts/2987682786688" data-width="550"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/shihjieh.hsu/posts/2987682786688">Post</a> by <a href="https://www.facebook.com/shihjieh.hsu">David Hsu</a>.</div></div> &#8211;>
+
 </div>
 
 
@@ -133,7 +142,7 @@
   
 
 
-<time datetime="2011-11-16T16:53:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+<time datetime="2013-10-19T18:27:00+08:00" pubdate data-updated="true">Oct 19<span>th</span>, 2013</time>
       
 
 
@@ -141,7 +150,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/11/16/my-experience-with-scala-on-android/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/11/16/my-experience-with-scala-on-android/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2013/10/19/government-intervention/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2013/10/19/government-intervention/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -154,14 +163,18 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard/" title="Previous Post: Data Modeling With Jackson Json and Scala - Proguard">&laquo; Data Modeling With Jackson Json and Scala - Proguard</a>
+        <a class="basic-alignment left" href="/blog/2013/09/30/new-york-taxi/" title="Previous Post: 談紐約的計程車如何降低乘客及司機間的不信任感">&laquo; 談紐約的計程車如何降低乘客及司機間的不信任感</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2011/11/22/source-code-of-my-scala-on-android-project/" title="Next Post: Source code of my Scala on Android Project.">Source code of my Scala on Android Project. &raquo;</a>
       
     </p>
   </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -236,6 +249,22 @@ alt="tumblr stats" style="border:none;"></a></section>
 
 </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'yunglin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.yunglinho.com/blog/2013/10/19/government-intervention/';
+        var disqus_url = 'http://blog.yunglinho.com/blog/2013/10/19/government-intervention/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 
