@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2014-01-16T14:43:47+08:00</updated>
+  <updated>2014-01-16T14:53:20+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -18,8 +18,7 @@
     <link href="http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german/"/>
     <updated>2014-01-16T14:17:00+08:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german</id>
-    <content type="html"><![CDATA[<p><a class="reference external" href="http://www.youtube.com/embed/9bTKSin4JN4">BBC Make Me a German</a></p>
-<p>德國人為什麼強大，沒空看影片的，這邊做個簡述</p>
+    <content type="html"><![CDATA[<iframe width="420" height="315" src="http://blog.yunglinho.com//www.youtube.com/embed/9bTKSin4JN4" frameborder="0" allowfullscreen></iframe><p>德國人為什麼強大，沒空看影片的，這邊做個簡述</p>
 <ol class="arabic simple">
 <li>德國男人 6:20 就起床，八點半上班，工時八小時，內含午餐一小時，下午四點半下班，就可以回家過家庭生活</li>
 <li>德國人上班時不可以玩手機 fb ，就是認真幹事，沒有休息或發呆的，有空閒就是主動多抓工作來做。</li>
