@@ -5,17 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>中小企業ERP系統上雲端？ - 碎碎唸</title>
+  <title>德國人為什麼強大 - 碎碎唸</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="※ 引述《NightWind (gin and tonic)》之銘言：
-: 我們是一家中小企業
-: 大約三年前才把古早的DOS系統
-: 換裝成鼎新的ERP
-: 現在當初買的伺服器主機保固也要到了
-: 老闆突發奇想把ERP系統裝在中華HiCloud那樣的雲端虛擬主機上
-: &hellip;">
+  <meta name="description" content="&lt;iframe width=&quot;560&quot; height=&quot;420&quot; src=&quot;http://www.youtube.com/embed/9bTKSin4JN4?color=white&amp;theme=light&quot;&gt;&lt;/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2013/02/03/move-erp-to-cloud">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -84,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">中小企業ERP系統上雲端？</h1>
+      <h1 class="entry-title">德國人為什麼強大</h1>
     
     
       <p class="meta">
@@ -100,48 +94,25 @@
   
 
 
-<time datetime="2013-02-03T17:11:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2013</time>
+<time datetime="2014-01-16T14:17:00+08:00" pubdate data-updated="true">Jan 16<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><pre class="literal-block">
-※ 引述《NightWind (gin and tonic)》之銘言：
-: 我們是一家中小企業
-: 大約三年前才把古早的DOS系統
-: 換裝成鼎新的ERP
-: 現在當初買的伺服器主機保固也要到了
-: 老闆突發奇想把ERP系統裝在中華HiCloud那樣的雲端虛擬主機上
-: 節省定期維護主機與擔心主機突然掛掉的費用
-: 請問真的有人會這樣做的嗎？
-: 又如果有的話，台北地區有沒有規劃的廠商？
-</pre>
-<p>HiCloud 沒用過，所以用 <a class="reference external" href="http://aws.amazon.com">AWS</a> 的例子來解釋要這麼做會碰上那些例子。</p>
-<p>第一個問題是 VM 的可靠度是比你自己買伺服器等級的機器還來的低的， AWS EC2 的
-合約是說 99.95% Available ，但是這不包括你 VM 被 AWS會有隨機關掉的機會。當
-被關掉後，你是要自己手動或自動重啟才有 99.95%</p>
-<p>第二個問題是，台灣多數的 ERP是2-tier的架構而非 3 tier 的，若是用 2-tier 的
-軟體，使用者端要從本機連到 AWS去，一個來回的時間從 &lt;10ms跳到 100ms 以上，如
-果程式寫的不好，本來一個流程的轉換要跑兩個 SQL command，原來是 (10ms*2 + SQL execution time) * 2，
-還有機會是小於 100ms看起來很即時就可以反應，一搬到雲端，時間就跳昇到 100ms * 4，變的超級鈍。</p>
-<p>再來，放到 AWS 去，還要考慮台美專線速度的問題，過去幾年來，台灣對外的海纜，幾乎
-每兩年都會斷線超過一天。所以放在雲端你的架構能提供的，就只剩不到 99.5%</p>
-<p>在 EC2 上，如果要用 EBS讓 VM 當機後資料還在的話， EBS的效能是有口皆呸的
-，但是如果不用 EBS，那 VM 一死，上面的資料又全消失了，變成你自己要做 Data Replication</p>
-<p>最後，如果要用台灣的雲端，不用要 HiCloud，比較建議的環境會是開發資源及支援較多
-的 <a class="reference external" href="http://www.microsoft.com/taiwan/windowsazure/">MS Azure</a> 或是使用 <a class="reference external" href="http://joyent.com/">joynet</a> 技術的 <a class="reference external" href="http://micloud.tw/">MiCloud</a> 會比較妥當。</p>
-<p>縱觀來講，搬到雲端有其它新的挑戰要處理，第一個看軟體要先 3tier 化，再來是要
-做DB online replication 保護資料，最後，是公司對外的專線要能跟的上資料量。</p>
-<p>如果前述問題都能解決的話，貴公司得到的會是</p>
+<div class="entry-content"><p>&lt;iframe width=&quot;560&quot; height=&quot;420&quot; src=&quot;<a class="reference external" href="http://www.youtube.com/embed/9bTKSin4JN4?color=white&amp;theme=light">http://www.youtube.com/embed/9bTKSin4JN4?color=white&amp;theme=light</a>&quot;&gt;&lt;/iframe&gt;</p>
+<p>德國人為什麼強大，沒空看影片的，這邊做個簡述</p>
 <ol class="arabic simple">
-<li>更短的錯誤迴復時間：伺服器一死，跟廠商搬機器來迴復也要一個工作天以上，用雲端可以降到一兩小時</li>
-<li>更敏捷的硬體效能：如果硬體效能不夠，使用雲端系統，是直接選更高等級的VM重開，當下就可以昇級。
-不用等採買硬體所需的數星期到數個月的時間，也不必擔心折舊週期還沒到就又要昇級。</li>
+<li>德國男人 6:20 就起床，八點半上班，工時八小時，內含午餐一小時，下午四點半下班，就可以回家過家庭生活</li>
+<li>德國人上班時不可以玩手機 fb ，就是認真幹事，沒有休息或發呆的，有空閒就是主動多抓工作來做。</li>
+<li>德國工業還是採學徒制，公司都是做很專門的小事，做到世界第一。雖然沒有明說，但類似日本的終生僱用制，讓員工能夠專心的精進技能。</li>
+<li>德國人對穩定的重視高過個人福利，薪資成長跟 CPI 一樣而已，為了成就團隊，個人可以什麼雜事都幹</li>
+<li>德國女人在小孩三歲前都是全職家庭主婦，一天花四小時在家政上，剩下來時間花在調教小孩，讓小孩及早養成良好的生活習慣。</li>
+<li>德國特有的森林幼稚園，就是把小朋友帶到森林去跟自然環境玩，發揮想像力，自己動手就地取材作玩具。</li>
+<li>德國的小朋友上學，八點上課，下午很早就下課，一週有三天是在中午前就結束。</li>
 </ol>
-<p>在是否該選用雲端方案的話，就看你們目前的 ERP是否是 3-tier 的，另外就是找顧問來來編
-寫相關的工具及作業流程。</p>
+<p>我的心德是，日德兩大工業國家果然有很多相似的地方，如勤奮重紀律、終生雇用、職人導向，德國還加上了重視家庭生活( 日本男人沒這麼爽 )，但相反的就是女性沒有什麼自主權。</p>
 
 </div>
 
@@ -165,7 +136,7 @@
   
 
 
-<time datetime="2013-02-03T17:11:00+08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2013</time>
+<time datetime="2014-01-16T14:17:00+08:00" pubdate data-updated="true">Jan 16<span>th</span>, 2014</time>
       
 
 
@@ -173,7 +144,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2013/02/03/move-erp-to-cloud/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2013/02/03/move-erp-to-cloud/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -186,10 +157,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/08/23/cloud-computing-and-rocket-science/" title="Previous Post: 為什麼雲端產業在台灣行不通">&laquo; 為什麼雲端產業在台灣行不通</a>
+        <a class="basic-alignment left" href="/blog/2013/12/15/project-manager-and-product-manager/" title="Previous Post: project-manager-and-product-manager">&laquo; project-manager-and-product-manager</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/" title="Next Post: 為什麼 Kim DotCom/Mega 能夠提供免費的網路">為什麼 Kim DotCom/Mega 能夠提供免費的網路 &raquo;</a>
       
     </p>
   </footer>
@@ -280,8 +249,8 @@ alt="tumblr stats" style="border:none;"></a></section>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://blog.yunglinho.com/blog/2013/02/03/move-erp-to-cloud/';
-        var disqus_url = 'http://blog.yunglinho.com/blog/2013/02/03/move-erp-to-cloud/';
+        var disqus_identifier = 'http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german/';
+        var disqus_url = 'http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german/';
         var disqus_script = 'embed.js';
       
     (function () {

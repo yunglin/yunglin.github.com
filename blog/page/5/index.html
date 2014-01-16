@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個public volatile int bitmap$0;若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object &hellip;">
+  <meta name="description" content="用Scala開發Android，是個滿有趣的經驗，大致上來因為我切入的時間點較晚，所以大部份的問題已經被前人所解決，就用 https://github.com/jberkel/android-plugin 把專案用 sbt 開好後，就可以開始寫 android.我用的 IDE 是 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,88 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/16/my-experience-with-scala-on-android/">My Experience With Scala on Android</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T16:53:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+用Scala開發Android，是個滿有趣的經驗，大致上來因為我切入的時間點較晚，所以大部份的問題已經被前人所解決，就用 https://github.com/jberkel/android-plugin 把專案用 sbt 開好後，就可以開始寫 android.<br /><br />我用的 IDE 是 intellij 11 EAP，用 sbt-idea 把 idea project 設好後，把預設的 asset pa th 從 .idea_module 改成 src/main ，就可以開始開發了。<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" imageanchor="1" style=""><img border="0" width="600" src="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" /></a></div><br />在開發上，除了前一回碰上的<a href="http://blog.yunglinho.com/2011/11/data-modeling-with-jackson-json-and_5795.html">proguard問題</a>外，我還碰上另一個比較嚴重的問題－不能在Scala裡寫 AsyncTask<br /><br />這問題跟<a href="https://issues.scala-lang.org/browse/SI-3622">SI-3622</a> <a href="https://issues.scala-lang.org/browse/SI-3494">SI-3494</a>有關，看來是在 Scala 2.8解掉的問題，2.9又跑回來了，我這邊看到的狀況是<br /><br /><pre class="brush: scala">override protected def doInBackground(params: Params*): Result<br /></pre><br />會被Scala compiler專換成<br /><pre class="brush: java">public Result doInBackground(Seq params)<br />    public Result doInBackground(Params[] params)<br /></pre><br /><br />而底下的code，則是scala compiler會吐出 overides nothing.<br /><pre class="brush: scala">override protected def doInBackground(params: Array[Params]): Result<br /></pre><br />不管怎樣，都跟Android要求的<code>protected Result doInBackground(Params[] params)</code>不同，所以在runtime時會跑出NoSuchMethodError.<br /><br />解決方法是在 java 裡寫個 bridge interface ，幫 scala compiler 搞不定的東西，在這個 interface 裡定意好<br /><br /><pre class="brush: java">public abstract class SAsyncTask&lt;Params, Progress, Result> extends AsyncTask&lt;Params, Progress, Result> {<br /><br />    protected abstract Result doInBackground(Seq&lt;Params> params);<br /><br />    @Override<br />    protected Result doInBackground(Params... paramses) {<br />        return doInBackground(JavaConversions.asScalaBuffer(Arrays.asList(paramses)));<br />    }<br />}<br /></pre></div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>yunglin</div>
+<div class='content'>
+多補幾個有關repeated parameters的討論，看來是Spec本身有問題，然後實作時一改再改，一路從2.7開始修修補補過來<br /><br />https://issues.scala-lang.org/browse/SI-1342<br />https://issues.scala-lang.org/browse/SI-1459<br />http://stackoverflow.com/questions/5512402/overriding-a-repeated-class-parameter-in-scala</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard/">Data Modeling With Jackson Json and Scala - Proguard</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-16T11:32:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+關於Proguard，官方的網頁是這麼自述的：<br /><blockquote>ProGuard is a free Java class file shrinker, optimizer, obfuscator, and preverifier. It detects and removes unused classes, fields, methods, and attributes. It optimizes bytecode and removes unused instructions. It renames the remaining classes, fields, and methods using short meaningless names. Finally, it preverifies the processed code for Java 6 or for Java Micro Edition.<br /></blockquote><br />在Mobile App開發的時候，多會用proguard把沒有用到的程式碼濾除，並把變數名稱跟函式名稱用更精簡的字串來取代，這樣編出來的程式會更小，以我用Scala開發的Android程式，使用的的函式庫大小超過10MB，但是用proguard編出來的class.min.jar只有1.7MB，8.xMB的scala-runtime.jar一大票沒用到的功能都被移掉了。<br /><br />這麼好的功具當然也有他的問題存在，proguard是使用靜態分析的方式，去追縱看有那些程式碼會被執行到，有那些程式碼是不會被碰到的可以被移除的；但由於Jackson是使用Reflection的方式去取得物件的屬性及是用reflection的方式去生成物件，因此，這些行為並不會被proguard偵測到，反而是被認為是dead code而被移除掉。<br /><br />另外proguard會把變數名稱改寫，這也是跟jackson不相容的地方，當getXxxx被改寫成gY，jackson自然無法知道這是Xxxx的getter，因此若是要在proguard的環境下使用jackson，obfuscator是要被關掉的。<br /><br />底下這邊，是我在<a href="https://market.android.com/details?id=com.bluetangstudio.android.disastermap">台北積水地圖</a>內，用的proguard設定檔<br /><br /><pre class="brush: scala">proguardOption in Android :=<br />      ("-dontoptimize -dontpreverify -dontobfuscate"  // shrinking only<br />          :: "-dontskipnonpubliclibraryclassmembers"  // keep Jackson's internal classes<br />          :: "-dontskipnonpubliclibraryclasses"       // keep Jackson's internal classes<br />          :: "-keepattributes *Annotation*."          // keep Jackson Json Annotations.<br />          :: "-keep class org.codehaus.jackson.**"<br />          :: "-keep class com.bluetangstudio.android.model.**"<br />          :: "-keep class com.bluetangstudio.searchcloud.client.**"<br />          :: """-keep class com.bluetangstudio.searchcloud.client.** {<br />                 <init>(...);<br />                 public static ** valueOf(...);<br />             }"""<br />          :: """-keep class com.bluetangstudio.** {<br />                 void set*(***);<br />                 void set*(int, ***);<br /><br />                 boolean is*();<br />                 boolean is*(int);<br /><br />                 *** get*();<br />                 *** get*(int);<br />             }"""<br />          :: """-keep class * implements android.os.Parcelable {<br />                 public static final android.os.Parcelable$Creator *;<br />             }"""<br />          :: """-keepclassmembers class * {<br />                 ** MODULE$;<br />             }"""<br />          :: "-keep public class org.xml.sax.EntityResolver"<br />          :: "-keep public class scala.Either"<br />          :: "-keep public class scala.Function1"<br />          :: "-keep public class scala.Function2"<br />          :: "-keep public class scala.Tuple2"<br />          :: "-keep public class scala.collection.Iterable"<br />          :: "-keep public class scala.PartialFunction"<br />          :: "-keep public class scala.collection.Seq"<br />          :: "-keep public class scala.collection.TraversableOnce"<br />          :: "-keep public class scala.collection.generic.CanBuildFrom"<br />          :: "-keep public class scala.collection.immutable.Map"<br />          :: "-keep public class scala.collection.immutable.List"<br />          :: "-keep public class scala.collection.mutable.StringBuilder"<br />          :: "-keep public class scala.Predef$$less$colon$less"<br />          :: "-keep public class scala.math.Numeric"<br />          :: "-keep public class scala.math.Ordering"<br />          :: "-keep public class scala.reflect.ClassManifest"<br />          :: "-keep public class scala.runtime.IntRef"<br />          :: "-keep public class scala.runtime.BooleanRef"<br />          :: "-keep public class scala.runtime.AbstractFunction1"<br />          :: "-keep public class * extends android.app.Activity"<br />          :: "-keep public class * extends android.app.Application"<br />          :: "-keep public class * extends android.app.Service"<br />          :: "-keep public class * extends android.appwidget.AppWidgetProvider"<br />          :: "-keep public class * extends android.content.BroadcastReceiver"<br />          :: "-keep public class * extends android.content.BroadcastReceiver"<br />          :: "-keep public class * extends android.app.backup.BackupAgentHelper"<br />          :: "-keep public class * extends android.content.ContentProvider"<br />          :: "-keep public class * extends android.view.View"<br />          :: "-keep public class * extends android.preference.Preference"<br />          :: Nil<br />      ) mkString " "<br /></pre></div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -372,103 +454,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/02/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/">Having a Good Build System Is Like Living in the Heaven, and Having a Bad&#8230;..</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-02T02:09:00+08:00" pubdate data-updated="true">Sep 2<span>nd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><!--
-  ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved.
-  -->
-
-<div class='post'>
-Having a good build system is like living in the heaven, and having a bad build system is like living in the hell. I am just tired of dealing with all kind of build system. In short, all build systems are either suck or sucks more.<br /><br />Yesterday, I spent 4 hours to help a coworker to deal with library projects in Android. It wasn&#8217;t a pleasure experience. Today, I spent another 4 hours to figure out how to configure an integration-test phase in SBT.<br /><br />Just to save you some time, here is how to do it with SBT&#8217;s quick configuration DSL, build.sbt.<br /><br /><pre>import sbt._
-<br />
-<br />{
-<br />    lazy val IntegrationTest = config("it") extend(Test) extend(Provided) extend(Optional)
-<br />    lazy val itSettings: Seq[Project.Setting[_]] =
-<br />        inConfig(IntegrationTest)(Defaults.testSettings) ++
-<br />        Seq(
-<br />             ivyConfigurations += IntegrationTest
-<br />        )
-<br />    seq(itSettings : _*)
-<br />}
-<br /></pre><br />That is all you need. The first line in the block defines a new configuration, it. The &#8216;it&#8217; configuration extends all the dependencies from &#8216;Test&#8217;. And the fifth line exposes this configuration to ivy and sbt.<br /><br /></div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/07/01/-apple-google/">為什麼Apple辦得到，Google辦不到</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-07-01T03:08:00+08:00" pubdate data-updated="true">Jul 1<span>st</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-講一下我理解中，為什麼Apple 辦得到（合乎中華民國消保法）Google 辦不到的原因。<br /><br />要知道，在AppStore &amp; Android Market上交易，可不是只有Apple/Google與消費者，交易的過程中，還有軟體開發商這單位。<br /><br />Google面對的不是只有消費者這塊，Google可是還有跟千千萬萬個軟體開發商，簽有合約，Google若是片面為了服合中華民國的法規，而在台灣進行七日鑑賞期，那可是違反了Google與軟體開發商所簽屬的合約。這一頭另一頭，可是比台北市政府還大多的EA等軟體商。<br /><br />今天，Google把整個Android Market下架，仍是不脫他 Don&#8217;t Be Evil的口號。<br /><br />既然今天Google沒有辦法，在法規上及技術上，快速的處理這問題，那麼，把Android Market下架，是唯一能合法處理這問題的方式。只有待Google修改過Market程式，以及與眾多軟體商，解釋這狀況，讓軟體商自由選擇是否要在這特殊市場上上架。<br /><br />在這天來臨之前，這是唯一，可以在不違反眾多法規及合約下的解決方案。<br /><br />至於北市府葉大官人，對Google在合法的範圍內，用他意料之外的方式，處理這問題；而腦羞成怒，對Google合法的作為，開罰一百萬。<br /><br />我只能說，法律是天龍人在玩的。<br /><br />至於 Apple為什麼可以，因為 Apple跟軟體商簽的合約本就有30天退費條款阿<br /><br /><br /><hr /><br />推 coldlian:xbox live跟psn要是被北市府告 不知道會如何應付喔? &nbsp; &nbsp; &nbsp; 07/01 03:16<br />→ coldlian:會為了台灣而修改現行於全球的規則嗎? &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;07/01 03:17<br /><br />這又要談到另一個商業上問題了 Android Market 與其它 Market 的不同。<br /><br />整個 Android平台，當初是為了讓各別電信商，能有自我掌控的權力，所以沒有推一個一統的 Market ，這樣的好處是，電信商會推 Android比較用力。<br /><br />至於 Apple那大一統的平台，讓電信商無利可途，所以在美國，也是持到iPhone上市的四年後，才有第二家電信商開始賣 iPhone<br /><br />Apple/MSFT/SONY 為了賣軟硬體，一定會進全力要求開發商，符合當地法規的要求。<br /><br />但是 Android Market 只是 Google 的示範平台，所以要解決法規問題，讓電信商去自建Market處理吧</div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>Infinity_</div>
-<div class='content'>
-路過，不知道appstore是30天退費的謠言為什麼傳這麼開，明明就是90天(三個月)</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -486,6 +471,14 @@ Having a good build system is like living in the heaven, and having a bad build 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/01/16/make-me-a-german/">德國人為什麼強大</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/12/15/project-manager-and-product-manager/">project-manager-and-product-manager</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/12/12/small-business-banking-in-silicon-valley/">矽谷為什麼是矽谷 - 談中小企業放款</a>
       </li>
     
@@ -495,14 +488,6 @@ Having a good build system is like living in the heaven, and having a bad build 
     
       <li class="post">
         <a href="/blog/2013/10/26/island-of-greed/">我們的政府很有錢啊</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/19/government-intervention/">談政府干預怎麼摧毀了台灣的軟體業</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/30/new-york-taxi/">談紐約的計程車如何降低乘客及司機間的不信任感</a>
       </li>
     
   </ul>
@@ -543,7 +528,7 @@ alt="tumblr stats" style="border:none;"></a></section>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 -  -
+  Copyright &copy; 2014 -  -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2013-12-12T20:47:02+08:00</updated>
+  <updated>2014-01-16T14:35:13+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,36 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[德國人為什麼強大]]></title>
+    <link href="http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german/"/>
+    <updated>2014-01-16T14:17:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german</id>
+    <content type="html"><![CDATA[<p>&lt;iframe width=&quot;560&quot; height=&quot;420&quot; src=&quot;<a class="reference external" href="http://www.youtube.com/embed/9bTKSin4JN4?color=white&amp;theme=light">http://www.youtube.com/embed/9bTKSin4JN4?color=white&amp;theme=light</a>&quot;&gt;&lt;/iframe&gt;</p>
+<p>德國人為什麼強大，沒空看影片的，這邊做個簡述</p>
+<ol class="arabic simple">
+<li>德國男人 6:20 就起床，八點半上班，工時八小時，內含午餐一小時，下午四點半下班，就可以回家過家庭生活</li>
+<li>德國人上班時不可以玩手機 fb ，就是認真幹事，沒有休息或發呆的，有空閒就是主動多抓工作來做。</li>
+<li>德國工業還是採學徒制，公司都是做很專門的小事，做到世界第一。雖然沒有明說，但類似日本的終生僱用制，讓員工能夠專心的精進技能。</li>
+<li>德國人對穩定的重視高過個人福利，薪資成長跟 CPI 一樣而已，為了成就團隊，個人可以什麼雜事都幹</li>
+<li>德國女人在小孩三歲前都是全職家庭主婦，一天花四小時在家政上，剩下來時間花在調教小孩，讓小孩及早養成良好的生活習慣。</li>
+<li>德國特有的森林幼稚園，就是把小朋友帶到森林去跟自然環境玩，發揮想像力，自己動手就地取材作玩具。</li>
+<li>德國的小朋友上學，八點上課，下午很早就下課，一週有三天是在中午前就結束。</li>
+</ol>
+<p>我的心德是，日德兩大工業國家果然有很多相似的地方，如勤奮重紀律、終生雇用、職人導向，德國還加上了重視家庭生活( 日本男人沒這麼爽 )，但相反的就是女性沒有什麼自主權。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[project-manager-and-product-manager]]></title>
+    <link href="http://blog.yunglinho.com/blog/2013/12/15/project-manager-and-product-manager/"/>
+    <updated>2013-12-15T19:39:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2013/12/15/project-manager-and-product-manager</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[矽谷為什麼是矽谷 - 談中小企業放款]]></title>
@@ -1939,321 +1969,6 @@ create location queries.</p>
 是，不管資料是內部還是外部建的，要用時，還是要自己全部檢查一遍才可用。</p>
 <p>至於給台灣 iTunes Store 消費者的建議是 <strong>快買</strong> 等美國那邊睡起來後，產品就會下架再
 改回原價了</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[軟體品質指標系列(三)：軟體品質如何測量]]></title>
-    <link href="http://blog.yunglinho.com/blog/2012/05/23/runtime-quality-metrics-series-3/"/>
-    <updated>2012-05-23T14:45:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2012/05/23/runtime-quality-metrics-series-3</id>
-    <content type="html"><![CDATA[<p>在這一系列的第一回我們談到，我們是軟體工程師，不談虛幻的概念，只講能夠量化追蹤的數值指標，那麼，
-我們要怎麼把品質轉換程數值指標呢？</p>
-<div class="section" id="id1">
-<h2>軟體品質如何測量</h2>
-<div class="section" id="id2">
-<h3>幾個故事</h3>
-<p>在開始講怎麼做前，我想先講兩個我親身的經驗，在我第一份工作時，前雇主是做手機遊戲的，整間公
-司有兩百個員工，但是只有三個是做Server端的，在 2005 年時，多數遊戲都是單機板的，那時公司
-簽下 World Series Of Poker 要做多人的線上遊戲，需要開發一個簡易的配對及遊戲訊息交換的伺
-服器，當然，大家當年都沒有經驗，所以說，要怎麼樣確保在上線時，不會被用戶衝垮就變成我的工作。</p>
-<p>而在我第二份工作時，也有相似的經驗，我們本來已有一個運作中的音樂平台，讓公司內外超過40個Partner使用；
-當時，公司又簽下一個合約，說是在三個月後的 6/1 ，會新增 200萬用戶！如何不讓大水衝垮我們的
-應用程式，又變成我那幾個月的工作重點。</p>
-<img alt="/images/2012-05-23/troops.jpg" src="http://blog.yunglinho.com/images/2012-05-23/troops.jpg" style="width: 800px;" />
-</div>
-</div>
-<div class="section" id="load-test">
-<h2>Load Test</h2>
-<p>寫到這邊，大部份的讀者應該都知道接下來要講的是 Load Test 了，Load Test是個很大的議題，通
-常我們在講 Load Test 時，常講的其實是三件不同的事</p>
-<ul class="simple">
-<li>Performance Test</li>
-<li>Stress Test</li>
-<li>Longevity Test</li>
-</ul>
-<p>這三個測試，用的工具雖然一樣，但是要找個指標跟目的卻是大不相同。</p>
-<div class="section" id="performance-test">
-<h3>Performance Test</h3>
-<p>Performance Test 的目地是在找出應用程式的 baseline performance ，做為未來績效評估及設計變
-革時的依據。</p>
-<p>被 Performance Test 的標的物，通常是已經 feature complete 的模組，然後我們將對模組的每
-一個功能，一個一個進行黑箱及白箱測試；然後再用腳本的型態，模擬實際上線的流量，再來測試看看
-各功能間對效能的互相影響程度；最後，是找到測試標的物的 Turning Point 及 Scale Factor。</p>
-<div class="section" id="best-case-performance">
-<h4>尋找 Best Case Performance</h4>
-<p>尋找應用程式的 best case performance  大概是最常被忽略的事了， best case performance 指的是你
-一個功能的最佳效率，不管怎樣測試，對單一功能來說，怎麼樣你的效率都不可能會再比這個數字
-好了；這個數字的第一個用處就在這，如果你的最佳效率比目標效率還糟，剩下來的就不用測了，
-因為怎樣都會比這個數字還糟，只能先停下來，回去修改程式碼增進效能。</p>
-<p>Best Case Performance 的測法是：</p>
-<ol class="arabic simple">
-<li>將應用程式啟動</li>
-<li>先用幾個 request 替應用程式暖身(warm up)，以 Java VM 來說，這樣可以讓 Hotspot VM 幫 bytecode 最
-佳化，有些需要被啟動的內部原件也會被啟動。</li>
-<li>接著是一個一個的慢慢送一百個 requests ，然後取平均值及標準差。</li>
-</ol>
-<p>若是標準差的值過高，或者是反應時間有增長的現像，那麼這個狀況應該記錄下來，然後使用白箱
-測試的工具(如 <a class="reference external" href="http://www.yourkit.com/">yourkit profiler</a> 去找問題的根源。</p>
-<p>除了平均數及標準差外，常用的數字還有</p>
-<ul class="simple">
-<li>mean</li>
-<li>standard deviation</li>
-<li>minimum</li>
-<li>maximum</li>
-<li>96   percentile</li>
-<li>99   percentile</li>
-<li>99.9 percentile</li>
-<li>5 minutes moving average</li>
-<li>throughput</li>
-<li>error rate</li>
-</ul>
-<p>另外，圖表也是常用的工具，因為相較於數字，圖表更容易看出來趨勢的走向；以下圖為例，藍線的
-平均反應時間是1.354秒，但跑load test二十分鐘後，每一個 request 都已經超過了平均數，因
-此將數字用圖像來呈現是有助於判別數字的。</p>
-<img alt="/images/2012-05-23/chart-1.png" src="http://blog.yunglinho.com/images/2012-05-23/chart-1.png" style="width: 480px;" />
-</div>
-<div class="section" id="performance-baseline">
-<h4>建立 Performance Baseline</h4>
-<p>接下來的工作，是定出比較的基礎，建立一個你覺得合理的流量，然後就這個比較基礎去找出來不同
-狀況下的平均反應時間及處理量的變化。</p>
-<p>基礎效能的建立，我們要先控制兩個變數 <strong>requests per minutes</strong> 及 <strong>number of concurrent requests</strong> ；
-透過調整這兩個變數，先找出反應時間較 best case 的流量，然後就此數字開始調整到一個你覺
-得合理的值，開始進行 Load Test。</p>
-<p>劉接下來我們開始把 <strong>requests per minutes(RPM) 倍增</strong> 但 <strong>number of concurrent requests(CR) 不變</strong> 來看，當流量
-增加時應用程式的反應時間會如何增長，接著是 RPM 及 CR 同時都倍增，看反應時間如何增長，
-依此規則，就二的次方(2^N)開始往上增加，直到 response 開始嚴重衰退，或者 throughput 開
-始衰退。</p>
-<p>接著，如果你的應用程式支援 Scale-Out ，那麼，我們依此規則，就 RPM, CR, Machines 三
-個變數再次就二的次方(2^N)開始調整流量來做測試。</p>
-<p>前面這個過程，可以幫我們了解以下幾件事</p>
-<ul class="simple">
-<li>應用程式對壓力的反應是如何，當流量被增時，反應時間成長的幅度是線性還是成等比級數成長。</li>
-<li>處理量 throughput 是否會隨著 request 數增加而增加，是否在超過某個轉折點時，會開始
-反轉下降</li>
-<li>上述的轉折點，便可當做未來評估是否需要增加機器或者是昇級機器的基準值。當實既須求接近這
-個點，或有事件會造成流量超過這個點，那麼，我們就可以在事前進行反應。或者，在監控應用程
-式中加入警告，當線上程式逼近這個值的時候，主動告知我們該加機器了</li>
-<li>當我們增加機器時，如果應用程式不是寫成完全 stateless 的，而是有共享資料資源時，那麼
-，scale factor便會小於 2，那麼，我們需要關查 scale factor 到底是隨著機器的增加而
-不變、還是緩慢成長、或者是快速成長。即使因為某些因素讓我們不能夠準備有實際上線時的機器
-數，但是透過分析 scale factor ，我們可以預估上線該使用多少機器。</li>
-</ul>
-</div>
-</div>
-<div class="section" id="stress-test">
-<h3>Stress Test</h3>
-<p>與 Performance Test 不同的是， Stress Test 是看，應用程式在極度的狀況下，是怎麼樣反
-應的，是全面性的停止服務，還是仍能正常處理部份的 request ，其餘未能處理的部份是被堆到排
-程中等待處理、還是直接收到錯誤訊息告知服務暫時不可用。而當這極端的狀況停下來後，應用程式
-是否會自行回復正常，還是需要
-重新啟動才能回復正常。</p>
-<p>Stress Test 的方式是直接把 performance test 中 <strong>處理量</strong> 開始反轉的那個點的流量再
-次倍增，看處理量及反應時間會如何的變化。</p>
-</div>
-<div class="section" id="longevity-test">
-<h3>Longevity Test</h3>
-<p>Longevity Test 跟前述兩者不同的是， Longevity Test 是在看，應用程式對長時間、持續性、
-平緩的流量是如何反應的，是否在某個時間點會有不良的反應，或者是說會有處理量越來越少或反應時
-間越來越長的跡象。</p>
-<p>透過 Longevity Test 我們可以發覺
-- 應用服務是否有 memory leak
-- 是否有背景的排程工作，造成某個時間點系統資源會被大量耗用</p>
-</div>
-</div>
-<div class="section" id="monitoring">
-<h2>Monitoring</h2>
-<p>除了從應用程式的外部去觀查應用程式的執行效能，我們還可以更進一步的</p>
-<ul class="simple">
-<li>從作業系統了解CPU, Memory, Disc I/O, and Network Usage</li>
-<li>從JVM 了解 Memory Usage, Object counts, GC Cycles.</li>
-<li>從應用程式自訂的 metrics 來觀察 request count, method call time, size of queue,
-cache hit/miss ratio, etc&#8230;</li>
-</ul>
-<p>透過截取、記錄、追縱這些數據，搭配上 Performance Test 產生的圖表，我們可以再進一步的了解
-應用程式耗用了多少的資源，應用程式的 bottleneck 在那，是 cpu bound, memory bound,
-disc io bound or network bound.</p>
-<div class="note">
-<p class="first admonition-title">Note</p>
-<p class="last">不要小看了這些監控的細節，我的某個程式，有少量用到 ActiveMQ, ZooKeeper 做溝通，照理說
-應該是 cpu or memory bound的應用，但是經過幾次 load test ，發覺不管加多少機器，總處
-理量還是不變。後來翻了翻OS來的數據才發現，整個環境的網路頻寬被限制在 250M bps ，再進一
-步了解到原來 Amazon EC2 的 Load Balancer 把流量限制在這個數字。</p>
-</div>
-<p>監控的工具有很多種，不過脫不了兩大類
-- <strong>監控系統用量</strong> 如: Munin, Graphite, RRDTools
-- <strong>監控系統異常</strong> 如: Nagios</p>
-<p>這些監控工具，我們不只是可以套用在 Load Test 時使用，更該被大量的佈建在監控線上的應用程
-式及外部的服務上，透過長期的追縱，我們可以了解到應用程式及外部的服務的可用度及可靠度。</p>
-</div>
-<div class="section" id="id3">
-<h2>(全文完)</h2>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[軟體品質指標系列(二)：軟體品質指標有那些]]></title>
-    <link href="http://blog.yunglinho.com/blog/2012/05/22/runtime-quality-metrics-series-2/"/>
-    <updated>2012-05-22T17:49:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2012/05/22/runtime-quality-metrics-series-2</id>
-    <content type="html"><![CDATA[<p>接下來，我們就來探討，軟體品質指標有那些種類</p>
-<div class="section" id="availability">
-<h2>可用度 Availability</h2>
-<p>一個服務的可用度，是由很多環節組合起來的，某些環節是掌控在開發者手中，某些環節則是
-在使用者手中的；對使用者來說，一個服務的可用度，是由底下幾個環節的總合：</p>
-<ul class="simple">
-<li>軟體本身的可用度</li>
-<li>IT/Cloud 架構本身的可用度</li>
-<li>服務提供者端的網路環境</li>
-<li>外部服務的可用度</li>
-<li>使用者端的網路環境</li>
-</ul>
-<p>在計算 Availability 時，是把上面幾個因素相乘起來，便是你服務的可用度，假設你的IT架構
-本身只能提供 99.99% 的可用度，那你的服務本身的可用度將會小於 99.99% 。當然，你可以透
-過 Multi-Host 的方式，將服務布建在多個不同 Data Center，此時你的服務可用度，將可超
-過單一平台可以提供的可用度。</p>
-<blockquote>
-假設 Cloud A 可以提供的可用度是 99% ， Cloud B 可以提供的可用度是 98% ，而你將服
-務同部布建在兩者之上，那麼兩者一起停機的機會是 (1-99%)*(1-98%) = 0.02% ，因此可靠
-度提昇為 99.98% 。</blockquote>
-<p>然而，為了提高可靠到而佈建到 Multi-Host 時，不只要把 Presentation Layer / Frontend 放
-到多個平台上面去，同時，使用者的資料也要同步到多個平台去，這樣，才能夠必免單一IT平台停機的
-問題。但是這麼一來，當停機的平台再次上線時，如何處理資料的不一致問題，便成了另一難題。因此
-，多數的服務提供者只會把服務佈建在單一平台上。</p>
-<div class="section" id="id1">
-<h3>服務提供者端的網路環境</h3>
-<p>目前，多數的雲端服務商仍是把主機設立在海外，在台灣沒有 Data Center ，因此，當台灣對外的海
-纜出了問題時，雖然服務本身在海外仍是可用的，但是在台灣就連不上線，這一點，也是台灣的開發者
-在選用雲端平台時需要考慮進去的。</p>
-<p>過去幾年來，台灣對外的海纜，幾乎每兩年都會斷線超過一天。</p>
-<blockquote>
-<ul class="simple">
-<li>2001/02/09 中美海纜遭魚船勾破，數據傳輸容量遽減至原來的四成。HiNet, SeedNet, TaNet 均受影響</li>
-<li>2003/10/02 中美海纜遭魚船勾破</li>
-<li>2006/12/26 恆春地震造成四條國際海纜中美海纜、法新歐亞三號、亞太光纜一號二號網絡斷線，
-影響到台灣對中國、香港、新加坡等東南亞國家和地區，以及上述地區對外的國際通信。耗時三週修複。</li>
-<li>2009/08/13 莫拉克颱風造成對外海纜斷線，影響台灣往中國大陸汕頭及東南亞地區，包括新加坡、菲律
-賓及香港等地之通信。影響時間超過一週</li>
-<li>2010/03/04 高雄甲仙地震造成中美海纜斷線，影響時間超過一個月</li>
-<li>2011/11/14 ~ 2012/21/26 海纜進行維修，將造成HiNet連線中國之部份連網服務傳輸延遲時間變長。</li>
-</ul>
-</blockquote>
-<p>若是你服務的對像是以亞洲為主，還是建議放在台灣或日本，若是服務對像以全球為目標，建議還是就放在美國吧。</p>
-</div>
-<div class="section" id="soa-in-reality">
-<h3>外部服務的可用度 / SOA in Reality</h3>
-<img alt="/images/2012-05-22/cloud-farm.jpg" src="http://blog.yunglinho.com/images/2012-05-22/cloud-farm.jpg" style="width: 400px;" />
-<p>在幾年前，流行的系統架構是 SOA ，讓每一個團隊專注在單一面向功能的服務，將服務透
-過SOAP/Restful API供內部及外部的使用者來使用。這樣的好處是，可以增快服務更新的速度減少
-測試的範圍，在組織上，也可讓組織將重點放在核心服務上，而將其它的需求委由外部服務處理。</p>
-<p>如此一來，對使用者來說，多重 SOA 子服務組合而成的服務，看起來就像是在雲端運行的一台大電
-腦，跟舊式的服務並沒有差異。</p>
-<img alt="/images/2012-05-22/cloud-server.png" src="http://blog.yunglinho.com/images/2012-05-22/cloud-server.png" style="width: 400px;" />
-<p>然而經過幾年的經驗後，大家發現實際上的經驗並不是那麼的美好；如同開頭所說的，服務的可用度，
-是所有子服務的總合，單一服務的問題，將會把整體的可用度都拉低。</p>
-<p>在我的實務經驗上， SOA 架構，反而變成無止境的 finger pointing ，最後變成，需要對所有外
-部服務的可用度做長期的追縱，評估他實際上的可用度。另外，在委外給外部服務時，只會把可以離線
-處理的服務委外給外部服務，需要線上即時處理的，還是自行開發較好。</p>
-<img alt="/images/2012-05-22/finger-pointing.png" src="http://blog.yunglinho.com/images/2012-05-22/finger-pointing.png" style="width: 400px;" />
-</div>
-<div class="section" id="service-level-agreement-term-of-service">
-<h3>Service Level Agreement / Term of Service</h3>
-<p>TBD</p>
-</div>
-</div>
-<div class="section" id="manageability">
-<h2>可維護性 Manageability</h2>
-<p>可維護性指的是，一個服務在運行時，留下了多少的資料，供 admin 做為判斷服務狀況的依據。一
-個線上的服務，除了基本的 log 檔外，還需提供底下的特性</p>
-<ul class="simple">
-<li>Configurability: 提供設定檔，讓 admin / tester 能夠在不修改程式碼本身，而對軟體的
-功能做調整。</li>
-<li>Monitorability : 提供開放性的介面，讓 admin 可以很容易的去追縱服務本身的建康狀態及用
-量，供 admin 來判斷，是否需要增加硬體的來分散線上伺服器的負擔。</li>
-</ul>
-<div class="section" id="monitoring-is-must">
-<h3>Monitoring is Must</h3>
-<p>在提供一個服務時，我們一定要監控服務本身的狀況，並且要把這份資料與外部分享，減少本身溝通的
-成本及增加客戶對服務的信任。</p>
-<p>不管是設計多麼精良的服務，各個軟體平台商仍免不了會發生大型的災難，如：</p>
-<ul class="simple">
-<li>Amazon AWS 於 2008, 2010, 2011 各發生過數小時的問題，造成 EBS 使用上的問題，導
-制 reddit, zynga 等下遊廠商的服務問題</li>
-<li>Google Gamil 於 2009 年發生過大形的停機，耖造成拳體用戶無法使用 Gmail 兩個半小時。</li>
-<li>Azure 於 2012/02/29 ，由於時間同步的問題，造成用戶無法開啟新的 VM instance.</li>
-</ul>
-</div>
-</div>
-<div class="section" id="performance">
-<h2>Performance</h2>
-<p>效能，算是個最常用的品質指標了，在講效能時我們通常會分成兩塊來講，一塊是反應時間(Response Time)，
-另一塊是處理量(throughput)，前者只的是服務單一需求所要花的時間，後者則是單位時間內，可同
-時服務的總需求數量。</p>
-<p>影響效能的因素有很多，在多數的系統中，往往處理量增加的結果就是反應時間也一起增加，因此在系
-統設計的初期，這些就要納入規格中，變成設計的一環；那麼，什麼是好的效能呢？在反應時間這邊有
-個很好的指標，就是跟人互動的UI程式，如果反應時間能壓在 100ms 以下，那麼人們的認知就會覺的
-這個程式是即時使用的，如果反應時間拉到 200ms 以上，就會開始覺得頓頓的。</p>
-<p>對於網頁程式來說，反應時間不只是從 Web Server 這一端出去的時間，還要算上網路傳輸的時間以
-及流覽器繪製畫面的時間，因此能留給網站主機的反應時間只剩下 50ms 上下；如果你的程式還有呼叫
-其於的外部程式，那麼每多一層，反應時間至少增加 20ms ，或者是說少 20ms 給你的程式使用。</p>
-</div>
-<div class="section" id="reliability">
-<h2>Reliability</h2>
-<p>可靠度(Reliability)跟可用度(Availability)是兩個常被弄混的名詞，Availability講的是，
-在一段長的時間內，系統可被使用的時間(Up Time)，Reliability則講的是在單位時間內，系統出
-錯的次數。一個線上服務，可能是可用的(Available)但是他的輸出結果是有問題的(Unreliable)</p>
-<p>Reliability 的評量指標有</p>
-<ul class="simple">
-<li>單位時間內，回傳錯誤訊息或者是無回應的次數。</li>
-<li>單位時間內，輸出結果是錯誤的次數。</li>
-</ul>
-<p>Reliability的問題，往往是系統內的 Bug ，只是在使用量大時，才會凸顯他的存在，因此軟體開發
-者不可忽略這微小的訊號。</p>
-</div>
-<div class="section" id="scalability">
-<h2>Scalability</h2>
-<p>Scalability 講的是你的服務能不能夠隨著用戶數的增長，而跟著成長，服務的可延展性可以分為
-， <strong>直向擴充 Scale Up</strong> 及 <strong>橫向擴充 Scale Out</strong> ，兩者都可以幫你增加可同時服務的
-線上用戶數，但是後者的可擴充的程度，仍是遠高過前者的。</p>
-<p>Scalability 讓我們動態的依事件配置不同數量的伺服器數量，以防止 Slashdot Effect 的發生
-，如總統大選或報稅截止日等事件，往往會在一日內擁入超過平日百倍的用戶數，如何讓服務正常運做
-，是軟體品質極重要的一環。</p>
-<p>而 Scalability 對 Application Service Provider 更是重要，因為 Cloud Based ERP or CRM 系
-統，較一般的網頁更有黏著性，一個有數萬個用戶的中型網站，同時間上線的用戶可能只有數百個，而
-於他們的 Session 中存的資料也只有數 kilo bytes。然而對企業用戶來說 Cloud Based ERP, CRM ，
-在上班時間，可是一直在使用的，一間 200 人公司用的 ERP 系統，可能就會有 200 active sessions ，每
-個 Session 又存了許多正在處理中的表格資料。</p>
-<p>如何 scale up/out database intensive application 變成 ASP 提供者不得不面對的難題。</p>
-</div>
-<div class="section" id="security">
-<h2>Security</h2>
-<p>網路服務的安全性問題，常常是個被誤會且忽略的問題，台灣許多主流的 Hosting Company 及 Billing Provider 的網站都出
-過問題；他們的問題是，某本常用的軟體手冊的程式碼，在教導如何實作使用者認證時，只有在首頁
-有檢查帳號，等帳號檢查過了，就會被導到內部的網頁去，然而，在內部網頁這邊，卻沒有檢查使用
-者有沒有登入。</p>
-<p>變成，只要得知內部網業的網址(form target)就可以直接存取內部的資料，因此，許多網站就
-被 Search Engine Crawler 長驅直入，把所有的使用者資料都放在搜尋結果中公開了。至於實際
-的例子我就不多舉了。</p>
-<p>另外我有寫過一篇 <a class="reference external" href="http://blog.yunglinho.com/blog/2012/01/03/how-to-protect-a-webservice/">專文</a> 討論，該如合保護一個 WebService ，台灣的政府及民間網站，常常
-用一些沒有被認可的電子簽證來做 https 的安全通訊，然而 https 的金鑰交換，在第一次是不安
-全的，因此，若是你的金鑰是沒有經過第三方簽核的，那麼再交換金鑰時可能會受到 <a class="reference external" href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in
-the middle attack</a> 直接把金鑰換掉。</p>
-<p>使用 https 時，必需遵守幾個使用規範，這樣子通訊才會是安全的。</p>
-<p>回到正題，服務的安全性可以分為幾塊</p>
-<ul class="simple">
-<li>通訊的安全性。</li>
-<li>身份的認可查核</li>
-<li>資料的安全性及使用權限</li>
-<li>資料的使用及變更的計錄追蹤</li>
-</ul>
-</div>
-<div class="section" id="id3">
-<h2>待續</h2>
-<p>在下一篇，我將講述，如何把這些概念，轉換成實際的數值指標。</p>
-</div>
 
 ]]></content>
   </entry>
