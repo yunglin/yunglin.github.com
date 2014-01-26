@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2014-01-16T14:53:20+08:00</updated>
+  <updated>2014-01-26T23:11:41+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,24 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[qnap-sucks]]></title>
+    <link href="http://blog.yunglinho.com/blog/2014/01/26/qnap-sucks/"/>
+    <updated>2014-01-26T23:08:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2014/01/26/qnap-sucks</id>
+    <content type="html"><![CDATA[<p>是我太多年沒裝機、還是這年頭的機構設計師都是天才？高高興興的把新買的 QNAP TS-212P 打開來，嗯&#8230; 好樣的，竟然沒有說明書。</p>
+<p>好吧，就自己硬幹了，開始裝第一顆硬碟，右側索好兩顆螺絲後，換鎖左側，好樣的，孔位對不上！那就鎖一側好了。</p>
+<p>先插排線，嗯&#8230;，怎麼 接頭卡到機板身上別的零件了，那這樣不是變成只能插一顆硬碟。2 Bay 的機種只能用一個是怎樣。</p>
+<img alt="/images/2014-01-26/qnap-1.png" src="http://blog.yunglinho.com/images/2014-01-26/qnap-1.png" style="width: 800px;" />
+<p>算了，先換另一個位子，先開機起來試用再說。</p>
+<p>硬碟換到另一個孔位裝好後，再插一次排線 ，嗯，這次接上去了，換插 SATA 排線，嗯，線好短，應該夠長吧。</p>
+<p>結果夠長是夠長拉，可是硬拉到那接頭的上下面是反的，所以又不夠長了。</p>
+<img alt="/images/2014-01-26/qnap-2.png" src="http://blog.yunglinho.com/images/2014-01-26/qnap-2.png" style="width: 800px;" />
+<p>靠，裝個機碰上三個設計問題是怎樣，浪費我時間</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[德國人為什麼強大]]></title>
@@ -1938,36 +1956,6 @@ create location queries.</p>
 </span><span class="line"><span class="k">val</span> <span class="n">query</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">makeQuery</span><span class="o">(</span><span class="s">&quot;field&quot;</span><span class="o">,</span> <span class="n">shape</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Distance</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="nc">Distance</span><span class="o">.</span><span class="nc">Unit</span><span class="o">.</span><span class="nc">KM</span><span class="o">))</span>
 </span></code></pre></td></tr></table></div></figure></div>
 </div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[那些系統整合教我的事 -- 資料錯誤]]></title>
-    <link href="http://blog.yunglinho.com/blog/2012/06/27/pricing-error/"/>
-    <updated>2012-06-27T18:52:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2012/06/27/pricing-error</id>
-    <content type="html"><![CDATA[<p>首先，今天要恭喜 iTunes Stores 台灣版總算上線了，恭喜蘋果搞定眾多台灣商家搞不定的
-數位資料授權的問題；既然 iTunes Store 幫忙打通了關節，接下來許多的台灣的小 start-up 可以
-透過串接 iTunes Store 的方式來賺取介紹費，又多了許多新的 business idea 可以在台
-灣實作的可能。</p>
-<p>iTunes Store 上線， <a class="reference external" href="http://briian.com/?p=8426">許多人發現</a> 許多專輯的費用只有 20 元，這讓我想到，當年我在
-某音樂公司的經驗，當時是美國幾大音樂公司開放開始賣 non-DRM 音樂的年代，我們公司在線
-上串流服務上做到全美最大，有三百萬的訂戶，音樂資料庫中，有超過一百萬首歌曲的資料，隨
-著 non-DRM 的熱潮，我們也非得開賣 non-DRM 的音樂。</p>
-<p>當時我是主管 QA 工程師的，問了再上頭的主管，問說除了網站的功能外，需要再做資料測試嗎
-，因為跟據我當時的經驗，許多的音樂專籍的資料是有缺或有錯的；但是主管的說法是有其它的
-單位會保證資料無誤，所以我這邊只要擔心功能性的問題就好。</p>
-<p>當時產品的訂價方式是，一首歌的成本是 0.6 美金，我們賣 0.99 美金，每一張專輯我們則是
-賣 9.99 ，等於是專輯如果超過 10 首歌，我們就開始吸收中間的價差。</p>
-<p>然而一上線的隔天我們就知道錯了，上線的當晚就有人發現，有許多張精選輯，一張精選輯有數
-張CD我們仍是只賣 9.99 每元，當晚，這些專輯就賣掉四千套，一晚就幫公司賠掉了五十萬美金
-以上。由於這些音樂都是 DRM Free 的，所以賣出去就是賣出去了，沒有辦法收回，我們仍是要
-依照賣掉的數量付錢原始授權的擁有者。</p>
-<p>其實，這些歌曲的資料庫我們是跟外部另一家公司買的，並不是自建的；我(們)在這邊學到的一課
-是，不管資料是內部還是外部建的，要用時，還是要自己全部檢查一遍才可用。</p>
-<p>至於給台灣 iTunes Store 消費者的建議是 <strong>快買</strong> 等美國那邊睡起來後，產品就會下架再
-改回原價了</p>
 
 ]]></content>
   </entry>
