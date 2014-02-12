@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。 Schemaless 的優點 Schemaless 不是沒有優點的，在搭配上動態語言時， Schemaless &hellip;">
+  <meta name="description" content="許多人從 RDBMS 跳到 NoSQL 的第一站都是 MongoDB ，所以這一篇，就是特別寫來解識，為什麼很多人選用 MongoDB ，以及解識你為什麼不該用 MongoDB 來換掉 RDBMS 。 MongoDB 熱門的理由 MongoDB 熱門的原因是因為他提供了一個可以跟 SQL 相比的 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,165 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/12/mongodb-mysql/">Mongodb vs MySQL/RDBMS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-12T16:24:00+08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>許多人從 RDBMS 跳到 NoSQL 的第一站都是 MongoDB ，所以這一篇，就是特別寫來解識，為什麼很多人選用 MongoDB ，以及解識你為什麼不該用 MongoDB 來換掉 RDBMS 。</p>
+
+<h2>MongoDB 熱門的理由</h2>
+
+<p>MongoDB 熱門的原因是因為他提供了一個可以跟 SQL 相比的 <a href="http://docs.mongodb.org/manual/tutorial/query-documents/">Query Language</a> ，在 NoSQL 不同面向的眾多方案中， MongoDB 所能支援的 AdHoc Query 是沒人能比的， Riak 跟 CouchDB 的 AdHoc Query
+也不差，但是 Riak 在跑 <a href="http://docs.basho.com/riak/latest/dev/using/mapreduce/">MapReduce Query</a> 時是不能透過 index 加速的， CouchDB 則是跟本不支源 index ，所以在這邊 MongoDB <strong>看似</strong> 是個很好的 MySQL drop-in replacement</p>
+
+<p>使用 MongoDB 來取代 MySQL ，在初期，看來是學習成本最低，轉換風險最低的解決方案，所以多數商業公司，為了降低風險，在追循潮流一窩風的採用 NoSQL 時，選擇了 MongoDB 這個看似合理且安全的選項。</p>
+
+<p>然而糖衣底下掩蓋的，卻是數不盡的陷井在那。</p>
+
+<h2>Trade-Off</h2>
+
+<p>技術的選用，往往是一連串的取捨，拿某樣功能去換回了另一項功能，所以，接下來我們就來看看，我們從 MySQL/RDBMS 跳到 MongoDB 去，我們到底是跟魔鬼做了什麼樣的交易，拿了什麼樣的東西，去換回了什麼。</p>
+
+<p>首先，我們先看看我們換出去的是什麼？我們換出去的是 ACID (Atomicity, Consistency, Isolation, Durability) 及 Relational Model</p>
+
+<h3>ACID</h3>
+
+<p>對絕大多數的應用來說，交易的正確性跟不可否任性，是系統必要的基石， ACID 便是協助達成這一目標的工具之一。</p>
+
+<p>ACID 雖然是一大重要工具，但也不是不能夠取代，像是 <a href="http://martinfowler.com/bliki/CQRS.html">CQRS Pattern</a> ， <a href="http://www.youtube.com/watch?v=BGxnjKd4MFQ">Cassandra Summit</a> 有一個很好的講題就是介紹怎麼用 Cassandra 透過 CQRS 來寫一個給銀行用的轉帳系統。</p>
+
+<p><a href="http://msdn.microsoft.com/en-us/library/jj591569.aspx">SAGA Pattern</a> 則是另一個在沒有 Transaction 下，來解決多事件互動的 Pattern 。</p>
+
+<p>然而 CQRS 或 SAGA Pattern 都沒有 ACID 好用，以及廣被眾人所了解，連我自己都只是讀過沒有親身實作過，要做的話，連底層的工具都要自己從頭開始作，或者是要去學一些非常新的工具如 <a href="http://www.datomic.com/">Datomic</a> 。</p>
+
+<p>因為換出的是 ACID 這樣強大的工具，替代的方案又是高未知的空間，所以許多人最後選擇的替代方案就是 &#8211; <strong>頭埋起來假裝沒有問題</strong></p>
+
+<p>而且 MongoDB 本身號稱的 BASE 跟本是 Eventual Inconsistency ，在
+<a href="http://aphyr.com/posts/284-call-me-maybe-mongodb">Call me maybe: MongoDB</a> 這篇文章中就驗證到，當 Network Partition 發生時，既使 MongoDB
+回復寫入成功，但是實既上還是會失敗的，所以就在這種底層實作不可靠下，你上層加什麼工具也是枉然，所以多數人就是假裝沒這回事，想說自己沒這麼倒楣。</p>
+
+<h3>Relational Model</h3>
+
+<p>Relational Model 是四十年前那次 DB 戰爭中，打敗 Network Model, Hierarchical Model 剩出的王者，在四十年後，再次受到 Document Model 的挑戰，這次的結果如何呢？</p>
+
+<p>Relational Model 的好處是可以透過正規化，減少資料的重複、提高資料的一致性，以及透過
+SQL ，除了 AdHoc Query 外，還可以對多個 Table 進行 Joined Query，這個是 MongoDB / Document Model 所做不到的。</p>
+
+<p>那這個特性重要嗎？我想透過一個例子就可以很簡單的介紹 Relational Model 的強大，跟 Document Model 在應用上會碰到的問題。</p>
+
+<h4>Relational Model Example</h4>
+
+<p>我們公司是做人肉搜索的，對於同一個人 / email 來說，我們會有很多來自不同來源的 metadata ，今天假設是兩個來源好了。</p>
+
+<p>在 RDBMS 中，就是開兩個 Table ，各自記錄不同來源來的資料
+ | TableA        | Email         | likes      |
+ | &#8212;&#8212;&#8212;&#8212;- |:&#8212;&#8212;&#8212;&#8212;-:| &#8212;&#8212;&#8212;-:|
+ |               | billg@ms.com  |  1600      |</p>
+
+<table>
+<thead>
+<tr>
+<th> </th>
+<th> TableB        </th>
+<th align="center"> Email         </th>
+<th align="right"> tweets  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> </td>
+<td>               </td>
+<td align="center"> billg@ms.com  </td>
+<td align="right">  9999   |</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>在 Document Model 可能就是用一個 Document 如 <code>{ email: "billg@ms.com", likes: 1600, tweets: 9999 }</code></p>
+
+<p>在 Query 時，前者要一個 join 才可以取回關於這個 email 的所有資料，後者則是一個 lookup ，自然後者的效率較好，而且同樣可以對不同的欄位下 Query 條件。</p>
+
+<p>然而，既然要用 NoSQL 就要完 <strong>BIG DATA</strong> ，所以我們把問題修改一下，我們從兩個來源，分別拿到十億筆
+email 的 likes 數，跟十億筆 email 的 tweets 數，我們想把這些資料寫到 DB 去再拿回來用。</p>
+
+<p>用 RDBMS 自然是輕鬆愉快，兩個檔案輪流打開，一筆筆的加到 DB 中，DBMS對這種簡單的寫入可以做到 10,000 insert / sec 沒問題，大概 27 分鐘就可以做完了。</p>
+
+<p>但是 MongoDB 呢？因為兩個屬性都是在同一個 Document 上，所以要馬是先把十億筆 (email, likes) ，先寫到 MongoDB 中，再下十億筆 Read / Update 把 Document
+讀回來再加上 tweets ，如果很不幸你的 Document Id 不是 email ，那就是要下十億筆 Search + Update ，不管怎麼算，都不是太漂亮。</p>
+
+<p>另一個作法是，你先把兩個十億筆的資料在本機的記億體中做 join ，然後再寫到 MongoDB 去，ㄜ&#8230; 這樣搞你不覺得累嗎？這麼小的應用問題就要自己動手刻程式碼，而且
+前面我們不是說 big data 嗎？如果資料不是十億筆而是一百億筆，你放不進記億體中，那你要先用 radix sort 寫到 file system 再讀回來嗎？</p>
+
+<p>然後你忙了這麼多後， MongoDB 給你的，因為 global write lock ，還是一樣是 10,000 insert /sec ，然後因為 MongoDB 實作的問題，如果你的 Document 有 indexed field
+，那麼寫到兩百萬筆後會越寫越慢，這問題在成熟的 DB 上是沒有的。</p>
+
+<p>我想，這個小例子就說明了 Relational Model 的強大之處及 Document Model 弱的地方，當你要既有的資料新增欄位時， Relational Model 是可以很簡單的增加一個
+ column 或 table 就做到，在 MongoDB 上，則是要跳過重重關卡才可以達成。</p>
+
+<p>在軟體需求不穩定時，或常有變更時 Relational Model 對變革的適應能力，較 Document Model 高出許多。</p>
+
+<h2>MongoDB 的長處</h2>
+
+<p>在交換出 <code>ACID</code> 與 <code>對Model 對變革的適應能力</code> 後，我們從 MongoDB 到底換回來了什麼呢？</p>
+
+<ul>
+<li>cluster 帶來的更多的儲存空間</li>
+<li>cluster 帶來的更 scalable read operation.</li>
+<li>在某個資料大小下，一個非常快速的 index</li>
+</ul>
+
+
+<p>前兩個長處就不用多談了，Opensource RDBMS的長處並不在這塊，跟從一開始就要做 cluster 的 MongoDB 是沒得比的，MongoDB 目前已有超過 100 node 的單一 cluster。</p>
+
+<p>第三個先略過不說，等說完結論再回來說</p>
+
+<h2>結論</h2>
+
+<p>我們看完了 Trade-off 後，我們要來思考一下，我們這個交易到底划不划算？</p>
+
+<p>對我來說，我們換出了 ACID 跟 <code>對Model 對變革的適應能力</code> 後，我們換回來的僅僅只有 Scalable storage &amp; scalable read ，
+就我看來，這是一筆極差的交易，因為這個換回來的東西大多只能應用在一塊很小的地方，一個需要大量儲空間、一個需要大量讀取能力的應用，而且後者還可以被 cache 所取代。</p>
+
+<p>前面講的 <code>在某個資料大小下，一個非常快速的 index</code> 就是指這個應用範圍， <a href="https://twitter.com/dickwall">Navigenics 的 Dick Wall</a> 就講過，他曾用 MongoDB 用來儲存要配對的 DNA Sequence
+，他的資料大小，剛好是大到無法用 Redis 放在記億體中，但是又剛剛好 index 的大小剛好是可以透過 MongoDB 全部放在記億體中，剩餘的資料則是存在硬碟上，就這麼剛好透過
+MongoDB ，他的搜尋速度可以達到 MySQL 方案的一百倍。</p>
+
+<p>然而，真正 big data 的應用，如 log storage &amp; analysis ，MongoDB 是無法達到對 write operation 的需求的。 MongoDB 能適用的問題空間實在太小，而且既使你目前的需求是在 MongoDB
+能達到的範圍內，但需求一變化，就長到 MongoDB 無法承擔的空間去了。</p>
+
+<p>這也是我未來不會採用 MongoDB 的原因，在小量資料時，我會用 PostgreSQL / MySQL ，在資料量大時，會用 Postgres + Cassandra + ElasticSearch</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -792,64 +951,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/30/new-york-taxi/">談紐約的計程車如何降低乘客及司機間的不信任感</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-30T21:41:00+08:00" pubdate data-updated="true">Sep 30<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>既然大家特愛看寫美國的制度，就再多來寫幾篇吧～～</p>
-<p>今天老婆去郵局開戶，結果鎩羽而歸，因為老婆是新竹人，嫁到台北後，戶籍不在台北，所以不給在台北開戶，要拿我的證件去證明她是住在台北的，才可以開戶。</p>
-<p>郵局人員對這限制也滿反感的，這限制是多年前詐騙盛行、人頭戶盛行，所以金管會下了個命令，禁止在非戶籍地開戶，連台北市內跨區開戶都不行。我是對這政策是非常的不能理解，人頭戶盛行就罰人頭戶罰他賠幾十萬幾百萬算了，台灣現在這樣做，把整個國家的競爭力給賠上去了。</p>
-<p>事情的源頭就是，台灣人對弱勢，有莫明沒道理的同情心過剩，認為弱勢做什麼都不該罰，連把個人的資料拿去賣，讓詐騙集團使用，都覺得不該罰。</p>
-<p>這一種同情心過剩，衍生到社會的各個層面去，把 <strong>無效率</strong> 、 <strong>守舊</strong> 當做 <strong>社會救助</strong> 的一環去了；前幾天跟同事吃飯時，聊到 Uber 等計程車服務，我講，未來 Uber 將會在第三式世界國家很盛行，因為在這些地區的計程車詐騙盛行，亂叫價亂繞路是常態，對許多來自已開發國家的商務人士很頭痛，若是要減低不確定性，未來商務人士可以直接叫 Uber ，透過 Uber 這個品牌的篩選，幫忙選用較佳的車行，同時，在服務有爭執時，可以調出行車路線圖解決紛爭。</p>
-<p>事實上，在這個禮拜，已有某外商銀行的朋友跟我說，他們公司考慮撤掉目前雇用的黑頭車及司機，直接透過 Uber 叫車，減少管理成本及費用的支出。</p>
-<p>另外，我也跟同事談到我在 2009 年到紐約機場坐計程車的經驗，在 2009 年時，紐約市的計程車上已經有 GPS / Map 供後座的乘客使用，我從市區坐車要到布魯克林去，透過 GPS 地圖就可以看出來計程車司機有沒有在繞路。</p>
-<img alt="/images/2013-09-30/map_on_taxi.jpg" class="align-left" src="/images/2013-09-30/map_on_taxi.jpg" style="width: 800px;" />
-<p>另外再早個一兩年，我在紐華克機場叫車到紐澤西的郊區拜訪親戚，在機場的叫車區就有服務人員，一個個的問你要去那裡，然後印出來類似下圖的乘車券，上面會有說你從那裡出發，要到那裡，大約的車資是多少，乘坐的車號是多少。</p>
-<p>紐約就是紐約，在制度上還是領先其它地區，對商務旅遊來說，還是有他獨到的地方，同事也說，如果這樣他多付十塊美金買安心也願意。</p>
-<img alt="/images/2013-09-30/airport_receipt.jpg" class="align-left" src="/images/2013-09-30/airport_receipt.jpg" style="width: 360px;" />
-<img alt="/images/2013-09-30/receipt.jpg" class="align-left" src="/images/2013-09-30/receipt.jpg" style="width: 360px;" />
-<p>接著事情就急轉直下了，我接著談到，台灣政府也有在考慮在計程車安裝新的計費表，能夠列印出制式的收據、統一發票，方便商務人士報帳，當然，背後的原因是政府要破產了，所以要擴大徵稅的對像；此時就有另一位同事說，開計程車的都是弱勢怎麼可以跟他們徵稅呢？</p>
-<p>我想，這就是台灣目前無法更上一層樓的原因，我們寧願犧牲國家競爭力，把對社會制度的修正跟對弱勢的補助綁在一起，甚至是對弱勢的定意都無法拿捏的清楚 <a class="footnote-reference" href="#id2" id="id1">[1]</a> ，就這樣和稀泥的過了 20 年，就停滯在開發中國家的頂邊，無法邁入已開發國家之列。</p>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>計程車司機若是能遵守車隊的規範，加入一級的車隊，扣掉費用，收入在四萬以上，高出貧戶補助的標準許多。</td></tr>
-</tbody>
-</table>
-<p>[2] 從計程車看人生 <a class="reference external" href="http://i-chentsai.blogspot.tw/2010/12/blog-post.html">http://i-chentsai.blogspot.tw/2010/12/blog-post.html</a></p>
-<p>[3] 圖片來源：<a class="reference external" href="http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/">http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/</a></p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -865,6 +966,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/02/12/mongodb-mysql/">Mongodb vs MySQL/RDBMS</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/02/12/mongodb-schemaless/">Mongodb - Schemaless</a>
       </li>
     
@@ -878,10 +983,6 @@
     
       <li class="post">
         <a href="/blog/2014/01/16/make-me-a-german/">德國人為什麼強大</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/12/15/project-manager-and-product-manager/">project-manager-and-product-manager</a>
       </li>
     
   </ul>
