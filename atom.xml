@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2014-02-12T20:17:18+08:00</updated>
+  <updated>2014-02-12T20:18:25+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -71,9 +71,9 @@ SQL ，除了 AdHoc Query 外，還可以對多個 Table 進行 Joined Query，�
 |               | billg@ms.com  |  1600      |
 
 
-| TableB        | Email         | tweets  |
-| ------------- |---------------| --------|
-|               | billg@ms.com  |  9999   |
+| TableB        | Email         | tweets     |
+| ------------- |---------------| -----------|
+|               | billg@ms.com  |  9999      |
 </code></pre>
 
 <p>在 Document Model 可能就是用一個 Document 如</p>
