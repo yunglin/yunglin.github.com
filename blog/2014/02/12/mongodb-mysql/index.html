@@ -147,10 +147,27 @@ SQL ，除了 AdHoc Query 外，還可以對多個 Table 進行 Joined Query，�
 
 <p>我們公司是做人肉搜索的，對於同一個人 / email 來說，我們會有很多來自不同來源的 metadata ，今天假設是兩個來源好了。</p>
 
-<p>在 RDBMS 中，就是開兩個 Table ，各自記錄不同來源來的資料
- | TableA        | Email         | likes      |
- | &#8212;&#8212;&#8212;&#8212;- |:&#8212;&#8212;&#8212;&#8212;-:| &#8212;&#8212;&#8212;-:|
- |               | billg@ms.com  |  1600      |</p>
+<p>在 RDBMS 中，就是開兩個 Table ，各自記錄不同來源來的資料</p>
+
+<table>
+<thead>
+<tr>
+<th> </th>
+<th> TableA        </th>
+<th align="center"> Email         </th>
+<th align="right"> likes      </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> </td>
+<td>               </td>
+<td align="center"> billg@ms.com  </td>
+<td align="right">  1600      |</td>
+</tr>
+</tbody>
+</table>
+
 
 <table>
 <thead>
