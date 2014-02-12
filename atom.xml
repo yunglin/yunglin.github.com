@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2014-02-12T20:31:03+08:00</updated>
+  <updated>2014-02-12T21:11:54+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -90,9 +90,9 @@ SQL ，除了 AdHoc Query 外，還可以對多個 Table 進行 Joined Query，�
 <p>然而，既然要用 NoSQL 就要玩 <strong>BIG DATA</strong> ，所以我們把問題修改一下，我們從兩個來源，分別拿到十億筆
 email 的 likes 數，跟十億筆 email 的 tweets 數，我們想把這些資料寫到 DB 去再拿回來用。</p>
 
-<p>用 RDBMS 自然是輕鬆愉快，兩個檔案輪流打開，一筆筆的加到 DB 中，DBMS對這種簡單的寫入可以做到 10,000 insert / sec 沒問題，大概 27 分鐘就可以做完了。</p>
+<p>用 RDBMS 自然是輕鬆愉快，兩個檔案輪流打開，一筆筆的加到 DB 中，DBMS對這種簡單的寫入可以做到 10,000 insert / sec 沒問題，大概 55 分鐘就可以做完了。</p>
 
-<p>但是 MongoDB 呢？因為兩個屬性都是在同一個 Document 上，所以要馬是先把十億筆 (email, likes) ，先寫到 MongoDB 中，再下十億筆 Read / Update 把 Document
+<p>但是 MongoDB 呢？因為兩個屬性都是在同一個 Document 上，所以要馬是先把十億筆 (email, likes) ，先寫到 MongoDB 中，再下十億筆 Read + Update 把 Document
 讀回來再加上 tweets ，如果很不幸你的 Document Id 不是 email ，那就是要下十億筆 Search + Update ，不管怎麼算，都不是太漂亮。</p>
 
 <p>另一個作法是，你先把兩個十億筆的資料在本機的記億體中做 join ，然後再寫到 MongoDB 去，ㄜ&#8230; 這樣搞你不覺得累嗎？這麼小的應用問題就要自己動手刻程式碼，而且
