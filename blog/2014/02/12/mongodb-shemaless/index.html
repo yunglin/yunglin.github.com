@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>談政府干預怎麼摧毀了台灣的軟體業 - 碎碎唸</title>
+  <title>mongodb-shemaless - 碎碎唸</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="看到今天大家又再吵無薪實習，把前一陣子在 FB 上寫的貼過來 Post by 揭露22K. Post by David Hsu.我舉個台灣軟體業被政府消滅的例子，來讓各位體會到，政府幫企業找人，是件多麼可怕的事。
-台灣20年前，台灣有軟體產業，有自製中文系統、排板軟體、繪圖軟體、資料庫等， &hellip;">
+  <meta name="description" content="我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。 Schemaless 的優點 Schemaless 不是沒有優點的，在搭配上動態語言時， Schemaless &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2013/10/19/government-intervention">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -79,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">談政府干預怎麼摧毀了台灣的軟體業</h1>
+      <h1 class="entry-title">Mongodb-shemaless</h1>
     
     
       <p class="meta">
@@ -95,23 +94,50 @@
   
 
 
-<time datetime="2013-10-19T18:27:00+08:00" pubdate data-updated="true">Oct 19<span>th</span>, 2013</time>
+<time datetime="2014-02-12T15:08:00+08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>看到今天大家又再吵無薪實習，把前一陣子在 FB 上寫的貼過來</p>
-<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-post" data-href="https://www.facebook.com/photo.php?fbid=207806502725706&amp;set=a.123958594443831.22510.123957401110617&amp;type=1" data-width="550"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?fbid=207806502725706&amp;set=a.123958594443831.22510.123957401110617&amp;type=1">Post</a> by <a href="https://www.facebook.com/ilove22K">揭露22K</a>.</div></div><div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-post" data-href="https://www.facebook.com/shihjieh.hsu/posts/2987682786688" data-width="550"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/shihjieh.hsu/posts/2987682786688">Post</a> by <a href="https://www.facebook.com/shihjieh.hsu">David Hsu</a>.</div></div><p>我舉個台灣軟體業被政府消滅的例子，來讓各位體會到，政府幫企業找人，是件多麼可怕的事。</p>
-<p>台灣20年前，台灣有軟體產業，有自製中文系統、排板軟體、繪圖軟體、資料庫等，但是在12,13年前，被國防役制度，把整個軟體產業給摧毀了。</p>
-<p>研發替代役，是下一個將摧毀台灣新興產業的政策，朋友問，台灣startup請新鮮人要多少薪水？我直接丟核彈，講：不用想了，因為研發替代役政策，小公司跟本不要想說招的到有能力的新鮮人，因為，有能力的，都去大公司上班當替代役，不能申請替代役的小公司，跟本不用去想招社會新鮮人這個問題。</p>
-<p>台灣最近一年研發替代役的名額是 7500 人，約是理工科大學畢業生的一成(目前是碩士才能申請替代役但是明年是大學就可以了)，差不多就是有即戰力的人數。除非是大公司的篩選機制出了漏網之魚，或者是因個人生涯規劃不申請，要不然，大多數的即戰力，就這樣被政府，趕鴨子似的，送給了大企業</p>
-<p>而這些大企業是怎麼使用這些人材的呢？既然能把人材綁著四年，年年都有新人進來，所以台灣的產業都把案子弄的很專案導向，能夠在短期內做完就好，沒有人會去想長期性的投資。反正有簡單的路走，為什麼要捨易求難呢？</p>
-<p>所以，各家公司就是一堆新人在走，反而不見公司投資在長期的流程改善及工程方法論當中。資深的員工，在台商薪水也上不來，只能逃到外商去。</p>
+<div class="entry-content"><p>我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。</p>
 
+<h2>Schemaless 的優點</h2>
+
+<p>Schemaless 不是沒有優點的，在搭配上動態語言時， Schemaless 是個很好用的功能，不用設定 mapping configuration ，直接就可以打 <code>item?.some_collections[0]?.city</code> 就這樣一路對一個物件逛下去，不用為了新增一個欄位就要去改 mapping configuration 然後跑 db migration。</p>
+
+<p>然而，這個特點，只有用在有 safe navigation 的動態語言上，才能享受到這些好處，要不然還是處處都要寫 null check ，要不然就會因為讀到前一版的 item 缺少某個欄位，而噴出了 NullPointerException。</p>
+
+<h2>Schemaless 與靜態語言</h2>
+
+<p>在靜態語言中使用 Schemaless DB 時，schemaless 的好處就消失怠盡了，像是我們公司是用 <a href="https://github.com/mongodb/morphia">Morphia</a> 來寫 Model &amp; DAO 的，若是要新增一個欄位，免不了是要去更新 Model class 然後重新 compile &amp; deploy 才能加上一個欄位的。</p>
+
+<p>相較於使用 Schemaful DB ，我們省下的，只有跑 DB Migration 的時間，當然，若是你有個超大的 DB ，那這省下的 off-line maintenance downtime 也可是很驚人的，但是，並不是所有的 db migration 都是要把整個系統下線才能跑的，大多數的 db migration 都是會把系統設計成(對DB)向後相容的，所以不用把整個系統啦下線就可以跑。</p>
+
+<blockquote><p>對DB向後相容：這邊指的是，先不要更新 Application ，先把 DB Migration 跑完，把資料庫的資料跟Schema更新完後，才把新版的 Application 上線。所以在某段時間內，是舊版的 Application 對著新版的 Schema 在跑的。</p></blockquote>
+
+<h2>Schemaless 的問題</h2>
+
+<p>許多大系統用 Schemaless DB 的原因是因為不想因為跑 DB Migration 把整個系統下線，所以就用 Schemaless 的系統來避開這問題。</p>
+
+<p>但是我想說的是，這誤會可大了，就像前面講的在 Schemaful DB 中，向前相容的 Schema 變動，是不用把系統下線就可以跑的，只有向前不相容的，才要跑 Offline DB Migration 或 Online Data Conversion.</p>
+
+<blockquote><p>Online Data Conversion 指的是，因為前後 Schema 不相容，所以開一個新的 Table 給新版本的物件用，每次讀取一個物件時，先去檢查是否已存在新的 Table 中，若沒有，則是從舊的 Table 讀出來，把格式更新，再存到新的 Table 中。</p>
+
+<p>如此一來，就不用下線也可以把前後格式不相容的的 DB 更新。</p></blockquote>
+
+<p>前文所說的 db migration &amp; online data conversion 就是 schemaless DB 的大問題，除非你是 <strong>神</strong> ，Model 一次就設計好，可以用一輩子，要不然，在你的 DB 中，必然會存在著 V1, V2,V3&#8230;Vn 版本的物件。</p>
+
+<p>不跑 db migration ，那就表示你要維護可以對 V1, V2, V3&#8230;.Vn 存取的 Model class ，你可能有一個 db item 一整年沒被讀取到，但是一年後突然用到，你要怎樣保證還讀的回來呢？？</p>
+
+<p>最常見的做法就是，不去更新 Model ，削足適屨，既使你知道更心 Model 會讓你未來程式更好寫，但是因為不能去更新 Model ，那就只好去調整程式邏輯，癟腳的用不合適的 Model 來做新工作。</p>
+
+<p>而既使你想跑 db migration ，但是因為 schemaless db 跟本不打算支援 db migration ，所以跟本不會內建任何工具來幫助你，所以你只能很苦命的自己刻 online data conversion 的工具了。</p>
+
+<h2>後記</h2>
+
+<p>如果你對 DB Migration 的幾種方式有興趣的話，我建議你花一小時，把這個 Martin Fowler 與 Pramod Sadalage 的 <a href="http://www.se-radio.net/2012/06/episode-186-martin-fowler-and-pramod-sadalage-on-agile-database-development/">Agile Database Development</a> 聽完</p>
 </div>
 
 
@@ -134,7 +160,7 @@
   
 
 
-<time datetime="2013-10-19T18:27:00+08:00" pubdate data-updated="true">Oct 19<span>th</span>, 2013</time>
+<time datetime="2014-02-12T15:08:00+08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
       
 
 
@@ -142,7 +168,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2013/10/19/government-intervention/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2013/10/19/government-intervention/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -155,10 +181,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/09/30/new-york-taxi/" title="Previous Post: 談紐約的計程車如何降低乘客及司機間的不信任感">&laquo; 談紐約的計程車如何降低乘客及司機間的不信任感</a>
+        <a class="basic-alignment left" href="/blog/2014/02/12/mongodb-shard-key/" title="Previous Post: MongoDB - Sharding">&laquo; MongoDB - Sharding</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/10/26/island-of-greed/" title="Next Post: 我們的政府很有錢啊">我們的政府很有錢啊 &raquo;</a>
       
     </p>
   </footer>
@@ -249,8 +273,8 @@ alt="tumblr stats" style="border:none;"></a></section>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://blog.yunglinho.com/blog/2013/10/19/government-intervention/';
-        var disqus_url = 'http://blog.yunglinho.com/blog/2013/10/19/government-intervention/';
+        var disqus_identifier = 'http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless/';
+        var disqus_url = 'http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless/';
         var disqus_script = 'embed.js';
       
     (function () {
