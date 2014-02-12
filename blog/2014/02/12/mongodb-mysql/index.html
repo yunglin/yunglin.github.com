@@ -193,7 +193,7 @@ SQL ，除了 AdHoc Query 外，還可以對多個 Table 進行 Joined Query，�
 
 <p>在 Query 時，前者要一個 join 才可以取回關於這個 email 的所有資料，後者則是一個 lookup ，自然後者的效率較好，而且同樣可以對不同的欄位下 Query 條件。</p>
 
-<p>然而，既然要用 NoSQL 就要完 <strong>BIG DATA</strong> ，所以我們把問題修改一下，我們從兩個來源，分別拿到十億筆
+<p>然而，既然要用 NoSQL 就要玩 <strong>BIG DATA</strong> ，所以我們把問題修改一下，我們從兩個來源，分別拿到十億筆
 email 的 likes 數，跟十億筆 email 的 tweets 數，我們想把這些資料寫到 DB 去再拿回來用。</p>
 
 <p>用 RDBMS 自然是輕鬆愉快，兩個檔案輪流打開，一筆筆的加到 DB 中，DBMS對這種簡單的寫入可以做到 10,000 insert / sec 沒問題，大概 27 分鐘就可以做完了。</p>
