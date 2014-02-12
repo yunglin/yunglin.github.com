@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="許多人從 RDBMS 跳到 NoSQL 的第一站都是 MongoDB ，所以這一篇，就是特別寫來解識，為什麼很多人選用 MongoDB ，以及解識你為什麼不該用 MongoDB 來換掉 RDBMS 。 MongoDB 熱門的理由 MongoDB 熱門的原因是因為他提供了一個可以跟 SQL 相比的 &hellip;">
+  <meta name="description" content="許多人從 RDBMS 跳到 NoSQL 的第一站都是 MongoDB ，所以這一篇，就是特別寫來解釋，為什麼很多人選用 MongoDB ，以及解釋你為什麼不該用 MongoDB 來換掉 RDBMS 。 MongoDB 熱門的理由 MongoDB 熱門的原因是因為他提供了一個可以跟 SQL 相比的 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -104,12 +104,12 @@
   </header>
 
 
-  <div class="entry-content"><p>許多人從 RDBMS 跳到 NoSQL 的第一站都是 MongoDB ，所以這一篇，就是特別寫來解識，為什麼很多人選用 MongoDB ，以及解識你為什麼不該用 MongoDB 來換掉 RDBMS 。</p>
+  <div class="entry-content"><p>許多人從 RDBMS 跳到 NoSQL 的第一站都是 MongoDB ，所以這一篇，就是特別寫來解釋，為什麼很多人選用 MongoDB ，以及解釋你為什麼不該用 MongoDB 來換掉 RDBMS 。</p>
 
 <h2>MongoDB 熱門的理由</h2>
 
 <p>MongoDB 熱門的原因是因為他提供了一個可以跟 SQL 相比的 <a href="http://docs.mongodb.org/manual/tutorial/query-documents/">Query Language</a> ，在 NoSQL 不同面向的眾多方案中， MongoDB 所能支援的 AdHoc Query 是沒人能比的， Riak 跟 CouchDB 的 AdHoc Query
-也不差，但是 Riak 在跑 <a href="http://docs.basho.com/riak/latest/dev/using/mapreduce/">MapReduce Query</a> 時是不能透過 index 加速的， CouchDB 則是跟本不支源 index ，所以在這邊 MongoDB <strong>看似</strong> 是個很好的 MySQL drop-in replacement</p>
+也不差，但是 Riak 在跑 <a href="http://docs.basho.com/riak/latest/dev/using/mapreduce/">MapReduce Query</a> 時是不能透過 index 加速的， CouchDB 則是跟本不支援 index ，所以在這邊 MongoDB <strong>看似</strong> 是個很好的 MySQL drop-in replacement</p>
 
 <p>使用 MongoDB 來取代 MySQL ，在初期，看來是學習成本最低，轉換風險最低的解決方案，所以多數商業公司，為了降低風險，在追循潮流一窩風的採用 NoSQL 時，選擇了 MongoDB 這個看似合理且安全的選項。</p>
 
@@ -135,11 +135,11 @@
 
 <p>而且 MongoDB 本身號稱的 BASE 跟本是 Eventual Inconsistency ，在
 <a href="http://aphyr.com/posts/284-call-me-maybe-mongodb">Call me maybe: MongoDB</a> 這篇文章中就驗證到，當 Network Partition 發生時，既使 MongoDB
-回復寫入成功，但是實既上還是會失敗的，所以就在這種底層實作不可靠下，你上層加什麼工具也是枉然，所以多數人就是假裝沒這回事，想說自己沒這麼倒楣。</p>
+回復寫入成功，但是實際上還是會失敗的，所以就在這種底層實作不可靠下，你上層加什麼工具也是枉然，所以多數人就是假裝沒這回事，想說自己沒這麼倒楣。</p>
 
 <h3>Relational Model</h3>
 
-<p>Relational Model 是四十年前那次 DB 戰爭中，打敗 Network Model, Hierarchical Model 剩出的王者，在四十年後，再次受到 Document Model 的挑戰，這次的結果如何呢？</p>
+<p>Relational Model 是三十年前那次 DB 戰爭中，打敗 Network Model, Hierarchical Model 剩出的王者，在三十年後，再次受到 Document Model 的挑戰，這次的結果如何呢？</p>
 
 <p>Relational Model 的好處是可以透過正規化，減少資料的重複、提高資料的一致性，以及透過
 SQL ，除了 AdHoc Query 外，還可以對多個 Table 進行 Joined Query，這個是 MongoDB / Document Model 所做不到的。</p>
