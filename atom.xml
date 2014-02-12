@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2014-02-12T20:11:49+08:00</updated>
+  <updated>2014-02-12T20:17:18+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -66,47 +66,24 @@ SQL ，除了 AdHoc Query 外，還可以對多個 Table 進行 Joined Query，�
 
 <p>在 RDBMS 中，就是開兩個 Table ，各自記錄不同來源來的資料</p>
 
-<table>
-<thead>
-<tr>
-<th></th>
-<th> TableA        </th>
-<th align="center"> Email         </th>
-<th align="right"> likes      </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td>               </td>
-<td align="center"> billg@ms.com  </td>
-<td align="right">  1600      |</td>
-</tr>
-</tbody>
-</table>
+<pre><code>| TableA        | Email         | likes      |
+| ------------- |---------------| -----------|
+|               | billg@ms.com  |  1600      |
 
 
-<table>
-<thead>
-<tr>
-<th></th>
-<th> TableB        </th>
-<th align="center"> Email         </th>
-<th align="right"> tweets  </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td>               </td>
-<td align="center"> billg@ms.com  </td>
-<td align="right">  9999   |</td>
-</tr>
-</tbody>
-</table>
+| TableB        | Email         | tweets  |
+| ------------- |---------------| --------|
+|               | billg@ms.com  |  9999   |
+</code></pre>
 
+<p>在 Document Model 可能就是用一個 Document 如</p>
 
-<p>在 Document Model 可能就是用一個 Document 如 <code>{ email: "billg@ms.com", likes: 1600, tweets: 9999 }</code></p>
+<pre><code>{
+    email: "billg@ms.com",
+    likes: 1600,
+    tweets: 9999
+}
+</code></pre>
 
 <p>在 Query 時，前者要一個 join 才可以取回關於這個 email 的所有資料，後者則是一個 lookup ，自然後者的效率較好，而且同樣可以對不同的欄位下 Query 條件。</p>
 
