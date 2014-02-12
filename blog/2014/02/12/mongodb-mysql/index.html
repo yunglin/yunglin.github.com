@@ -212,8 +212,8 @@ email 的 likes 數，跟十億筆 email 的 tweets 數，我們想把這些資�
 就我看來，這是一筆極差的交易，因為這個換回來的東西大多只能應用在一塊很小的地方，一個需要大量儲空間、一個需要大量讀取能力的應用，而且後者還可以被 cache 所取代。</p>
 
 <p>前面講的 <code>在某個資料大小下，一個非常快速的 index</code> 就是指這個應用範圍， <a href="https://twitter.com/dickwall">Navigenics 的 Dick Wall</a> 就講過，他曾用 MongoDB 用來儲存要配對的 DNA Sequence
-，他的資料大小，剛好是大到無法用 Redis 放在記億體中，但是又剛剛好 index 的大小剛好是可以透過 MongoDB 全部放在記億體中，剩餘的資料則是存在硬碟上，就這麼剛好透過
-MongoDB ，他的搜尋速度可以達到 MySQL 方案的一百倍。</p>
+，他的資料大小，剛好是大到無法用 Redis 放在記億體中，但是 index 的大小剛好是可以透過 MongoDB 全部放在記億體中，剩餘的資料則是存在硬碟上，就這麼剛好透過
+MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案的一百倍。</p>
 
 <p>然而，真正 big data 的應用，如 log storage &amp; analysis ，MongoDB 是無法達到對 write operation 的需求的。 MongoDB 能適用的問題空間實在太小，而且既使你目前的需求是在 MongoDB
 能達到的範圍內，但需求一變化，就長到 MongoDB 無法承擔的空間去了。</p>
