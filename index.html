@@ -222,6 +222,17 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 能達到的範圍內，但需求一變化，就長到 MongoDB 無法承擔的空間去了。</p>
 
 <p>這也是我未來不會採用 MongoDB 的原因，在小量資料時，我會用 PostgreSQL / MySQL ，在資料量大時，會用 Postgres + Cassandra + ElasticSearch</p>
+
+<h2>附注</h2>
+
+<p>既然我說 MongoDB 的這筆交易不是個好交易，那什麼是好交易呢？</p>
+
+<p>我覺得 Cassandra 這個就是個好交易，我們拿 ACID, AdHoc Query 出去換。是的我們把 AdHoc Query 都拿出去換掉了，換回來的是一次只能問兩個問題的 Query ，而且這兩個問題還是在 Table Design 時就要決定的。</p>
+
+<p>但我們換回來的是幾乎無上限的 Read &amp; Write operation 能力 ，在<a href="http://techblog.netflix.com/2011/11/benchmarking-cassandra-scalability-on.html">Netflix 的測試中</a>，Cassandra 單一節點可以有 10,000 rw/sec ，然後一路隨著增加到 288 個節點，每加一個點可以增加 10,000 rw/sec 。</p>
+
+<p>這個才是我說的好交易，因為這個特殊能力，是其它解決方案都辦不到的；雖然說我們交易掉了 ACID &amp; AdHoc Query ，但是透過適當的 Table Design ， Cassandra 的特性剛好可以用來解決 Big Data 中 log storage &amp; analysis
+這個大部份人需要解決的問題。</p>
 </div>
   
   
