@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2014-02-12T20:20:16+08:00</updated>
+  <updated>2014-02-12T20:31:03+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -43,7 +43,7 @@
 
 <p><a href="http://msdn.microsoft.com/en-us/library/jj591569.aspx">SAGA Pattern</a> 則是另一個在沒有 Transaction 下，來解決多事件互動的 Pattern 。</p>
 
-<p>然而 CQRS 或 SAGA Pattern 都沒有 ACID 好用，以及廣被眾人所了解，連我自己都只是讀過沒有親身實作過，要做的話，連底層的工具都要自己從頭開始作，或者是要去學一些非常新的工具如 <a href="http://www.datomic.com/">Datomic</a> 。</p>
+<p>然而 CQRS 或 SAGA Pattern 都沒有 Transaction 好用，以及廣被眾人所了解，連我自己都只是讀過沒有親身實作過，要做的話，連底層的工具都要自己從頭開始作，或者是要去學一些非常新的工具如 <a href="http://www.datomic.com/">Datomic</a> 。</p>
 
 <p>因為換出的是 ACID 這樣強大的工具，替代的方案又是高未知的空間，所以許多人最後選擇的替代方案就是 &#8211; <strong>頭埋起來假裝沒有問題</strong></p>
 
