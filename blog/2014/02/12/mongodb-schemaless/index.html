@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>mongodb-shemaless - 碎碎唸</title>
+  <title>Mongodb schemaless - 碎碎唸</title>
   <meta name="author" content="">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2014/02/12/mongodb-schemaless">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -78,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">Mongodb-shemaless</h1>
+      <h1 class="entry-title">Mongodb Schemaless</h1>
     
     
       <p class="meta">
@@ -115,7 +115,7 @@
 
 <p>相較於使用 Schemaful DB ，我們省下的，只有跑 DB Migration 的時間，當然，若是你有個超大的 DB ，那這省下的 off-line maintenance downtime 也可是很驚人的，但是，並不是所有的 db migration 都是要把整個系統下線才能跑的，大多數的 db migration 都是會把系統設計成(對DB)向後相容的，所以不用把整個系統啦下線就可以跑。</p>
 
-<blockquote><p>對DB向後相容：這邊指的是，先不要更新 Application ，先把 DB Migration 跑完，把資料庫的資料跟Schema更新完後，才把新版的 Application 上線。所以在某段時間內，是舊版的 Application 對著新版的 Schema 在跑的。</p></blockquote>
+<blockquote><p>對DB向後相容的 Application / 向前相容的 Schema ：這邊指的是，先不要更新 Application ，先把 DB Migration 跑完，把資料庫的資料跟Schema更新完後，才把新版的 Application 上線。所以在某段時間內，是舊版的 Application 對著新版的 Schema 在跑的。</p></blockquote>
 
 <h2>Schemaless 的問題</h2>
 
@@ -127,17 +127,17 @@
 
 <p>如此一來，就不用下線也可以把前後格式不相容的的 DB 更新。</p></blockquote>
 
-<p>前文所說的 db migration &amp; online data conversion 就是 schemaless DB 的大問題，除非你是 <strong>神</strong> ，Model 一次就設計好，可以用一輩子，要不然，在你的 DB 中，必然會存在著 V1, V2,V3&#8230;Vn 版本的物件。</p>
+<p>前文所說的 db migration &amp; online data conversion 就是 schemaless DB 的大問題，除非你是 <strong>神</strong> ，Model 一次就設計好，可以用一輩子，要不然不跑 db migration ，在你的 DB 中，必然會存在著 V1, V2,V3&#8230;Vn 版本的物件。</p>
 
 <p>不跑 db migration ，那就表示你要維護可以對 V1, V2, V3&#8230;.Vn 存取的 Model class ，你可能有一個 db item 一整年沒被讀取到，但是一年後突然用到，你要怎樣保證還讀的回來呢？？</p>
 
-<p>最常見的做法就是，不去更新 Model ，削足適屨，既使你知道更心 Model 會讓你未來程式更好寫，但是因為不能去更新 Model ，那就只好去調整程式邏輯，癟腳的用不合適的 Model 來做新工作。</p>
+<p>最常見的做法就是，不去 <strong>大幅度</strong> 更新 Model ，削足適屨，既使你知道更新 Model 會讓你未來程式更好寫，但是因為不能去更新 Model ，那就只好去調整程式邏輯，癟腳的用不合適的 Model 來做新工作。</p>
 
 <p>而既使你想跑 db migration ，但是因為 schemaless db 跟本不打算支援 db migration ，所以跟本不會內建任何工具來幫助你，所以你只能很苦命的自己刻 online data conversion 的工具了。</p>
 
 <h2>後記</h2>
 
-<p>如果你對 DB Migration 的幾種方式有興趣的話，我建議你花一小時，把這個 Martin Fowler 與 Pramod Sadalage 的 <a href="http://www.se-radio.net/2012/06/episode-186-martin-fowler-and-pramod-sadalage-on-agile-database-development/">Agile Database Development</a> 聽完</p>
+<p>如果你對 DB Migration 的幾種方式有興趣的話，我建議你花一小時，把 Martin Fowler 與 Pramod Sadalage 的 <a href="http://www.se-radio.net/2012/06/episode-186-martin-fowler-and-pramod-sadalage-on-agile-database-development/">Agile Database Development</a> 聽完</p>
 </div>
 
 
@@ -168,7 +168,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2014/02/12/mongodb-schemaless/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2014/02/12/mongodb-schemaless/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -203,7 +203,7 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2014/02/12/mongodb-shemaless/">mongodb-shemaless</a>
+        <a href="/blog/2014/02/12/mongodb-schemaless/">Mongodb schemaless</a>
       </li>
     
       <li class="post">
@@ -273,8 +273,8 @@ alt="tumblr stats" style="border:none;"></a></section>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless/';
-        var disqus_url = 'http://blog.yunglinho.com/blog/2014/02/12/mongodb-shemaless/';
+        var disqus_identifier = 'http://blog.yunglinho.com/blog/2014/02/12/mongodb-schemaless/';
+        var disqus_url = 'http://blog.yunglinho.com/blog/2014/02/12/mongodb-schemaless/';
         var disqus_script = 'embed.js';
       
     (function () {
