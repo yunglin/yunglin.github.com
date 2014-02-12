@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>為什麼 Kim DotCom/Mega 能夠提供免費的網路 - 碎碎唸</title>
+  <title>MongoDB - Sharding - 碎碎唸</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="NOWNews 為紐西蘭提供免費光纖！盜版之王Kim Dotcom發豪語 現在，這位『網路頑童』再次放出讓人驚歎的承諾：為紐西蘭的每個人提供免費光纖服務。 引用 Dotcom 在 Twitter 上 的話就是：『The new Mega company will be based in
-NZ & &hellip;">
+  <meta name="description" content="Sharding 是一個我非常討厭 MongoDB 的地方，在多台 DB 的解決方案中，免不了要用一個方式來決定那個 object 該放在那台機器上，一個解決方式就是用某個欄位來當 shard key 。
+在 MongoDB 中，這個 Shard Key 一決定後就不能改了，然後 MongoDB &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@ NZ & &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -79,7 +79,7 @@ NZ & &hellip;">
   
   <header>
     
-      <h1 class="entry-title">為什麼 Kim DotCom/Mega 能夠提供免費的網路</h1>
+      <h1 class="entry-title">MongoDB - Sharding</h1>
     
     
       <p class="meta">
@@ -95,30 +95,19 @@ NZ & &hellip;">
   
 
 
-<time datetime="2013-02-04T19:21:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2013</time>
+<time datetime="2014-02-12T14:27:00+08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a class="reference external" href="http://www.nownews.com/2012/11/20/11814-2874727.htm">NOWNews 為紐西蘭提供免費光纖！盜版之王Kim Dotcom發豪語</a></p>
-<pre class="literal-block">
-現在，這位『網路頑童』再次放出讓人驚歎的承諾：為紐西蘭的每個人提供免費光纖服務。
-
-引用 Dotcom 在 Twitter 上 的話就是：『The new Mega company will be based in
-NZ &amp; become it's most valuable IT biz. I will relaunch Pacific Fibre. Free
-broadband for all Kiwi's
-</pre>
-<p>為什麼 Kim DotCom/Mega 能夠提供免費的網路呢？這要先從國際專線的拆帳機制講起；所謂拆帳就是，從甲地到乙地的線路
-，如果是甲地往乙地的流量佔四成，乙地往甲地的佔六成，那麼，這條專線的流量費用，就是六四分，甲付六成乙付四成。</p>
-<p>所以說，如果 Kim Dotcom 可以在紐西蘭建立起一個超大的 ICP ，這條專線，百分之九十九的流量都是流出紐西蘭的，那麼
-他就有機會只要付出 1% 的費用就可，當然要怎樣說服對連的電信商，接受這個條件，那就是 KD 的功力了。</p>
-<p>反觀中XX電信，由於台灣的對外頻寬，由於多數是外往內，國內沒有好的 ICP ，造成這些專線的費用，都是台灣買單的。</p>
-<p>小時候學的那些，台灣是東南亞重要戰略樞紐都是狗屁，過境的專線一堆，但是都沒留下實質的好處</p>
-<p>之前同事有問我，為什麼國外的 Hosting 公司可以免錢的，我說，就是因為養 ICP 對 ISP 有好處，所以國外的公司養一堆當談判條件用。</p>
-<p>台灣這邊，除了 <a class="reference external" href="http://wp.xdite.net/?p=122">「無名」被Giga當成談判條件</a> 過之外，就沒有聽過有人拿 ICP 當談判條件了，話說回來，大部份的 ICP 都被中華給拉過去後，也 <a class="reference external" href="http://blog.urdada.net/2009/03/24/197/">沒人有條件跟中華談了</a> 。</p>
-<p>但是，在國際專線這塊，台灣應該也來養幾個這種免費空間，這樣子才不會在國際專線費用這塊，被人家吃透透</p>
+<div class="entry-content"><p><a class="reference external" href="http://docs.mongodb.org/manual/tutorial/choose-a-shard-key/">Sharding</a> 是一個我非常討厭 MongoDB 的地方，在多台 DB 的解決方案中，免不了要用一個方式來決定那個 object 該放在那台機器上，一個解決方式就是用某個欄位來當 shard key 。</p>
+<p>在 MongoDB 中，這個 Shard Key 一決定後就不能改了，然後 MongoDB 會幫你把 object 按 shard key 的值域，平均分配在 n 台機器上。</p>
+<p>問題是，平均分派值域並不代表值會是平均非配的，例如 email ，因為姓名是集中在幾個字母上的，所以按值域分派會有 hot spot 產生，a-d 的特別多人，然後 x y z 的沒有人。</p>
+<p>在其它的 DB 中，每個 shard 機器所負責的值域是可以讓 dba 去調整的，但 MongoDB 是不行的，所以必然會產生 hot spot 而且你無法去躲開。</p>
+<p>有些人會自己去產生 UUID 來當 shard key ，在 MongoDB 2.4 中，則是加入了 hashed shard key 自動幫你把 shard key field 拿去算 hash key 出來當 shard key 用。但是，這還是免不了某些值域是 hot spot 的問題。</p>
+<p>所以，扔了 MongoDB 吧</p>
 
 </div>
 
@@ -142,7 +131,7 @@ broadband for all Kiwi's
   
 
 
-<time datetime="2013-02-04T19:21:00+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2013</time>
+<time datetime="2014-02-12T14:27:00+08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
       
 
 
@@ -150,7 +139,7 @@ broadband for all Kiwi's
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -163,10 +152,8 @@ broadband for all Kiwi's
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/02/03/move-erp-to-cloud/" title="Previous Post: 中小企業ERP系統上雲端？">&laquo; 中小企業ERP系統上雲端？</a>
+        <a class="basic-alignment left" href="/blog/2014/01/26/qnap-sucks/" title="Previous Post: QNAP Sucks">&laquo; QNAP Sucks</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/03/19/clean-future-api-design-sort.rst/" title="Next Post: Clean Future API Design">Clean Future API Design &raquo;</a>
       
     </p>
   </footer>
@@ -257,8 +244,8 @@ alt="tumblr stats" style="border:none;"></a></section>
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://blog.yunglinho.com/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/';
-        var disqus_url = 'http://blog.yunglinho.com/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/';
+        var disqus_identifier = 'http://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key/';
+        var disqus_url = 'http://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key/';
         var disqus_script = 'embed.js';
       
     (function () {
