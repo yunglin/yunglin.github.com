@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2014-03-23T01:04:22+08:00</updated>
+  <updated>2014-03-26T21:35:59+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,43 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[典範]]></title>
+    <link href="http://blog.yunglinho.com/blog/2014/03/26/role-model/"/>
+    <updated>2014-03-26T21:31:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2014/03/26/role-model</id>
+    <content type="html"><![CDATA[<p>這篇寫的真好，在國外渡過我二十歲的歲月，三十歲回到台灣來，發覺，台灣人最缺的就是一個典範跟一個夢想。</p>
+
+<p>台灣的年輕人活的很沒未來，常做一些很短期的事，像是一年換一次手機，一年就出國一次去玩，工作收入有個四五萬一個月好像就很滿足了。</p>
+
+<p>這些，我不會去怪這些年輕人，因為台灣這個社會讓年輕人沒有了夢想，把手機的錢存下來又怎樣，什麼都還是買不起，買車買房都無望，還是今朝有酒今朝醉吧，比別人多努力兩成又怎樣，生活又不會過比較好，反而還比較慘。</p>
+
+<p>我在美國單身的歲月裡，一年可以存下一半的薪水，工作了兩三年後，存下的錢在考慮要怎麼花，看是現金買部BMW M3圓夢、買個公寓省下房租、或投資做生意中做選擇，生活是一日比一日好。</p>
+
+<p>回來台灣後發現，台灣年輕人最缺的，其實是生命上的導師、一個可以遵從的典範，一個長你十多歲，一個你一直努力，就可以達到他的境界的目標。</p>
+
+<p>Ronald 是1.5代移民的香港人 30 歲幹到了 Director of Engineering ，Mak是日裔第一代移民 X-Window 中有他的名字，雖然英語不是他的母語，還是帶了 80 人，後來還跑去做了 Sims 3 ，Maidu 聯合國科學家的兒子，19歲大學畢業，30歲初頭時在兩年內在印度開了家公司，在舊金山生了小孩，還在 U of Chicago 拿 MBA，Stu 超級技術強人，幫我開了一輩子的眼界。</p>
+
+<p>這些人是我工作的同事，長我五到十歲，讓我知道，只要有目標，忍耐得了寂默苦修，有一天我也可以達到他們的境界。</p>
+
+<p>但是台灣的年輕人就沒什麼典範可以學習了，電視雜誌上報導的，多是六七十歲的大老，要不然就是官二代富二代；看這些人的故事，怎麼看都沒什麼好學的，反正再怎麼努力，你爺爺也不會變成姓蔣的，你無法去複製他們的成功經驗。</p>
+
+<p>台灣因為市場結構問題，要打入既有商業體系的，都只能靠「關係」，我這幾年下來，碰上創業成功的，多是做吃的，因為只有做吃的不用靠關係可以直接面對市場。或許就是這樣吧，年輕人就只能學著當個好寶寶，等著接收長輩的蔽蔭。</p>
+
+<p>所以看到陳為廷和林飛帆能幫年輕人立個典範，告訴大家，年輕人還是能改變社會，讓我非常的感動。</p>
+
+<div id="fb-root"></div>
+
+
+<p> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script></p>
+
+<div class="fb-post" data-href="https://www.facebook.com/nai.lai.12/posts/10200710575647101" data-width="466"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/nai.lai.12/posts/10200710575647101">Post</a> by <a href="https://www.facebook.com/nai.lai.12">蔡坤霖</a>.</div></div>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[從立法院長王金平談遵守法定程序]]></title>
@@ -1506,25 +1543,6 @@ pool.</p>
 </span><span class="line">  <span class="o">}</span>
 </span><span class="line"><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure></div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Clean Future API Design]]></title>
-    <link href="http://blog.yunglinho.com/blog/2013/03/19/clean-future-api-design-sort.rst/"/>
-    <updated>2013-03-19T21:43:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2013/03/19/clean-future-api-design-sort.rst</id>
-    <content type="html"><![CDATA[The Review
-===========================================================================
-
-歡迎來到 2013 Java Developer Day ，一年又過去了，在去年這個時間，我跟大家介紹了我們這一代程式
-設計師面對的挑戰是什麼？同時也介紹了 Actor Model 這個用來面對多核心挑戰的工具之一。
-
-在今年的議程裡，我將會介紹在 Scala 中，另一個用來做非同步處理（asynchronous programming)的工具。
-
-Why Asynchronous is Valuable
-============================================================================
 
 ]]></content>
   </entry>
