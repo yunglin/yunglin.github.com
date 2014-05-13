@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2014-04-03T02:42:56+08:00</updated>
+  <updated>2014-05-13T22:48:27+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[TDD]]></title>
+    <link href="http://blog.yunglinho.com/blog/2014/05/13/tdd/"/>
+    <updated>2014-05-13T22:46:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2014/05/13/tdd</id>
+    <content type="html"><![CDATA[<p>總算是把 TDD 的戰文看完了，看完後我對 DHH 的評估仍是沒變。</p>
+
+<p>DHH 在 Rework 中自述到，他偏好帶領一個三十人的團隊自在的工作，而不要把組織擴大到上百上千人把自己搞的焦頭濫額。 DHH 在組織架構跟應用範圍的偏好偏食，讓我在讀 DHH 文章時都會先考慮過他的出發點跟局限性。</p>
+
+<p>以程式設計師的角色來說， DHH 的精兵政策當然看起來很爽，我自己也做過類似的選擇，捨棄 Java 而就 Scala ，追求更高的個人產值。</p>
+
+<p>然而若是以一個架構師的角度來說，我的目標是成為像 Martin Fowler 的角色，相較於只有 36 個員工的 37 signals ，ThoughtWorks 是個有超過 2500 個員工的專業代工廠，在 ThoughtWorks 掛頭牌的 Martin Fowler 在技術的選用上，自然的考量要更全面，顧慮到不同應用領域的開發需求、以及不同程度的程式設計師該怎麼管理。</p>
+
+<p>DHH 對 TDD 的批評我多數同意，尤其是 Testing / DI 對 Design 的入侵也是一直困擾我的問題，但是我是把 Testing 當成一個需求來看，所以是多一個需求造成的額外成本在困擾我，而不是降低可讀性等問題在困擾我。
+在目前看不到較好的替代品之前，我還是會繼續用 TDD (w/o test first) 來做設計上的工法。</p>
+
+<p>我目前對程式的想法是從資料做起，我做的系統，多數就是把輸入的資料，透過一串串的轉換，Map, Filter, Count, Sum, Aggregation 後，變成最後要的樣子，在A -> B -> C -> D 中間，可能會有一些中介型態的出現。</p>
+
+<p>在我的設計中就會變成，在每一次的轉換的過程中，讓輸入輸出是可以被測試的，在設計階段就預先考量到要怎麼測試這些轉換。</p>
+
+<p>至於會不會做 Unit Test, Test First, 我是看有多少時間做多少事的，但至少模組內的一串流程的測試是會去做的。</p>
+
+<p>另外我會把 DAO &amp; Data Transformer(Service) 分開來，資料轉換的運算，是可以不用靠 DB 來的資料直接做測試，這樣跑起來才會快。</p>
+
+<p>許多的商業邏輯，我會在 DAO -> Service 上再多架一層 Controller ，這個 Controller 就會很醜，因為只有三(四)層，所以一個 Controller 可能換串個十來個 Service ，但是醜的就是在這裡面而以。</p>
+
+<p>測試的時候，至少是可以分層把底層容易測的都測好是穩定不容易出錯的，到時後上線有問題時，就可以知道是在 Controller 把東西串起來時出錯了。</p>
+
+<p>沒有 Test First 沒有 Unit Test ，但是會做 regression test, integration test 會在設計時預先留下容易稽核的點。這是不是 TDD??</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[我看服貿]]></title>
@@ -990,54 +1022,6 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 <p>在過去的幾年間，美國透過修改法規，出現了 Square ，加州通過了「無人架駛車輛標準」，而 Uber 還在跟許多州溝通中，要去修改出租車的法規。</p>
 <p>反觀台灣，類似 AirBnB 的民宿及短租公寓的需求已經出現，但是政府還是只會一昧的禁止，拒絕跟沒有門神背景的業者對談。</p>
 <p>許多人覺得我常講政治，但是對創業家來說，要麻就是避走他鄉或是不碰利潤最大的這一塊，要不然必然還是要碰上走「關說」、「碰政治」這一條路的</p>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[美國出差行]]></title>
-    <link href="http://blog.yunglinho.com/blog/2013/09/12/us-trip/"/>
-    <updated>2013-09-12T21:24:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2013/09/12/us-trip</id>
-    <content type="html"><![CDATA[<p>八月底到美國出差了兩個多禮拜，算起來，這是我自 2010 年搬回台灣後，第二次造訪美國；前一次是 2012 年 10 月出差到 San Jose ，這次則是到 San Francisco ，兩次造訪，這一次的震憾較上一次強烈許多。</p>
-<p>當年離美時就很清楚知道，離開三年後就會跟美國的商業環境開始脫節，但是親身經歷起來，還是有不少的感嘆，2008年金融風暴開始，房價爆跌、民間消費銳減、許多企業開始裁減支出，許多的商業計劃都被裁轍，美國的經濟陷入一段蕭條期。</p>
-<div class="section" id="tesla">
-<h2>Tesla</h2>
-<p>這一次來美國，見到了許多美國在這一段時間做出的變化；最大的特色還是鋼鐵人的公司 Tesla</p>
-<img alt="http://www.teslamotors.com/sites/all/themes/tesla/homepage/images/hero_20130823.jpg?20130826" src="http://www.teslamotors.com/sites/all/themes/tesla/homepage/images/hero_20130823.jpg?20130826" style="width: 800px;" />
-<p>Tesla 在前一年推出 Model S 後，雖然售價仍是高達七萬美金，但是銷售量大增，2013上半年就賣了 12,700 台，其中有 4,713 台是在加州賣掉；舊金山街頭處處可以看到 Tesla 的身影，連我去商店買東西跟老闆聊天，她也說她先生才剛買一台；在不遠的未來， Tesla 將是美國及加州經濟的一大推手。</p>
-</div>
-<div class="section" id="square">
-<h2>第二變化則是 Square</h2>
-<img alt="/images/2013-09-12/square-stand.jpg" src="http://blog.yunglinho.com/images/2013-09-12/square-stand.jpg" style="width: 800px;" />
-<p>Square 解決了兩個問題，第一個是過去在申請信用卡刷卡機時，需要遷有電話線，造成行動性不佳，許多的街頭攤販在無法使用信用卡付款的方式下，只能消售價格較低的產品，但是在 Square 出現後，這問題就迎刃而解；只要可以行動上網就可以接受信用卡付款，讓銷售行為更有便利性。</p>
-<p>Square 解決的第二個問題是 POS 系統的問題， Square 內建一個簡單的 POS 系統，可以讓你製作簡單的產品型錄、購物車及結帳，透過 Square 小型商家不用多花經費外包，就可以有一個 store front 可以用。</p>
-<p>在某一個週五下班後，我跟同事到一個 <a class="reference external" href="http://www.bluxomewinery.com/">倉庫</a> 去參加品酒會，現場的酒商，就是用 Square 來當 POS 系統，當場的試喝或者是買幾瓶幾箱回去，都可以在 Square 上完成，不用擔心是因為臨時性的場地無法做大金額的銷售。</p>
-</div>
-<div class="section" id="id1">
-<h2>第三個變化是穿戴性配備</h2>
-<p>從 2012 起 <strong>硬體文藝復興</strong> <a class="reference external" href="http://www.paulgraham.com/hw.html">Hardware Renaissance</a> 開始成為一個熱門的話題，成為創投開始關注的下一個目標，硬體及 IC 設計代工產業，讓開發硬體設備的成本越來越低，讓各種小型專案（在 Kickstarter) 開始盛行，其中大家最關注的一個方向就是穿戴性設備。</p>
-<p>美國創業土壤良好的一個因素，就是美國的消費者對新事物的接受度很高，在我們美國辦公室內，七個人就有三個人買了 <a class="reference external" href="https://jawbone.com/up">Jawbone Up</a> ，我們 CEO 還買了另一家的產品來用，讓愛嘗鮮的我也買了一支來試用。</p>
-<p>在舊金山的市區的 Apple Store ，有一整個櫃子在賣穿戴性設備，有 <a class="reference external" href="https://jawbone.com/up">Jawbone Up</a> <a class="reference external" href="http://www.fitbit.com/one">Fitbit One</a> <a class="reference external" href="http://www.nike.com/cdp/fuelband/us/en_us/">Nike Fuel Band</a> 等產品，其中 Up 還賣到斷貨，許多人都在問要何時在有適合的尺寸跟顏色進來。</p>
-<img alt="/images/2013-09-12/up.png" class="align-left" src="http://blog.yunglinho.com/images/2013-09-12/up.png" style="width: 180px;" />
-<img alt="/images/2013-09-12/fitbit.png" class="align-left" src="http://blog.yunglinho.com/images/2013-09-12/fitbit.png" style="width: 180px;" />
-<img alt="/images/2013-09-12/fitbit_one.jpg" class="align-left" src="http://blog.yunglinho.com/images/2013-09-12/fitbit_one.jpg" style="width: 180px;" />
-<img alt="/images/2013-09-12/fuelband.png" class="align-left" src="http://blog.yunglinho.com/images/2013-09-12/fuelband.png" style="width: 180px;" />
-</div>
-<div class="section" id="uber">
-<h2>第四個變化是 Uber</h2>
-<p>在台灣我們習慣使用電話叫車，但是美國已經變成使用手機叫車，在手機選好車種，叫車到特定地點，上車，下車時也不用再掏錢付款，直接在 Uber 結帳；與傳統的叫車攔車相比，又是更方便快速一些。</p>
-</div>
-<div class="section" id="id2">
-<h2>感想</h2>
-<p>美國在經歷 2008 年的房地產金融泡沫後，已經從衰退中，找到許多新的商業模式站起來，Tesla無疑的將對汽車製造業有市場重劃的影響。Google 的無人車計劃更是將把對個交通產業翻過來，未來個人不用擁有汽車，要用車，直接在手機上叫車，車輛自己開來你家接你，把你載到某個地點後，自己會再去找下一個客人，或者去找地方充電；在駕駛上，因為車輛可以互相溝通，所以在高速公路上可以保持非常近的安全距離，帶頭的第一台車要煞車時，同時也將電子訊號送給後面的車輛立即煞車，可以把道路空間更有效的利用。</p>
-<p>在電子製造業於美國無利可途的環境下，美國的消費產業，善用消費者及製造端的特性，開發出一樣又一樣的試驗型產品，雖然目前的穿戴式設備仍有電力及資料傳輸便利性的問題，但消費者、生產者及資本市場，仍不吝於給與嘗試的機會。</p>
-<p>Square, Uber 等電子化消費工具，將交易的成本降低，讓金錢的流通更迅速，加強美國在商業環境上的競爭力。在工業上，因為油頁岩探堪技術的突破，美國煉鋼成本大降，未來成為汽車等製造業成本最低的國家。</p>
-<p>在短短的五年間，美國就脫胎換骨，找到未來十年發展的發產潛力；反觀台灣，在過去幾年間，仍是以炒作房地產為主，家庭收入六成都卡在房貸上，民間消費全部停下來，百貨業今年的銷售額只有前一年的六成。</p>
-<p>在 2000, 2005, 2008 年就該被逃汰的 DRAM LCD WiMAX 產業，在政府的補助下，仍茍延殘喘，無法將勞動力釋出，產業結構仍是停留在 1990 年代的 <em>高人力成本</em> 的製造業為主。</p>
-<p>美國的產業轉型從 2008 年就開始了，台灣在過去五年內仍是炒房，目前台北市的房價已經跟曼哈頓島上一樣貴了，天龍國大安區信義區，價錢更是高到紐約中央公園第一排的水準；日前，台灣又開放保險業投資房地產的資金比率，再次幫房地產增加上漲的動力，有機會再漲兩年。</p>
-<p>三年前 31 歲的我，覺得能在台灣跟台灣一起面對經濟轉型，沒想到台灣沒有轉型，反而是要再拖至少兩年才能改革，而且是要走「日本失落的二十年」模式，而非美國的模式；已經不年輕的我，還有機會再等下去嗎？想來就悲哀</p>
 </div>
 
 ]]></content>

@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="在布建一個Web Application時，用.war來佈屬服務，算是最沒有效率的一種方式，因為，這樣無法把web container所需要的設定檔一起佈建出去，同時，也無法板本控製你的應用程式；本文接下來會敘述，如何用maven & jetty & debian來佈屬你的Web &hellip;">
+  <meta name="description" content="<!-- ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved. --> 台灣媒體從業人員笨死了，成天在媒體上獵女巫，檢討別人的成本結構；殊不知，(除了原物料必需品外)，售價是由供需曲線決定的，而不是由成本所決定的，成本， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/18/">成本降就該降售價嗎？</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-18T01:01:00+08:00" pubdate data-updated="true">Apr 18<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><!--
+  ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved.
+  -->
+
+<div class='post'>
+台灣媒體從業人員笨死了，成天在媒體上獵女巫，檢討別人的成本結構；殊不知，(除了原物料必需品外)，售價是由供需曲線決定的，而不是由成本所決定的，成本，只決定是否有業者會提供某項產品。<br /><br />媒體成天講什麼，稅金降所以該降價，成本漲所以物價漲，全民的腦力都浪費在幫別人算成本，而不是幫自己開創新產品。<br /><br />講多了，全民都變笨了。而且還偏好用名牌，漲價時不會去選用替代品，只會忙著叫龍頭降價，問題是，你越愛用，龍頭業者越有調漲的本錢。<br /><br />最近年紀到了，開始準備生小孩，就開始頭痛未來教育問題，不知道怎麼幫他規劃如何活在這塊土地上，而不被一些錯誤的觀念所誤導呢？﻿<br /><br />還是說，我又該離鄉背景工作個幾年，幫小孩弄個外國籍，未來送到台北歐洲學校或日僑學校去(美僑學校已經招生爆炸，只收父母都是美國人的小孩了)</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -417,51 +458,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/16/my-experience-with-scala-on-android/">My Experience With Scala on Android</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-16T16:53:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-用Scala開發Android，是個滿有趣的經驗，大致上來因為我切入的時間點較晚，所以大部份的問題已經被前人所解決，就用 https://github.com/jberkel/android-plugin 把專案用 sbt 開好後，就可以開始寫 android.<br /><br />我用的 IDE 是 intellij 11 EAP，用 sbt-idea 把 idea project 設好後，把預設的 asset pa th 從 .idea_module 改成 src/main ，就可以開始開發了。<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" imageanchor="1" style=""><img border="0" width="600" src="http://4.bp.blogspot.com/-OQlhhS6AeRY/TsNxXNa-1FI/AAAAAAAAC9A/H23HPm8vOy4/s1600/Screen%2Bshot%2B2011-11-16%2Bat%2B4.15.56%2BPM.png" /></a></div><br />在開發上，除了前一回碰上的<a href="http://blog.yunglinho.com/2011/11/data-modeling-with-jackson-json-and_5795.html">proguard問題</a>外，我還碰上另一個比較嚴重的問題－不能在Scala裡寫 AsyncTask<br /><br />這問題跟<a href="https://issues.scala-lang.org/browse/SI-3622">SI-3622</a> <a href="https://issues.scala-lang.org/browse/SI-3494">SI-3494</a>有關，看來是在 Scala 2.8解掉的問題，2.9又跑回來了，我這邊看到的狀況是<br /><br /><pre class="brush: scala">override protected def doInBackground(params: Params*): Result<br /></pre><br />會被Scala compiler專換成<br /><pre class="brush: java">public Result doInBackground(Seq params)<br />    public Result doInBackground(Params[] params)<br /></pre><br /><br />而底下的code，則是scala compiler會吐出 overides nothing.<br /><pre class="brush: scala">override protected def doInBackground(params: Array[Params]): Result<br /></pre><br />不管怎樣，都跟Android要求的<code>protected Result doInBackground(Params[] params)</code>不同，所以在runtime時會跑出NoSuchMethodError.<br /><br />解決方法是在 java 裡寫個 bridge interface ，幫 scala compiler 搞不定的東西，在這個 interface 裡定意好<br /><br /><pre class="brush: java">public abstract class SAsyncTask&lt;Params, Progress, Result> extends AsyncTask&lt;Params, Progress, Result> {<br /><br />    protected abstract Result doInBackground(Seq&lt;Params> params);<br /><br />    @Override<br />    protected Result doInBackground(Params... paramses) {<br />        return doInBackground(JavaConversions.asScalaBuffer(Arrays.asList(paramses)));<br />    }<br />}<br /></pre></div>
-<h2>Comments</h2>
-<div class='comments'>
-<div class='comment'>
-<div class='author'>yunglin</div>
-<div class='content'>
-多補幾個有關repeated parameters的討論，看來是Spec本身有問題，然後實作時一改再改，一路從2.7開始修修補補過來<br /><br />https://issues.scala-lang.org/browse/SI-1342<br />https://issues.scala-lang.org/browse/SI-1459<br />http://stackoverflow.com/questions/5512402/overriding-a-repeated-class-parameter-in-scala</div>
-</div>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -479,6 +475,10 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/13/tdd/">TDD</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/04/03/cross-strait-trade-agreement/">我看服貿</a>
       </li>
     
@@ -492,10 +492,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
     
       <li class="post">
         <a href="/blog/2014/03/15/prepaid-card-lifetime-limit/">消基會抽查預付卡100%違規設使用期限，NCC：將要求業者改善</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/02/19/on-load-testing/">從壓力測試回想到一些老故事</a>
       </li>
     
   </ul>
