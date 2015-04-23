@@ -9,9 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="是我太多年沒裝機、還是這年頭的機構設計師都是天才？高高興興的把新買的 QNAP TS-212P 打開來，嗯&#8230; 好樣的，竟然沒有說明書。
-好吧，就自己硬幹了，開始裝第一顆硬碟，右側索好兩顆螺絲後，換鎖左側，好樣的，孔位對不上！那就鎖一側好了。
-先插排線，嗯&#8230;，怎麼 &hellip;">
+  <meta name="description" content="我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。 Schemaless 的優點 Schemaless 不是沒有優點的，在搭配上動態語言時， Schemaless &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +75,122 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/12/mongodb-schemaless/">Mongodb - Schemaless</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-12T15:08:00+08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。</p>
+
+<h2>Schemaless 的優點</h2>
+
+<p>Schemaless 不是沒有優點的，在搭配上動態語言時， Schemaless 是個很好用的功能，不用設定 mapping configuration ，直接就可以打 <code>item?.some_collections[0]?.city</code> 就這樣一路對一個物件逛下去，不用為了新增一個欄位就要去改 mapping configuration 然後跑 db migration。</p>
+
+<p>然而，這個特點，只有用在有 safe navigation 的動態語言上，才能享受到這些好處，要不然還是處處都要寫 null check ，要不然就會因為讀到前一版的 item 缺少某個欄位，而噴出了 NullPointerException。</p>
+
+<h2>Schemaless 與靜態語言</h2>
+
+<p>在靜態語言中使用 Schemaless DB 時，schemaless 的好處就消失怠盡了，像是我們公司是用 <a href="https://github.com/mongodb/morphia">Morphia</a> 來寫 Model &amp; DAO 的，若是要新增一個欄位，免不了是要去更新 Model class 然後重新 compile &amp; deploy 才能加上一個欄位的。</p>
+
+<p>相較於使用 Schemaful DB ，我們省下的，只有跑 DB Migration 的時間，當然，若是你有個超大的 DB ，那這省下的 off-line maintenance downtime 也可是很驚人的，但是，並不是所有的 db migration 都是要把整個系統下線才能跑的，大多數的 db migration 都是會把系統設計成(對DB)向後相容的，所以不用把整個系統啦下線就可以跑。</p>
+
+<blockquote><p>對DB向後相容的 Application / 向前相容的 Schema ：這邊指的是，先不要更新 Application ，先把 DB Migration 跑完，把資料庫的資料跟Schema更新完後，才把新版的 Application 上線。所以在某段時間內，是舊版的 Application 對著新版的 Schema 在跑的。</p></blockquote>
+
+<h2>Schemaless 的問題</h2>
+
+<p>許多大系統用 Schemaless DB 的原因是因為不想因為跑 DB Migration 把整個系統下線，所以就用 Schemaless 的系統來避開這問題。</p>
+
+<p>但是我想說的是，這誤會可大了，就像前面講的在 Schemaful DB 中，向前相容的 Schema 變動，是不用把系統下線就可以跑的，只有向前不相容的，才要跑 Offline DB Migration 或 Online Data Conversion.</p>
+
+<blockquote><p>Online Data Conversion 指的是，因為前後 Schema 不相容，所以開一個新的 Table 給新版本的物件用，每次讀取一個物件時，先去檢查是否已存在新的 Table 中，若沒有，則是從舊的 Table 讀出來，把格式更新，再存到新的 Table 中。</p>
+
+<p>如此一來，就不用下線也可以把前後格式不相容的的 DB 更新。</p></blockquote>
+
+<p>前文所說的 db migration &amp; online data conversion 就是 schemaless DB 的大問題，除非你是 <strong>神</strong> ，Model 一次就設計好，可以用一輩子，要不然不跑 db migration ，在你的 DB 中，必然會存在著 V1, V2,V3&#8230;Vn 版本的物件。</p>
+
+<p>不跑 db migration ，那就表示你要維護可以對 V1, V2, V3&#8230;.Vn 存取的 Model class ，你可能有一個 db item 一整年沒被讀取到，但是一年後突然用到，你要怎樣保證還讀的回來呢？？</p>
+
+<p>最常見的做法就是，不去 <strong>大幅度</strong> 更新 Model ，削足適屨，既使你知道更新 Model 會讓你未來程式更好寫，但是因為不能去更新 Model ，那就只好去調整程式邏輯，癟腳的用不合適的 Model 來做新工作。</p>
+
+<p>而既使你想跑 db migration ，但是因為 schemaless db 跟本不打算支援 db migration ，所以不會內建任何工具來幫助你，你只能很苦命的自己刻 online data conversion 的工具了。</p>
+
+<h2>後記</h2>
+
+<p>如果你對 DB Migration 的幾種方式有興趣的話，我建議你花一小時，把 Martin Fowler 與 Pramod Sadalage 的 <a href="http://www.se-radio.net/2012/06/episode-186-martin-fowler-and-pramod-sadalage-on-agile-database-development/">Agile Database Development</a> 聽完</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/12/mongodb-shard-key/">MongoDB - Sharding</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-12T14:27:00+08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a class="reference external" href="http://docs.mongodb.org/manual/tutorial/choose-a-shard-key/">Sharding</a> 是一個我非常討厭 MongoDB 的地方，在多台 DB 的解決方案中，免不了要用一個方式來決定那個 object 該放在那台機器上，一個解決方式就是用某個欄位來當 shard key 。</p>
+<p>在 MongoDB 中，這個 Shard Key 一決定後就不能改了，然後 MongoDB 會幫你把 object 按 shard key 的值域，平均分配在 n 台機器上。</p>
+<p>問題是，平均分派值域並不代表值會是平均非配的，例如 email ，因為姓名是集中在幾個字母上的，所以按值域分派會有 hot spot 產生，a-d 的特別多人，然後 x y z 的沒有人。</p>
+<p>在其它的 DB 中，每個 shard 機器所負責的值域是可以讓 dba 去調整的，但 MongoDB 是不行的，所以必然會產生 hot spot 而且你無法去躲開。</p>
+<p>有些人會自己去產生 UUID 來當 shard key ，在 MongoDB 2.4 中，則是加入了 hashed shard key 自動幫你把 shard key field 拿去算 hash key 出來當 shard key 用。但是，這還是免不了某些值域是 hot spot 的問題。</p>
+<p>既使 MongoDB 能夠平均分派儲存的值域，但是最終我們要看的是，怎麼樣平均分派 read/write operation 。</p>
+<p>因為在讀取時，也會發生因為某些原因，讓使用者對某些 object 的存取較其它物件多出 n 倍，所以每個 shard 所負責的值域一定要是 tunable ，要不然遲早一定會出問題。</p>
+<p>所以，扔了 MongoDB 吧</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -736,89 +850,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/23/california-legalize-ridesharing/">加州公共事業委員會通過共乘法案</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-23T02:04:00+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a class="reference external" href="http://techcrunch.com/2013/09/19/cpuc-ridesharing-regulations/">California Regulator Passes First Ridesharing Rules, A Big Win For Lyft, SideCar, And Uber</a></p>
-<p>我把這篇 TechCrunch 的新聞貼在我的 FB 上，反應不佳，所以只好幫他做個中文補述：</p>
-<p>因為既有的私人出租車、共乘服務，與既有的加州法規不相容，所以『加州公共事業委員會』在七月提出一個建議案，經過一個半月的討論，在 9/19 通過生效，這種行政單位的效率，是台灣遠遠不及的，才花一個半月就解決一個問題。</p>
-<p>Lyft 這種服務的殺傷力很大，以後學生暑假打工又多一個選擇，可以開計程車，或是跑機場接送，別人一趟要 60 ，學生半價就好，然後還可以接到朋友開的 AirBnb etc&#8230;</p>
-<p>所以我前一篇才寫 this only happens in California ，在短短的一段時間內，又一個破壞性創新發生了。</p>
-<p>如果是社會主義國家如台灣，大概是要炒說乘客的安全誰來保障（乘客都不在乎了，你管那麼多幹麻），出了事誰負責（現在坐計程車車禍，還是健保買單啊，車子也沒保險）？最後，就是長官出來，官僚式的說一聲：「我們再研究，這問題很好，要從長計議&#8230;.」</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/17/on-hr/">談人力資源主管</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-17T11:13:00+08:00" pubdate data-updated="true">Sep 17<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-post" data-href="https://www.facebook.com/samlu128/posts/4693698999344" data-width="550"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/samlu128/posts/4693698999344">Post</a> by <a href="https://www.facebook.com/samlu128">Sam Lu</a>.</div></div><p>台灣 HR 的心態再不改，台灣一定完蛋，前陣子跟美國的朋友聊到台美之間 HR 的差別，我說，台灣的 HR 像買菜一樣，樣樣挑錯批評，想辦法用最便宜的價錢把人請進來，既使激怒你也沒關係；美國的 HR 比較像是服務業，雖然也是一開始丟個較低的數字，但然是想盡辦法僅量滿足你的需求，讓你高高興興的進來。</p>
-<p>我到台灣某最大網路公司面試時， HR 問我薪資要求，我說了一個數字，對方直接回『不可能』三個字（最後我在外面兩間公司拿到一樣的數字），也沒問說薪水之外有什麼其它要求的。</p>
-<p>我在美國的某百人公司，在談的時候，薪水較我前一份工作有減少，但是，我問他公司的年假的數量可不可以多幾天，因為我一年要回台灣一趟，就這樣，一進去公司就幫我加了18天的假可以用，雖然薪水有少，但滿足了我的要求，所以也不覺得有委屈到。</p>
-<p>台灣的 HR 處處都講「制度」，挑人時再用個模板套在你身上，對不合的地方東挑西撿，完全忽視掉人性的差異跟大家需求的差異，如果 HR 是這樣當的，那乾脆找台電腦來當 HR 就好啦～</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -836,6 +867,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/23/type-inference-and-code-review/">Type Inference 在實務上碰上的問題</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/05/on-metrics/">談台灣年輕人低薪問題</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/05/on-compensation-of-youth/">談台灣年輕人低薪問題</a>
       </li>
     
@@ -845,14 +884,6 @@
     
       <li class="post">
         <a href="/blog/2014/04/03/cross-strait-trade-agreement/">我看服貿</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/26/role-model/">典範</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/22/wang-jin-pyng/">從立法院長王金平談遵守法定程序</a>
       </li>
     
   </ul>
@@ -893,7 +924,7 @@ alt="tumblr stats" style="border:none;"></a></section>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 -  -
+  Copyright &copy; 2015 -  -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

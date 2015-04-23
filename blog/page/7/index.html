@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="在某些人士運作之下，中華民國政府及台北市政府，示範性值的，開放了一些資料出來，開放出來的資料及品質，大家自己去看就好，我懶得去說了。我比較有意見的是，這些開放資料的授權方式。目前北市府網站已故障，找不到合約。跟據我的印象，第二條是寫『資料的使用必須要就有公益性的部份，提供免費版』&nbsp; &hellip;">
+  <meta name="description" content="在台北市政府公開的資料中，有一大部份是用shapefile的格式開放的，如何把這些資料轉換出來，變成是一個問題，在這邊把我怎麼把TWD67座標的shapefile，轉換成WSG84的 GeoJSON格式。首先，請參考前文把里介圖在QGIS中打開。再來按這邊講的，把TWD67的定義加入到 QGIS &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,80 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/10/06/">轉換台北市政府公開資料的格式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-06T17:01:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+在台北市政府公開的資料中，有一大部份是用shapefile的格式開放的，如何把這些資料轉換出來，變成是一個問題，在這邊把我怎麼把TWD67座標的shapefile，轉換成WSG84的 GeoJSON格式。<br /><br />首先，請參考前文把里介圖在QGIS中打開。<br /><br />再來按<a href="http://gis-tech.blogspot.com/2008/11/quantum-gis_24.html">這邊</a>講的，把TWD67的定義加入到 QGIS 中<br /><br />接著，選Layer Property -&gt; Set Layer CRS -&gt; TWD 67<br /><br />然後，指定專案用的CRS定意，FIle -&gt; Project Property -&gt; CRS -&gt; WSG 84<br /><br />最後，是把Layer另存新檔，Layer -&gt; Save As -&gt; File Format: GeoJSON, Encoding: UTF-8<br /><br />這樣，就可以把shapefile的內容匯出來，變成像下述的格式<br /><br />{ &#8220;type&#8221;: &#8220;Feature&#8221;, &#8220;id&#8221;: 0, &#8220;properties&#8221;: { &#8220;AREA&#8221;: 16326625.055040, &#8220;NEW&#8221;: 6301200042.000000, &#8220;FULL&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PERF_ID&#8221;: 63012.000000, &#8220;COUN_ID&#8221;: &#8220;6301200&#8221;, &#8220;CPID&#8221;: &#8220;63012&#8221;, &#8220;CPTID&#8221;: &#8220;6301200&#8221;, &#8220;CPTVID&#8221;: &#8220;6301200042&#8221;, &#8220;NPID&#8221;: 63012.000000, &#8220;NPTID&#8221;: 6301200.000000, &#8220;NPTVID&#8221;: 6301200042.000000, &#8220;PNAME&#8221;: &#8220;臺北市&#8221;, &#8220;TNAME&#8221;: &#8220;北投區&#8221;, &#8220;VNAME&#8221;: &#8220;湖田里&#8221;, &#8220;PTVNAME&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PTNAME&#8221;: &#8220;臺北市北投區&#8221;, &#8220;TVNAME&#8221;: &#8220;北投區湖田里&#8221;, &#8220;TM2_MAX_X&#8221;: 306973.245000, &#8220;TM2_MAX_Y&#8221;: 2789383.300000, &#8220;TM2_MIN_X&#8221;: 301490.096000, &#8220;TM2_MIN_Y&#8221;: 2783263.350000, &#8220;MAX_X&#8221;: 0.000000, &#8220;MAX_Y&#8221;: 0.000000, &#8220;MIN_X&#8221;: 0.000000, &#8220;MIN_Y&#8221;: 0.000000 }, &#8220;geometry&#8221;: { &#8220;type&#8221;: &#8220;Polygon&#8221;, &#8220;coordinates&#8221;: [ [ [ 121.522589, 25.174993 ], [ 121.522587, 25.174995 ], [ 121.522557, 25.175033 ], [ 121.522408, 25.175170 ], [ 121.522317, 25.175324 ], [ 121.522314, 25.175367 ], [ 121.522323, 25.175569 ], [ 121.522315, 25.175789 ], [ 121.522322, 25.175950 ], [ 121.522270, 25.176082 ], [ 121.522158, 25.176302 ], [ 121.522043, 25.176548 ], [ 121.522002, 25.176598 ], [ 121.521997, 25.176648 ], [ 121.522278, 25.177273 ], [ 121.522359, 25.177825 ], [ 121.522384, 25.178200 ], [ 121.522338, 25.178332 ], [ 121.522127, 25.178615 ], [ 121.521821, 25.178986 ], [ 121.521780, 25.179026 ], [ 121.521691, 25.179134 ], [ 121.522349, 25.179671 ], [ 121.522623, 25.179892 ], [ 121.522810, 25.179997 ], [ 121.522949, 25.180089 ], [ 121.523101, 25.180244 ], [ 121.523337, 25.180539 ], [ 121.523425, 25.180655 ], [ 121.523550, 25.180683 ], [ 121.523641, 25.180779 ], [ 121.523652, 25.180779 ], [ 121.523816, 25.1809<br /><br /><br /><br /></div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/07/-mac-osx/">如何在Mac OSX上，讀取台北市政府放出來的地圖資料</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-07T14:39:00+08:00" pubdate data-updated="true">Sep 7<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+台北市政府把一些地圖資訊，用<a href="http://en.wikipedia.org/wiki/Shapefile">shapefile</a>的格式放出來了，玩了兩天，總算把這檔案開了起來。為了造福後人，就把過程寫下來了<br /><br />1. 安裝<a href="http://www.qgis.org/wiki/Download#MacOS_X">QGIS</a><br />2. 下載<a href="http://data.taipei.gov.tw/ct.asp?xItem=3448999&amp;ctNode=45112&amp;mp=datataipei">里界圖</a>，並解壓縮<br /><br />開起QGIS，從選單上選 Layer -&gt; Add Vector Layer -&gt; Encoding = BIG5, Dataset = 解開的檔案<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s1600/no-label.png" imageanchor="1" style=""><img border="0" src="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s400/no-label.png" /></a></div><br /><br />一開始開啟的檔案，並沒有把文字資料一起顯示出來，所以，接著我們要把這資料打開來。從Layers中點選『台北市里界圖』並選Labels，Display labels勾起來，然後Field選PTVAME，然後按OK<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s1600/layer_properties.png" imageanchor="1" style=""><img border="0" src="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s400/layer_properties.png" /></a></div><br />這樣，文字資料就跑出來了<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s1600/with_label.png" imageanchor="1" style=""><img border="0" src="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s400/with_label.png" /></a></div><br /><br />接下來的兩週，我會把Geometric search的功能，加到我公司的<a href="http://www.searchcloudapp.com">產品</a>中，讓你直接能後匯入多邊型的地理資料，並且能夠做一些簡單的搜尋功能</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -266,6 +340,14 @@ Having a good build system is like living in the heaven, and having a bad build 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/23/type-inference-and-code-review/">Type Inference 在實務上碰上的問題</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/05/on-metrics/">談台灣年輕人低薪問題</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/05/on-compensation-of-youth/">談台灣年輕人低薪問題</a>
       </li>
     
@@ -275,14 +357,6 @@ Having a good build system is like living in the heaven, and having a bad build 
     
       <li class="post">
         <a href="/blog/2014/04/03/cross-strait-trade-agreement/">我看服貿</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/26/role-model/">典範</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/22/wang-jin-pyng/">從立法院長王金平談遵守法定程序</a>
       </li>
     
   </ul>
@@ -323,7 +397,7 @@ alt="tumblr stats" style="border:none;"></a></section>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 -  -
+  Copyright &copy; 2015 -  -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

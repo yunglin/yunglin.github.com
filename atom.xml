@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2014-07-10T13:05:11+08:00</updated>
+  <updated>2015-04-24T00:13:28+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,141 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Type Inference 在實務上碰上的問題]]></title>
+    <link href="http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review/"/>
+    <updated>2015-04-23T23:36:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review</id>
+    <content type="html"><![CDATA[<p>最近在讀 <strong>Implementing Domain-Driven Design</strong> 這本書，學習一下別人
+是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。</p>
+
+<p>在 DDD 的概念中，一個模組 <strong>Domain</strong> / <strong>Bounded Context</strong>  應該是一個獨立的關念，一個大型程式，應該是由許多 <strong>Bounded Context</strong> 組合而成，整個程式的架構應該僅量保持這些的純淨性，<strong>Bounded Context</strong> 的互用，要把上下行的關係定意清處，程式碼間不應該在一個區塊中引入多個 <strong>Bounded Context</strong>。</p>
+
+<p>在整實作上，如合檢視一個 class 是否有妥善的處理引用入的 <strong>Domain</strong> ，最簡單也最好用的方式就是看檔頭 <strong>import</strong> 的地方</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import com.codahale.metrics.Meter
+</span><span class='line'>
+</span><span class='line'>import org.apache.commons.lang.StringUtils
+</span><span class='line'>import org.jboss.netty.handler.timeout.TimeoutException
+</span><span class='line'>import org.slf4j.Logger;
+</span><span class='line'>import org.slf4j.LoggerFactory;
+</span><span class='line'>
+</span><span class='line'>import com.yunglinho.common.JsonSerializer
+</span><span class='line'>
+</span><span class='line'>import com.yunglinho.app.service.LocationService
+</span><span class='line'>import com.yunglinho.app.core.model.Location
+</span><span class='line'>import com.yunglinho.app.feature.SocialProfile
+</span><span class='line'>
+</span><span class='line'>import scala.concurrent.Await
+</span><span class='line'>import scala.concurrent.ExecutionContext
+</span><span class='line'>import scala.concurrent.Future
+</span><span class='line'>import scala.concurrent.duration._</span></code></pre></td></tr></table></div></figure>
+
+
+<p>過去我排 import 的慣用法是按 <strong>有授權疑慮</strong> 的順序去排</p>
+
+<ul>
+<li>com.* 的在最上面</li>
+<li>org, net 排第二</li>
+<li> 接著是排自己公司的東西，按 common, base, app 的順序去排，common 跟 based 是放 utilities &amp; framework ， app 就是放一個專案的東西了</li>
+<li>最後scala &amp; java 的東西</li>
+</ul>
+
+
+<p>這樣排的好處是， code review 一眼看過去，就可以知道用了那些版權有疑慮的東西，而且 import 時，不會把 java &amp; scala 內建的東西蓋過去，同時也知道這支程式碼用了多少其它的東西</p>
+
+<p>然而，這個機制，在 <strong>Scala&#8217;s Type Inference</strong> 的影響下，變的很不可靠。</p>
+
+<p><strong>Type Inference</strong> 是初學 Scala 時，覺得很方便的一個功能，能夠在寫程式時，少打很多的字，例如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>   // 在沒有 Type Inference 下， statement 的左右兩邊都要宣告型態
+</span><span class='line'>   val location: Location = new Location("Taipei")
+</span><span class='line'>
+</span><span class='line'>   // 然而，左邊的這邊其實是也可以省下的
+</span><span class='line'>   val location = new Location("Taipei")
+</span><span class='line'>   
+</span><span class='line'>   // 左右兩邊都沒有 *Location* 的存在，但是卻是被用在這邊了 
+</span><span class='line'>   val location = locationService.lookup("Taipei")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這看似方便的功能，卻有著非常深遠且負面的影響，在上面的例子中 <em>Location</em>  這類別，雖然在 import 時沒有出現過，但是卻是在 Reviewer 意料之外中，被帶入到了這程式碼中。</p>
+
+<p>當然，在上面的例子中，<em>Location</em> &amp; <em>LocationService</em> 是一套的關念，所以沒有真的引入意料之外的 <em>Domain</em> 進來，但是如果今天程式碼寫的不好，是有個 <em>ApplicationContextHolder.getCalendarService</em> 的話，那就不一樣了。</p>
+
+<p>在一行行 code review 時，有可能會抓到這問題，但是如果你沒有空一行行的看呢？或者是你是在 <em>refactor</em> 數千行程式碼時，那要怎樣一行行的去看呢？</p>
+
+<p>所以，設計程式語言真的是很困難，一個看似方便的功能，卻在意料之外的地方造成困擾，讓我最近有點想回去改用 Java 。當然 Scala 還是個很好的語言，能夠幫我增加兩三倍的生產力，不過，卻會讓團隊工作時造成困擾。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[談台灣年輕人低薪問題]]></title>
+    <link href="http://blog.yunglinho.com/blog/2014/06/05/on-metrics/"/>
+    <updated>2014-06-05T01:35:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2014/06/05/on-metrics</id>
+    <content type="html"><![CDATA[<p>歡迎各位來到首屆的 Java Community Conference ，我是何永琳，目前於飛向科技擔任工頭，所謂的工頭，就是做
+大家做的事跟做大家不喜歡做的事，什麼是大家不喜歡做的事呢？那就是管上線機器的大大小小問題。</p>
+
+<p>在我們開始之前，先岔題一下，大家都是工程師，(放someone on the internet is wrong)應該都有些大大小小的睡
+眠問題，過去我一直以為我一天有睡到七小時，一直到去年穿戴式配備的興起，我買了個 Jawbone 來戴（放 Jawbone Up的圖片)，
+才知道我一天只睡六小時左右，中間的睡眠品質不佳。有了 Jawbone Up 天天計錄我的生活起居狀況，我才了解到自己真
+正的狀況，才能著手改善問題。</p>
+
+<h2>上面的故事，就是今天講題的主軸 測量 / metrics</h2>
+
+<p>在軟體開發的過程中，程式的編寫，其實只在軟體生命週期的很小一塊，在經過數個禮拜至數週的開發及測試後，軟體就
+被佈屬到線上環境中，在過去，可能是放在公司的機房中或是資料中心，現在則是被放到雲端平台之上，總之，你細心開
+發的軟體，將要被真實世界開始摧殘。</p>
+
+<p>在一個軟體的生命週期中，他可能會碰上大量的用戶擁入，也可能跑了數十天沒有重開，也有可能在臨晨三點碰上資料庫
+備份，當然也有可能每兩個禮拜碰上其它整個的 REST API 不穩的狀況，在他跑了一兩年後，有可能被換到新的硬體上。</p>
+
+<p>問題在於，你有沒有辦法知道這些狀況會不會出現，如果出現了，你能不能知道發生了什麼事；而且在這些狀況下，你的
+應用程式會出什麼怪手？是全面性的慢下來、還是不可預期的某些 Thread 才慢些來，或者是，你的應用程式可以輕鬆
+應付這些狀況，不用你擔心。</p>
+
+<p>如果上線的系統不能應付這些狀況，你要做出什麼相對應的調整呢？？</p>
+
+<h2>Metrics By Codahale</h2>
+
+<p>Metrics 一套是由 Codahale 在 2011 公布出來的 Opensource 專案，自此之後，因為他的 API 設計精良又容
+易跟其它的外部程式整合，所以開始被業界所採用。</p>
+
+<p>http://codahale.com/codeconf-2011-04-09-metrics-metrics-everywhere.pdf</p>
+
+<p>為什麼我們需要測量的原因</p>
+
+<h2>手動調整</h2>
+
+<p>Iterative tuning -> 建立假設 -> 重建問題 -> 提出對應 -> 修理 -> 驗證</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[談台灣年輕人低薪問題]]></title>
@@ -964,35 +1099,6 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 </table>
 <p>[2] 從計程車看人生 <a class="reference external" href="http://i-chentsai.blogspot.tw/2010/12/blog-post.html">http://i-chentsai.blogspot.tw/2010/12/blog-post.html</a></p>
 <p>[3] 圖片來源：<a class="reference external" href="http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/">http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/</a></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[加州公共事業委員會通過共乘法案]]></title>
-    <link href="http://blog.yunglinho.com/blog/2013/09/23/california-legalize-ridesharing/"/>
-    <updated>2013-09-23T02:04:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2013/09/23/california-legalize-ridesharing</id>
-    <content type="html"><![CDATA[<p><a class="reference external" href="http://techcrunch.com/2013/09/19/cpuc-ridesharing-regulations/">California Regulator Passes First Ridesharing Rules, A Big Win For Lyft, SideCar, And Uber</a></p>
-<p>我把這篇 TechCrunch 的新聞貼在我的 FB 上，反應不佳，所以只好幫他做個中文補述：</p>
-<p>因為既有的私人出租車、共乘服務，與既有的加州法規不相容，所以『加州公共事業委員會』在七月提出一個建議案，經過一個半月的討論，在 9/19 通過生效，這種行政單位的效率，是台灣遠遠不及的，才花一個半月就解決一個問題。</p>
-<p>Lyft 這種服務的殺傷力很大，以後學生暑假打工又多一個選擇，可以開計程車，或是跑機場接送，別人一趟要 60 ，學生半價就好，然後還可以接到朋友開的 AirBnb etc&#8230;</p>
-<p>所以我前一篇才寫 this only happens in California ，在短短的一段時間內，又一個破壞性創新發生了。</p>
-<p>如果是社會主義國家如台灣，大概是要炒說乘客的安全誰來保障（乘客都不在乎了，你管那麼多幹麻），出了事誰負責（現在坐計程車車禍，還是健保買單啊，車子也沒保險）？最後，就是長官出來，官僚式的說一聲：「我們再研究，這問題很好，要從長計議&#8230;.」</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[談人力資源主管]]></title>
-    <link href="http://blog.yunglinho.com/blog/2013/09/17/on-hr/"/>
-    <updated>2013-09-17T11:13:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2013/09/17/on-hr</id>
-    <content type="html"><![CDATA[<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-post" data-href="https://www.facebook.com/samlu128/posts/4693698999344" data-width="550"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/samlu128/posts/4693698999344">Post</a> by <a href="https://www.facebook.com/samlu128">Sam Lu</a>.</div></div><p>台灣 HR 的心態再不改，台灣一定完蛋，前陣子跟美國的朋友聊到台美之間 HR 的差別，我說，台灣的 HR 像買菜一樣，樣樣挑錯批評，想辦法用最便宜的價錢把人請進來，既使激怒你也沒關係；美國的 HR 比較像是服務業，雖然也是一開始丟個較低的數字，但然是想盡辦法僅量滿足你的需求，讓你高高興興的進來。</p>
-<p>我到台灣某最大網路公司面試時， HR 問我薪資要求，我說了一個數字，對方直接回『不可能』三個字（最後我在外面兩間公司拿到一樣的數字），也沒問說薪水之外有什麼其它要求的。</p>
-<p>我在美國的某百人公司，在談的時候，薪水較我前一份工作有減少，但是，我問他公司的年假的數量可不可以多幾天，因為我一年要回台灣一趟，就這樣，一進去公司就幫我加了18天的假可以用，雖然薪水有少，但滿足了我的要求，所以也不覺得有委屈到。</p>
-<p>台灣的 HR 處處都講「制度」，挑人時再用個模板套在你身上，對不合的地方東挑西撿，完全忽視掉人性的差異跟大家需求的差異，如果 HR 是這樣當的，那乾脆找台電腦來當 HR 就好啦～</p>
 
 ]]></content>
   </entry>

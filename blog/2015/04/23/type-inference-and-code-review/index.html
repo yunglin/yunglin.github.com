@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Type Inference 在實務上碰上的問題 - 碎碎唸</title>
+  <meta name="author" content="">
+
+  
+  <meta name="description" content="最近在讀 Implementing Domain-Driven Design 這本書，學習一下別人
+是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。 在 DDD 的概念中，一個模組 Domain / Bounded Context 應該是一個獨立的關念，一個大型程式， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="http://feeds.feedburner.com/yunglinho" rel="alternate" title="碎碎唸" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">碎碎唸</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://feeds.feedburner.com/yunglinho" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:blog.yunglinho.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Type Inference 在實務上碰上的問題</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-04-23T23:36:00+08:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>最近在讀 <strong>Implementing Domain-Driven Design</strong> 這本書，學習一下別人
+是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。</p>
+
+<p>在 DDD 的概念中，一個模組 <strong>Domain</strong> / <strong>Bounded Context</strong>  應該是一個獨立的關念，一個大型程式，應該是由許多 <strong>Bounded Context</strong> 組合而成，整個程式的架構應該僅量保持這些的純淨性，<strong>Bounded Context</strong> 的互用，要把上下行的關係定意清處，程式碼間不應該在一個區塊中引入多個 <strong>Bounded Context</strong>。</p>
+
+<p>在整實作上，如合檢視一個 class 是否有妥善的處理引用入的 <strong>Domain</strong> ，最簡單也最好用的方式就是看檔頭 <strong>import</strong> 的地方</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import com.codahale.metrics.Meter
+</span><span class='line'>
+</span><span class='line'>import org.apache.commons.lang.StringUtils
+</span><span class='line'>import org.jboss.netty.handler.timeout.TimeoutException
+</span><span class='line'>import org.slf4j.Logger;
+</span><span class='line'>import org.slf4j.LoggerFactory;
+</span><span class='line'>
+</span><span class='line'>import com.yunglinho.common.JsonSerializer
+</span><span class='line'>
+</span><span class='line'>import com.yunglinho.app.service.LocationService
+</span><span class='line'>import com.yunglinho.app.core.model.Location
+</span><span class='line'>import com.yunglinho.app.feature.SocialProfile
+</span><span class='line'>
+</span><span class='line'>import scala.concurrent.Await
+</span><span class='line'>import scala.concurrent.ExecutionContext
+</span><span class='line'>import scala.concurrent.Future
+</span><span class='line'>import scala.concurrent.duration._</span></code></pre></td></tr></table></div></figure>
+
+
+<p>過去我排 import 的慣用法是按 <strong>有授權疑慮</strong> 的順序去排</p>
+
+<ul>
+<li>com.* 的在最上面</li>
+<li>org, net 排第二</li>
+<li> 接著是排自己公司的東西，按 common, base, app 的順序去排，common 跟 based 是放 utilities &amp; framework ， app 就是放一個專案的東西了</li>
+<li>最後scala &amp; java 的東西</li>
+</ul>
+
+
+<p>這樣排的好處是， code review 一眼看過去，就可以知道用了那些版權有疑慮的東西，而且 import 時，不會把 java &amp; scala 內建的東西蓋過去，同時也知道這支程式碼用了多少其它的東西</p>
+
+<p>然而，這個機制，在 <strong>Scala&#8217;s Type Inference</strong> 的影響下，變的很不可靠。</p>
+
+<p><strong>Type Inference</strong> 是初學 Scala 時，覺得很方便的一個功能，能夠在寫程式時，少打很多的字，例如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>   // 在沒有 Type Inference 下， statement 的左右兩邊都要宣告型態
+</span><span class='line'>   val location: Location = new Location("Taipei")
+</span><span class='line'>
+</span><span class='line'>   // 然而，左邊的這邊其實是也可以省下的
+</span><span class='line'>   val location = new Location("Taipei")
+</span><span class='line'>   
+</span><span class='line'>   // 左右兩邊都沒有 *Location* 的存在，但是卻是被用在這邊了 
+</span><span class='line'>   val location = locationService.lookup("Taipei")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這看似方便的功能，卻有著非常深遠且負面的影響，在上面的例子中 <em>Location</em>  這類別，雖然在 import 時沒有出現過，但是卻是在 Reviewer 意料之外中，被帶入到了這程式碼中。</p>
+
+<p>當然，在上面的例子中，<em>Location</em> &amp; <em>LocationService</em> 是一套的關念，所以沒有真的引入意料之外的 <em>Domain</em> 進來，但是如果今天程式碼寫的不好，是有個 <em>ApplicationContextHolder.getCalendarService</em> 的話，那就不一樣了。</p>
+
+<p>在一行行 code review 時，有可能會抓到這問題，但是如果你沒有空一行行的看呢？或者是你是在 <em>refactor</em> 數千行程式碼時，那要怎樣一行行的去看呢？</p>
+
+<p>所以，設計程式語言真的是很困難，一個看似方便的功能，卻在意料之外的地方造成困擾，讓我最近有點想回去改用 Java 。當然 Scala 還是個很好的語言，能夠幫我增加兩三倍的生產力，不過，卻會讓團隊工作時造成困擾。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-04-23T23:36:00+08:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2015</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/06/05/on-metrics/" title="Previous Post: 談台灣年輕人低薪問題">&laquo; 談台灣年輕人低薪問題</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/04/23/type-inference-and-code-review/">Type Inference 在實務上碰上的問題</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/05/on-metrics/">談台灣年輕人低薪問題</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/05/on-compensation-of-youth/">談台灣年輕人低薪問題</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/13/tdd/">TDD</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/03/cross-strait-trade-agreement/">我看服貿</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>Facebook</h1>
+  <div class="fb-follow" data-href="https://www.facebook.com/yunglin.ho" data-width="260" data-show-faces="true"></div>
+</section>
+<section>
+  <h1>Twitter</h1>
+  <a class="twitter-timeline" href="https://twitter.com/yunglinho" data-widget-id="379628400123445248">Tweets by @yunglinho</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+</section>
+
+
+<section class="googleplus">
+  <h1>
+    <a href="https://plus.google.com/101164690243066571931?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+
+<section>
+<a title="tumblr stats"
+href="http://statcounter.com/tumblr/" target="_blank"><img
+src="http://c.statcounter.com/8085210/0/5c96ca74/0/"
+alt="tumblr stats" style="border:none;"></a></section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 -  -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'yunglin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review/';
+        var disqus_url = 'http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

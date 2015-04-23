@@ -9,9 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="
-把前面幾回講的用Scala寫的Android程式，放上 bitbucket 了，有興趣的可以自己去下載來看。 https://bitbucket.org/bluetang/android-taipei-disaster
-">
+  <meta name="description" content="嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +75,88 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/08/lucene-on-android/">Lucene on Android</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-08T18:20:00+08:00" pubdate data-updated="true">Dec 8<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。<br /><br />Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說，無法把 index files 放在 apk 中直接讀取，一定要存放在 device or external storage 上，才能夠使用；或者是自己弄個虛擬目錄出來，不過，這會耗用過多的計憶體空間。<br /><br />我是選用把 index 放在 &#8216;src/res/raw&#8217; 底下，讓他變成 apk 的一部份，省去在網路上找個空間來放置 index 的問題，當要更新 index 時，就重編個 apk 叫使用者更新就好。<br /><br />在放 lucene index 時，如果你想用 compound format 的話，可以用底下的指令，把多個 index files 包裹成單一檔案 .cfs <br /><br /><pre class="brush: scala;">// run REPL with 'scala -cp luke-3.4.0_1-all.jar'<br /><br />import org.apache.lucene.store.FSDirectory<br />import org.apache.lucene.index._<br />import org.apache.lucene.analysis.standard._<br /><br />val source = FSDirectory.open(new java.io.File("source"))<br />val dest = FSDirectory.open(new java.io.File("dest"))<br /><br />// open source index<br />val reader = IndexReader.open(source)<br /><br />// create writer for compound index.<br />val analyzer = new StandardAnalyzer(org.apache.lucene.util.Version.LUCENE_34)<br />val writer = new org.apache.lucene.index.IndexWriter(dir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED)<br /><br />// force writer always use compound index format.<br />writer.getMergePolicy.asInstanceOf[LogByteSizeMergePolicy].setNoCFSRatio(1.0)<br /><br /><br />// add source index to dest index.<br />writer.addIndexes(reader)<br />writer.optimized<br />writer.close<br /><br />reader.close<br /></pre><br />接著，是把產生的 segment, segments_1, _0.cfs 拷到 src/res/raw 底下，讓這些檔案變成 .apk 的一部份。<br /><br /><br />接著，是要在第一次執行時，把這些 index 從 apk 中覆製到 SD 卡上或是機子上，這邊，我寫了個小工具來做這件事<br /><br /><pre class="brush: scala;">import android.content.Context<br />import android.os.Environment<br />import android.util.Log<br /><br />import com.bluetangstudio.android.disastermap.TaipeiDisasterApp.LogTag<br /><br />import org.apache.commons.io.FileUtils<br />import org.apache.lucene.store.{FSDirectory, Directory}<br /><br />import scala.collection.JavaConversions._<br />import java.io.File<br /><br />/**<br /> *  Helper class that search for lucene index directories on the device. The search order is<br /> *  external storage first then local storage. If lucene index does not exist on device, this<br /> *  class will copy the index from the apk to the device storage.<br /> *<br /> * @param context  the application context<br /> * @param path     the root folder name of the index directory to use and to look for.<br /> * @param source   the source of index resource to copy if index does not exist on the device.<br /> *                 format: Seq[(filename, resourceId)]<br /> */<br />case class LuceneOpenHelper(context: Context, path: String, source: Seq[Tuple2[String, Int]]) {<br /><br />    /**<br />     * create or open an Directory.<br />     */<br />    def open(): Option[Directory] = {<br />        val candidates = Seq(externalFolder, internalFolder).flatten<br /><br />        // find the folder with index in it.<br />        val folder = candidates.filter(f => f.exists() && f.list().length > 0).headOption<br />        val withIndex = folder.orElse(<br />            candidates.find(<br />                f => {<br />                    // ensure folder is available.<br />                    f.exists() || f.mkdirs() match {<br />                        // folder is not accessible<br />                        case false => false<br /><br />                        case _ => {<br />                            Log.d(LogTag, "Duplicating index from apk to %s...".format(f))<br />                            source.foreach(<br />                                s => {<br />                                    val is = context.getResources.openRawResource(s._2)<br />                                    try {<br />                                        FileUtils.copyInputStreamToFile(is, new File(f, s._1))<br />                                    } finally {<br />                                        is.close()<br />                                    }<br />                                }<br />                            )<br />                            true<br />                        }<br />                    }<br />                }<br />            )<br />        )<br /><br />        return withIndex.map(FSDirectory.open(_))<br />    }<br /><br />    private def externalFolder: Option[File] = {<br />        Environment.getExternalStorageState match {<br />            case Environment.MEDIA_MOUNTED => Option(context.getExternalFilesDir(path))<br />            case _ => None<br />        }<br />    }<br /><br />    private def internalFolder: Option[File] = {<br />        return Option(new File(context.getFilesDir, path))<br />    }<br /><br />}<br /></pre><br />最後，是在 *App 上加上這段<br /><br /><pre class="brush: scala;">object MyApp {<br />    private val INDEX_DIRECTORY = "idx"<br /><br />    private val INDEX_FILES = Seq(<br />        ("_0.cfs", R.raw.idx_0), <br />        ("segments", R.raw.segments), <br />        ("segments_1", R.raw.segments_1)<br />    )<br />}<br />class MyApp extends android.app.Application {<br /><br />    import MyApp._<br /><br />    private var _luceneSearcher: Option[IndexSearcher] = None<br /><br />    def luceneSearcher: Option[IndexSearcher] = {<br />        if (_luceneSearcher.isEmpty) {<br />            Log.d(LogTag, "Initializing new IndexSearcher...")<br />            _luceneSearcher = LuceneOpenHelper(this, INDEX_DIRECTORY, INDEX_FILES).open().map(new IndexSearcher(_))<br />        }<br />        _luceneSearcher<br />    }<br />   <br />    override def onLowMemory() {<br />        _luceneSearcher.foreach(s => s.close())<br />        _luceneSearcher = None<br />    }<br />}<br /></pre><br />這樣一來，就能在 Android 上面跑 lucene-core 了.</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/24/analytics-hadoop-v-s-dbms/">Analytics: Hadoop v.s. DBMS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-24T16:55:00+08:00" pubdate data-updated="true">Nov 24<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+最近兩周，我開始參加 <a href="http://www.blogger.com/www.taipei-gtug.org/">GTUG</a> 的活動，在活動間，有人問起，為什麼我公司選用DBMS(MySQL)來做資料分析，而不用 Hadoop。在這邊，我把跟公司的DB怪才同事的討論結果，稍為簡單敘述一下。<br /><br />首先，要先理解到的一點是，在 MapReduce 及 Hadoop 出現之前，Data Mining的工具及技術，已經在DBMS上建構了有30年了，相關的技術也發產的很成熟且有許多專書論述。<br /><br /><a href="http://en.wikipedia.org/wiki/Extract,_transform,_load">ETL(Extract, Transform, Load)</a>是這個領域的關鍵字，用 ETL 去找下去，會找到許多的書籍講怎麼做資料分析<br /><ul><li>Extract: 如何在雜亂的原始資料中，找出有用的訊號，並把這些訊號歸檔<br />例如：把 Apache 的 access.log 轉換成一對對的 (timestamp, session) </li><li>Transform: 如何把整理好的訊號，轉換成更好用的中介查詢表格<br />例如：把前面的 (timestamp, session) 轉換成以小時為單位的存取次數 (time-slice, count) </li><li>Load: 把整理好的資料，存到資料庫中。 <br /></li></ul>透過這個轉換過的Fact Table，我們可以把很昂貴的『每日訪問總數查尋』從 <br /><pre class="brush: sql"># pseudo code 應該是錯的，不過你知道我在表達什麼就好了 :P<br /><br />SELECT COUNT(UNIQUE session) FROM http_access<br />  GROUP BY DATE_FORMAT(timestamp,'%Y %m %d')<br /></pre>變成 <br /><pre class="brush: sql">SELECT SUM(count) FROM access_counts<br />  GROUP BY DATE_FORMAT(time_slice,'%Y %m %d')<br /></pre><br />假設，你的原始資料有一整年這麼多，總共有四千萬筆(40M)，那麼，前者就是把四千萬筆的資料讀出來，然後過濾加總，而後者，由於資料匯入時已先處理過了，所以要處理的只有24 * 365筆資料；而這兩者間所花費的時間差易，會隨著查尋次數而產生重大差異。&nbsp; <br /><br />試問，若是每次你老闆跟你要資料時，你要跟他說，要等半小時才可以，還是說等我五分鐘？  至於前面的半小時是怎麼算出來的呢？<br /><br />由於DB運算，瓶頸多是卡在硬碟存取上，在前面的例子中，40M筆資料，假設一筆是1K bytes，那麼，總資料量是 40GB ，從硬碟循序讀取 40GB 出來，所花的時間是 40GB / 40MB/s(硬碟速度) = 17分鐘  <br /><br /><h3>MapReduce & DBMS</h3><br />MapReduce是把資料分拆運算，然後再加總的技術；但是，MapReduce的概念對 RDBMS 並不是什麼新奇的事，在<a href="http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/admin/c0005292.htm">這份IBM的文件</a>中，便清楚的敘述到，DBMS會對 SQL 指令做編譯，DBMS內部就會依資料型態、INDEX檔、CPU Core的數量等，去做最佳化，這些，是Hadoop不會幫你做的。 <br /><br />既然DBMS那麼好那麼，為什麼會有 MapReduce 等技術的出現呢，那是因為，DBMS可以幫你scale up，但是最終，還是會碰上硬體的極限，那麼，這時只有 scale out ，才能解決這問題。  但是 scale out 的程式難度，總是比 scale up 困難，而且，一個不好的分析模式，並不會因為跑的快10倍，就變得比較好；因此， ETL 的概念，在使用 MapReduce 時仍是可以應用的，<br /><br /><br />講到這邊，什麼時候該用 Hadoop ，什麼時候該選用 DBMS ，應該很清楚了<br /><ol><li>首先，就是要先看你要找的分析訊號是什麼，定好分析的步驟及查詢表格</li><li>再來，看你的資料量會有多大，做些簡單的計算，看看是不是能在合理的時間內跑完</li><li>最後，看你這些報表倒底是有多常被取用，若是，這是內部的報表，只要一個月能出一次就好，那麼，Hadoop可能就大才小用；若是，你是要做產品，像Google Analytics做到即時大量分析，那麼你可能就需要用到Hadoop<br /><br />過去我在 <a href="http://medio.com/">Medio</a> 服務時，公司有幫美國幾大電信商分析 App 的購買行為，由於，這些是每個月才需產生一次的報表，而且，資料的訊號有待我們的 data expert 去尋找，因此，我們的資料專家是把資料倒到 MicroStrategy 再去下指令分析的，並沒有用到 Hadoop</li></ol></div>
+<h2>Comments</h2>
+<div class='comments'>
+<div class='comment'>
+<div class='author'>Sam Wong</div>
+<div class='content'>
+我不會Hadoop…想請教，用Hadoop不也得ETL嗎？<br /><br />也許Fact Table的設計可以節省 - 以Scale out MapReduce的bruteforce來換取事前精準按business requirement設計fact table schema - 但Hadoop也不能當OTLP用吧？Hadoop應該沒有ACID的能力吧？</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -382,80 +462,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/06/">轉換台北市政府公開資料的格式</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-06T17:01:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-在台北市政府公開的資料中，有一大部份是用shapefile的格式開放的，如何把這些資料轉換出來，變成是一個問題，在這邊把我怎麼把TWD67座標的shapefile，轉換成WSG84的 GeoJSON格式。<br /><br />首先，請參考前文把里介圖在QGIS中打開。<br /><br />再來按<a href="http://gis-tech.blogspot.com/2008/11/quantum-gis_24.html">這邊</a>講的，把TWD67的定義加入到 QGIS 中<br /><br />接著，選Layer Property -&gt; Set Layer CRS -&gt; TWD 67<br /><br />然後，指定專案用的CRS定意，FIle -&gt; Project Property -&gt; CRS -&gt; WSG 84<br /><br />最後，是把Layer另存新檔，Layer -&gt; Save As -&gt; File Format: GeoJSON, Encoding: UTF-8<br /><br />這樣，就可以把shapefile的內容匯出來，變成像下述的格式<br /><br />{ &#8220;type&#8221;: &#8220;Feature&#8221;, &#8220;id&#8221;: 0, &#8220;properties&#8221;: { &#8220;AREA&#8221;: 16326625.055040, &#8220;NEW&#8221;: 6301200042.000000, &#8220;FULL&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PERF_ID&#8221;: 63012.000000, &#8220;COUN_ID&#8221;: &#8220;6301200&#8221;, &#8220;CPID&#8221;: &#8220;63012&#8221;, &#8220;CPTID&#8221;: &#8220;6301200&#8221;, &#8220;CPTVID&#8221;: &#8220;6301200042&#8221;, &#8220;NPID&#8221;: 63012.000000, &#8220;NPTID&#8221;: 6301200.000000, &#8220;NPTVID&#8221;: 6301200042.000000, &#8220;PNAME&#8221;: &#8220;臺北市&#8221;, &#8220;TNAME&#8221;: &#8220;北投區&#8221;, &#8220;VNAME&#8221;: &#8220;湖田里&#8221;, &#8220;PTVNAME&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PTNAME&#8221;: &#8220;臺北市北投區&#8221;, &#8220;TVNAME&#8221;: &#8220;北投區湖田里&#8221;, &#8220;TM2_MAX_X&#8221;: 306973.245000, &#8220;TM2_MAX_Y&#8221;: 2789383.300000, &#8220;TM2_MIN_X&#8221;: 301490.096000, &#8220;TM2_MIN_Y&#8221;: 2783263.350000, &#8220;MAX_X&#8221;: 0.000000, &#8220;MAX_Y&#8221;: 0.000000, &#8220;MIN_X&#8221;: 0.000000, &#8220;MIN_Y&#8221;: 0.000000 }, &#8220;geometry&#8221;: { &#8220;type&#8221;: &#8220;Polygon&#8221;, &#8220;coordinates&#8221;: [ [ [ 121.522589, 25.174993 ], [ 121.522587, 25.174995 ], [ 121.522557, 25.175033 ], [ 121.522408, 25.175170 ], [ 121.522317, 25.175324 ], [ 121.522314, 25.175367 ], [ 121.522323, 25.175569 ], [ 121.522315, 25.175789 ], [ 121.522322, 25.175950 ], [ 121.522270, 25.176082 ], [ 121.522158, 25.176302 ], [ 121.522043, 25.176548 ], [ 121.522002, 25.176598 ], [ 121.521997, 25.176648 ], [ 121.522278, 25.177273 ], [ 121.522359, 25.177825 ], [ 121.522384, 25.178200 ], [ 121.522338, 25.178332 ], [ 121.522127, 25.178615 ], [ 121.521821, 25.178986 ], [ 121.521780, 25.179026 ], [ 121.521691, 25.179134 ], [ 121.522349, 25.179671 ], [ 121.522623, 25.179892 ], [ 121.522810, 25.179997 ], [ 121.522949, 25.180089 ], [ 121.523101, 25.180244 ], [ 121.523337, 25.180539 ], [ 121.523425, 25.180655 ], [ 121.523550, 25.180683 ], [ 121.523641, 25.180779 ], [ 121.523652, 25.180779 ], [ 121.523816, 25.1809<br /><br /><br /><br /></div>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/07/-mac-osx/">如何在Mac OSX上，讀取台北市政府放出來的地圖資料</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-07T14:39:00+08:00" pubdate data-updated="true">Sep 7<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-台北市政府把一些地圖資訊，用<a href="http://en.wikipedia.org/wiki/Shapefile">shapefile</a>的格式放出來了，玩了兩天，總算把這檔案開了起來。為了造福後人，就把過程寫下來了<br /><br />1. 安裝<a href="http://www.qgis.org/wiki/Download#MacOS_X">QGIS</a><br />2. 下載<a href="http://data.taipei.gov.tw/ct.asp?xItem=3448999&amp;ctNode=45112&amp;mp=datataipei">里界圖</a>，並解壓縮<br /><br />開起QGIS，從選單上選 Layer -&gt; Add Vector Layer -&gt; Encoding = BIG5, Dataset = 解開的檔案<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s1600/no-label.png" imageanchor="1" style=""><img border="0" src="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s400/no-label.png" /></a></div><br /><br />一開始開啟的檔案，並沒有把文字資料一起顯示出來，所以，接著我們要把這資料打開來。從Layers中點選『台北市里界圖』並選Labels，Display labels勾起來，然後Field選PTVAME，然後按OK<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s1600/layer_properties.png" imageanchor="1" style=""><img border="0" src="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s400/layer_properties.png" /></a></div><br />這樣，文字資料就跑出來了<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s1600/with_label.png" imageanchor="1" style=""><img border="0" src="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s400/with_label.png" /></a></div><br /><br />接下來的兩週，我會把Geometric search的功能，加到我公司的<a href="http://www.searchcloudapp.com">產品</a>中，讓你直接能後匯入多邊型的地理資料，並且能夠做一些簡單的搜尋功能</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -473,6 +479,14 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/23/type-inference-and-code-review/">Type Inference 在實務上碰上的問題</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/05/on-metrics/">談台灣年輕人低薪問題</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/05/on-compensation-of-youth/">談台灣年輕人低薪問題</a>
       </li>
     
@@ -482,14 +496,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
       <li class="post">
         <a href="/blog/2014/04/03/cross-strait-trade-agreement/">我看服貿</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/26/role-model/">典範</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/22/wang-jin-pyng/">從立法院長王金平談遵守法定程序</a>
       </li>
     
   </ul>
@@ -530,7 +536,7 @@ alt="tumblr stats" style="border:none;"></a></section>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 -  -
+  Copyright &copy; 2015 -  -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

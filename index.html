@@ -9,7 +9,8 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="台灣這幾年商界、政界、很喜歡對年輕人指指點點，說只要努力就可以脫離 22K ，年輕人收入不好的問題根源是在年輕人上，所以在這邊寫一下我的看法。 我在美國念書畢業一年後，在 26 歲時，底薪收入就有八萬美金，後來我又幹了四年，回台灣又幹了四年，但我的收入連八年前的一半都沒有，所以說，是我能力退步了嗎 &hellip;">
+  <meta name="description" content="最近在讀 Implementing Domain-Driven Design 這本書，學習一下別人
+是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。 在 DDD 的概念中，一個模組 Domain / Bounded Context 應該是一個獨立的關念，一個大型程式， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +76,195 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/04/23/type-inference-and-code-review/">Type Inference 在實務上碰上的問題</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-04-23T23:36:00+08:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近在讀 <strong>Implementing Domain-Driven Design</strong> 這本書，學習一下別人
+是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。</p>
+
+<p>在 DDD 的概念中，一個模組 <strong>Domain</strong> / <strong>Bounded Context</strong>  應該是一個獨立的關念，一個大型程式，應該是由許多 <strong>Bounded Context</strong> 組合而成，整個程式的架構應該僅量保持這些的純淨性，<strong>Bounded Context</strong> 的互用，要把上下行的關係定意清處，程式碼間不應該在一個區塊中引入多個 <strong>Bounded Context</strong>。</p>
+
+<p>在整實作上，如合檢視一個 class 是否有妥善的處理引用入的 <strong>Domain</strong> ，最簡單也最好用的方式就是看檔頭 <strong>import</strong> 的地方</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>import com.codahale.metrics.Meter
+</span><span class='line'>
+</span><span class='line'>import org.apache.commons.lang.StringUtils
+</span><span class='line'>import org.jboss.netty.handler.timeout.TimeoutException
+</span><span class='line'>import org.slf4j.Logger;
+</span><span class='line'>import org.slf4j.LoggerFactory;
+</span><span class='line'>
+</span><span class='line'>import com.yunglinho.common.JsonSerializer
+</span><span class='line'>
+</span><span class='line'>import com.yunglinho.app.service.LocationService
+</span><span class='line'>import com.yunglinho.app.core.model.Location
+</span><span class='line'>import com.yunglinho.app.feature.SocialProfile
+</span><span class='line'>
+</span><span class='line'>import scala.concurrent.Await
+</span><span class='line'>import scala.concurrent.ExecutionContext
+</span><span class='line'>import scala.concurrent.Future
+</span><span class='line'>import scala.concurrent.duration._</span></code></pre></td></tr></table></div></figure>
+
+
+<p>過去我排 import 的慣用法是按 <strong>有授權疑慮</strong> 的順序去排</p>
+
+<ul>
+<li>com.* 的在最上面</li>
+<li>org, net 排第二</li>
+<li> 接著是排自己公司的東西，按 common, base, app 的順序去排，common 跟 based 是放 utilities &amp; framework ， app 就是放一個專案的東西了</li>
+<li>最後scala &amp; java 的東西</li>
+</ul>
+
+
+<p>這樣排的好處是， code review 一眼看過去，就可以知道用了那些版權有疑慮的東西，而且 import 時，不會把 java &amp; scala 內建的東西蓋過去，同時也知道這支程式碼用了多少其它的東西</p>
+
+<p>然而，這個機制，在 <strong>Scala&#8217;s Type Inference</strong> 的影響下，變的很不可靠。</p>
+
+<p><strong>Type Inference</strong> 是初學 Scala 時，覺得很方便的一個功能，能夠在寫程式時，少打很多的字，例如：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>   // 在沒有 Type Inference 下， statement 的左右兩邊都要宣告型態
+</span><span class='line'>   val location: Location = new Location("Taipei")
+</span><span class='line'>
+</span><span class='line'>   // 然而，左邊的這邊其實是也可以省下的
+</span><span class='line'>   val location = new Location("Taipei")
+</span><span class='line'>   
+</span><span class='line'>   // 左右兩邊都沒有 *Location* 的存在，但是卻是被用在這邊了 
+</span><span class='line'>   val location = locationService.lookup("Taipei")</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這看似方便的功能，卻有著非常深遠且負面的影響，在上面的例子中 <em>Location</em>  這類別，雖然在 import 時沒有出現過，但是卻是在 Reviewer 意料之外中，被帶入到了這程式碼中。</p>
+
+<p>當然，在上面的例子中，<em>Location</em> &amp; <em>LocationService</em> 是一套的關念，所以沒有真的引入意料之外的 <em>Domain</em> 進來，但是如果今天程式碼寫的不好，是有個 <em>ApplicationContextHolder.getCalendarService</em> 的話，那就不一樣了。</p>
+
+<p>在一行行 code review 時，有可能會抓到這問題，但是如果你沒有空一行行的看呢？或者是你是在 <em>refactor</em> 數千行程式碼時，那要怎樣一行行的去看呢？</p>
+
+<p>所以，設計程式語言真的是很困難，一個看似方便的功能，卻在意料之外的地方造成困擾，讓我最近有點想回去改用 Java 。當然 Scala 還是個很好的語言，能夠幫我增加兩三倍的生產力，不過，卻會讓團隊工作時造成困擾。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/05/on-metrics/">談台灣年輕人低薪問題</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-05T01:35:00+08:00" pubdate data-updated="true">Jun 5<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>歡迎各位來到首屆的 Java Community Conference ，我是何永琳，目前於飛向科技擔任工頭，所謂的工頭，就是做
+大家做的事跟做大家不喜歡做的事，什麼是大家不喜歡做的事呢？那就是管上線機器的大大小小問題。</p>
+
+<p>在我們開始之前，先岔題一下，大家都是工程師，(放someone on the internet is wrong)應該都有些大大小小的睡
+眠問題，過去我一直以為我一天有睡到七小時，一直到去年穿戴式配備的興起，我買了個 Jawbone 來戴（放 Jawbone Up的圖片)，
+才知道我一天只睡六小時左右，中間的睡眠品質不佳。有了 Jawbone Up 天天計錄我的生活起居狀況，我才了解到自己真
+正的狀況，才能著手改善問題。</p>
+
+<h2>上面的故事，就是今天講題的主軸 測量 / metrics</h2>
+
+<p>在軟體開發的過程中，程式的編寫，其實只在軟體生命週期的很小一塊，在經過數個禮拜至數週的開發及測試後，軟體就
+被佈屬到線上環境中，在過去，可能是放在公司的機房中或是資料中心，現在則是被放到雲端平台之上，總之，你細心開
+發的軟體，將要被真實世界開始摧殘。</p>
+
+<p>在一個軟體的生命週期中，他可能會碰上大量的用戶擁入，也可能跑了數十天沒有重開，也有可能在臨晨三點碰上資料庫
+備份，當然也有可能每兩個禮拜碰上其它整個的 REST API 不穩的狀況，在他跑了一兩年後，有可能被換到新的硬體上。</p>
+
+<p>問題在於，你有沒有辦法知道這些狀況會不會出現，如果出現了，你能不能知道發生了什麼事；而且在這些狀況下，你的
+應用程式會出什麼怪手？是全面性的慢下來、還是不可預期的某些 Thread 才慢些來，或者是，你的應用程式可以輕鬆
+應付這些狀況，不用你擔心。</p>
+
+<p>如果上線的系統不能應付這些狀況，你要做出什麼相對應的調整呢？？</p>
+
+<h2>Metrics By Codahale</h2>
+
+<p>Metrics 一套是由 Codahale 在 2011 公布出來的 Opensource 專案，自此之後，因為他的 API 設計精良又容
+易跟其它的外部程式整合，所以開始被業界所採用。</p>
+
+<p>http://codahale.com/codeconf-2011-04-09-metrics-metrics-everywhere.pdf</p>
+
+<p>為什麼我們需要測量的原因</p>
+
+<h2>手動調整</h2>
+
+<p>Iterative tuning -> 建立假設 -> 重建問題 -> 提出對應 -> 修理 -> 驗證</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -743,122 +933,6 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/12/mongodb-schemaless/">Mongodb - Schemaless</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-12T15:08:00+08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。</p>
-
-<h2>Schemaless 的優點</h2>
-
-<p>Schemaless 不是沒有優點的，在搭配上動態語言時， Schemaless 是個很好用的功能，不用設定 mapping configuration ，直接就可以打 <code>item?.some_collections[0]?.city</code> 就這樣一路對一個物件逛下去，不用為了新增一個欄位就要去改 mapping configuration 然後跑 db migration。</p>
-
-<p>然而，這個特點，只有用在有 safe navigation 的動態語言上，才能享受到這些好處，要不然還是處處都要寫 null check ，要不然就會因為讀到前一版的 item 缺少某個欄位，而噴出了 NullPointerException。</p>
-
-<h2>Schemaless 與靜態語言</h2>
-
-<p>在靜態語言中使用 Schemaless DB 時，schemaless 的好處就消失怠盡了，像是我們公司是用 <a href="https://github.com/mongodb/morphia">Morphia</a> 來寫 Model &amp; DAO 的，若是要新增一個欄位，免不了是要去更新 Model class 然後重新 compile &amp; deploy 才能加上一個欄位的。</p>
-
-<p>相較於使用 Schemaful DB ，我們省下的，只有跑 DB Migration 的時間，當然，若是你有個超大的 DB ，那這省下的 off-line maintenance downtime 也可是很驚人的，但是，並不是所有的 db migration 都是要把整個系統下線才能跑的，大多數的 db migration 都是會把系統設計成(對DB)向後相容的，所以不用把整個系統啦下線就可以跑。</p>
-
-<blockquote><p>對DB向後相容的 Application / 向前相容的 Schema ：這邊指的是，先不要更新 Application ，先把 DB Migration 跑完，把資料庫的資料跟Schema更新完後，才把新版的 Application 上線。所以在某段時間內，是舊版的 Application 對著新版的 Schema 在跑的。</p></blockquote>
-
-<h2>Schemaless 的問題</h2>
-
-<p>許多大系統用 Schemaless DB 的原因是因為不想因為跑 DB Migration 把整個系統下線，所以就用 Schemaless 的系統來避開這問題。</p>
-
-<p>但是我想說的是，這誤會可大了，就像前面講的在 Schemaful DB 中，向前相容的 Schema 變動，是不用把系統下線就可以跑的，只有向前不相容的，才要跑 Offline DB Migration 或 Online Data Conversion.</p>
-
-<blockquote><p>Online Data Conversion 指的是，因為前後 Schema 不相容，所以開一個新的 Table 給新版本的物件用，每次讀取一個物件時，先去檢查是否已存在新的 Table 中，若沒有，則是從舊的 Table 讀出來，把格式更新，再存到新的 Table 中。</p>
-
-<p>如此一來，就不用下線也可以把前後格式不相容的的 DB 更新。</p></blockquote>
-
-<p>前文所說的 db migration &amp; online data conversion 就是 schemaless DB 的大問題，除非你是 <strong>神</strong> ，Model 一次就設計好，可以用一輩子，要不然不跑 db migration ，在你的 DB 中，必然會存在著 V1, V2,V3&#8230;Vn 版本的物件。</p>
-
-<p>不跑 db migration ，那就表示你要維護可以對 V1, V2, V3&#8230;.Vn 存取的 Model class ，你可能有一個 db item 一整年沒被讀取到，但是一年後突然用到，你要怎樣保證還讀的回來呢？？</p>
-
-<p>最常見的做法就是，不去 <strong>大幅度</strong> 更新 Model ，削足適屨，既使你知道更新 Model 會讓你未來程式更好寫，但是因為不能去更新 Model ，那就只好去調整程式邏輯，癟腳的用不合適的 Model 來做新工作。</p>
-
-<p>而既使你想跑 db migration ，但是因為 schemaless db 跟本不打算支援 db migration ，所以不會內建任何工具來幫助你，你只能很苦命的自己刻 online data conversion 的工具了。</p>
-
-<h2>後記</h2>
-
-<p>如果你對 DB Migration 的幾種方式有興趣的話，我建議你花一小時，把 Martin Fowler 與 Pramod Sadalage 的 <a href="http://www.se-radio.net/2012/06/episode-186-martin-fowler-and-pramod-sadalage-on-agile-database-development/">Agile Database Development</a> 聽完</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/12/mongodb-shard-key/">MongoDB - Sharding</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-12T14:27:00+08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a class="reference external" href="http://docs.mongodb.org/manual/tutorial/choose-a-shard-key/">Sharding</a> 是一個我非常討厭 MongoDB 的地方，在多台 DB 的解決方案中，免不了要用一個方式來決定那個 object 該放在那台機器上，一個解決方式就是用某個欄位來當 shard key 。</p>
-<p>在 MongoDB 中，這個 Shard Key 一決定後就不能改了，然後 MongoDB 會幫你把 object 按 shard key 的值域，平均分配在 n 台機器上。</p>
-<p>問題是，平均分派值域並不代表值會是平均非配的，例如 email ，因為姓名是集中在幾個字母上的，所以按值域分派會有 hot spot 產生，a-d 的特別多人，然後 x y z 的沒有人。</p>
-<p>在其它的 DB 中，每個 shard 機器所負責的值域是可以讓 dba 去調整的，但 MongoDB 是不行的，所以必然會產生 hot spot 而且你無法去躲開。</p>
-<p>有些人會自己去產生 UUID 來當 shard key ，在 MongoDB 2.4 中，則是加入了 hashed shard key 自動幫你把 shard key field 拿去算 hash key 出來當 shard key 用。但是，這還是免不了某些值域是 hot spot 的問題。</p>
-<p>既使 MongoDB 能夠平均分派儲存的值域，但是最終我們要看的是，怎麼樣平均分派 read/write operation 。</p>
-<p>因為在讀取時，也會發生因為某些原因，讓使用者對某些 object 的存取較其它物件多出 n 倍，所以每個 shard 所負責的值域一定要是 tunable ，要不然遲早一定會出問題。</p>
-<p>所以，扔了 MongoDB 吧</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -874,6 +948,14 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/23/type-inference-and-code-review/">Type Inference 在實務上碰上的問題</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/05/on-metrics/">談台灣年輕人低薪問題</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/05/on-compensation-of-youth/">談台灣年輕人低薪問題</a>
       </li>
     
@@ -883,14 +965,6 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
     
       <li class="post">
         <a href="/blog/2014/04/03/cross-strait-trade-agreement/">我看服貿</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/26/role-model/">典範</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/22/wang-jin-pyng/">從立法院長王金平談遵守法定程序</a>
       </li>
     
   </ul>
@@ -931,7 +1005,7 @@ alt="tumblr stats" style="border:none;"></a></section>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 -  -
+  Copyright &copy; 2015 -  -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
