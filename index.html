@@ -175,16 +175,16 @@
 </pre></td><td class='code'><pre><code class=''><span class='line'>   // 在沒有 Type Inference 下， statement 的左右兩邊都要宣告型態
 </span><span class='line'>   val location: Location = new Location("Taipei")
 </span><span class='line'>
-</span><span class='line'>   // 然而，左邊的這邊其實是也可以省下的
+</span><span class='line'>   // 左邊的這邊其實是可以省下的
 </span><span class='line'>   val location = new Location("Taipei")
 </span><span class='line'>   
-</span><span class='line'>   // 左右兩邊都沒有 *Location* 的存在，但是卻是被用在這邊了 
+</span><span class='line'>   // 左右兩邊都沒有 *Location* 的存在，但是卻是被引入在這邊了 
 </span><span class='line'>   val location = locationService.lookup("Taipei")</span></code></pre></td></tr></table></div></figure>
 
 
 <p>這看似方便的功能，卻有著非常深遠且負面的影響，在上面的例子中 <em>Location</em>  這類別，雖然在 import 時沒有出現過，但是卻是在 Reviewer 意料之外中，被帶入到了這程式碼中。</p>
 
-<p>當然，在上面的例子中，<em>Location</em> &amp; <em>LocationService</em> 是一套的關念，所以沒有真的引入意料之外的 <em>Domain</em> 進來，但是如果今天程式碼寫的不好，是有個 <em>ApplicationContextHolder.getCalendarService</em> 的話，那就不一樣了。</p>
+<p>當然，在上面的例子中，<em>Location</em> &amp; <em>LocationService</em> 是一套的觀念，所以沒有真的引入意料之外的 <em>Domain</em> 進來，但是如果今天程式碼寫的不好，是有個 <em>ApplicationContextHolder.getCalendarService</em> 的話，那就不一樣了。</p>
 
 <p>在一行行 code review 時，有可能會抓到這問題，但是如果你沒有空一行行的看呢？或者是你是在 <em>refactor</em> 數千行程式碼時，那要怎樣一行行的去看呢？</p>
 
