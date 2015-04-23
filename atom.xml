@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2015-04-24T00:22:29+08:00</updated>
+  <updated>2015-04-24T00:57:49+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -51,9 +51,9 @@
 </span><span class='line'>
 </span><span class='line'>import com.yunglinho.common.JsonSerializer
 </span><span class='line'>
-</span><span class='line'>import com.yunglinho.app.service.LocationService
 </span><span class='line'>import com.yunglinho.app.core.model.Location
 </span><span class='line'>import com.yunglinho.app.feature.SocialProfile
+</span><span class='line'>import com.yunglinho.app.service.LocationService
 </span><span class='line'>
 </span><span class='line'>import scala.concurrent.Await
 </span><span class='line'>import scala.concurrent.ExecutionContext
