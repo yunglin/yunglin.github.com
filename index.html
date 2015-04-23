@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="最近在讀 Implementing Domain-Driven Design 這本書，學習一下別人
-是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。 在 DDD 的概念中，一個模組 Domain / Bounded Context 應該是一個獨立的關念，一個大型程式， &hellip;">
+是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。 在 DDD 的概念中，一個模組 Domain / Bounded Context 應該是一個獨立的觀念，一個大型程式， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -108,9 +108,9 @@
   <div class="entry-content"><p>最近在讀 <strong>Implementing Domain-Driven Design</strong> 這本書，學習一下別人
 是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。</p>
 
-<p>在 DDD 的概念中，一個模組 <strong>Domain</strong> / <strong>Bounded Context</strong>  應該是一個獨立的關念，一個大型程式，應該是由許多 <strong>Bounded Context</strong> 組合而成，整個程式的架構應該僅量保持這些的純淨性，<strong>Bounded Context</strong> 的互用，要把上下行的關係定意清處，程式碼間不應該在一個區塊中引入多個 <strong>Bounded Context</strong>。</p>
+<p>在 DDD 的概念中，一個模組 <strong>Domain</strong> / <strong>Bounded Context</strong>  應該是一個獨立的觀念，一個大型程式，應該是由許多 <strong>Bounded Context</strong> 組合而成，整個程式的架構應該僅量保持這些的純淨性，<strong>Bounded Context</strong> 的互用，要把上下行的關係定義清楚，程式碼間不應該在一個區塊中引入多個 <strong>Bounded Context</strong>。</p>
 
-<p>在整實作上，如合檢視一個 class 是否有妥善的處理引用入的 <strong>Domain</strong> ，最簡單也最好用的方式就是看檔頭 <strong>import</strong> 的地方</p>
+<p>在整實作上，如何合檢視一個 class 是否有妥善的處理引用入的 <strong>Domain</strong> ，最簡單也最好用的方式就是看檔頭 <strong>import</strong> 的地方</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
