@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2015-04-24T00:13:28+08:00</updated>
+  <updated>2015-04-24T00:18:26+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -102,49 +102,6 @@
 <p>在一行行 code review 時，有可能會抓到這問題，但是如果你沒有空一行行的看呢？或者是你是在 <em>refactor</em> 數千行程式碼時，那要怎樣一行行的去看呢？</p>
 
 <p>所以，設計程式語言真的是很困難，一個看似方便的功能，卻在意料之外的地方造成困擾，讓我最近有點想回去改用 Java 。當然 Scala 還是個很好的語言，能夠幫我增加兩三倍的生產力，不過，卻會讓團隊工作時造成困擾。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[談台灣年輕人低薪問題]]></title>
-    <link href="http://blog.yunglinho.com/blog/2014/06/05/on-metrics/"/>
-    <updated>2014-06-05T01:35:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2014/06/05/on-metrics</id>
-    <content type="html"><![CDATA[<p>歡迎各位來到首屆的 Java Community Conference ，我是何永琳，目前於飛向科技擔任工頭，所謂的工頭，就是做
-大家做的事跟做大家不喜歡做的事，什麼是大家不喜歡做的事呢？那就是管上線機器的大大小小問題。</p>
-
-<p>在我們開始之前，先岔題一下，大家都是工程師，(放someone on the internet is wrong)應該都有些大大小小的睡
-眠問題，過去我一直以為我一天有睡到七小時，一直到去年穿戴式配備的興起，我買了個 Jawbone 來戴（放 Jawbone Up的圖片)，
-才知道我一天只睡六小時左右，中間的睡眠品質不佳。有了 Jawbone Up 天天計錄我的生活起居狀況，我才了解到自己真
-正的狀況，才能著手改善問題。</p>
-
-<h2>上面的故事，就是今天講題的主軸 測量 / metrics</h2>
-
-<p>在軟體開發的過程中，程式的編寫，其實只在軟體生命週期的很小一塊，在經過數個禮拜至數週的開發及測試後，軟體就
-被佈屬到線上環境中，在過去，可能是放在公司的機房中或是資料中心，現在則是被放到雲端平台之上，總之，你細心開
-發的軟體，將要被真實世界開始摧殘。</p>
-
-<p>在一個軟體的生命週期中，他可能會碰上大量的用戶擁入，也可能跑了數十天沒有重開，也有可能在臨晨三點碰上資料庫
-備份，當然也有可能每兩個禮拜碰上其它整個的 REST API 不穩的狀況，在他跑了一兩年後，有可能被換到新的硬體上。</p>
-
-<p>問題在於，你有沒有辦法知道這些狀況會不會出現，如果出現了，你能不能知道發生了什麼事；而且在這些狀況下，你的
-應用程式會出什麼怪手？是全面性的慢下來、還是不可預期的某些 Thread 才慢些來，或者是，你的應用程式可以輕鬆
-應付這些狀況，不用你擔心。</p>
-
-<p>如果上線的系統不能應付這些狀況，你要做出什麼相對應的調整呢？？</p>
-
-<h2>Metrics By Codahale</h2>
-
-<p>Metrics 一套是由 Codahale 在 2011 公布出來的 Opensource 專案，自此之後，因為他的 API 設計精良又容
-易跟其它的外部程式整合，所以開始被業界所採用。</p>
-
-<p>http://codahale.com/codeconf-2011-04-09-metrics-metrics-everywhere.pdf</p>
-
-<p>為什麼我們需要測量的原因</p>
-
-<h2>手動調整</h2>
-
-<p>Iterative tuning -> 建立假設 -> 重建問題 -> 提出對應 -> 修理 -> 驗證</p>
 ]]></content>
   </entry>
   
@@ -1099,6 +1056,21 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 </table>
 <p>[2] 從計程車看人生 <a class="reference external" href="http://i-chentsai.blogspot.tw/2010/12/blog-post.html">http://i-chentsai.blogspot.tw/2010/12/blog-post.html</a></p>
 <p>[3] 圖片來源：<a class="reference external" href="http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/">http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/</a></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[加州公共事業委員會通過共乘法案]]></title>
+    <link href="http://blog.yunglinho.com/blog/2013/09/23/california-legalize-ridesharing/"/>
+    <updated>2013-09-23T02:04:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2013/09/23/california-legalize-ridesharing</id>
+    <content type="html"><![CDATA[<p><a class="reference external" href="http://techcrunch.com/2013/09/19/cpuc-ridesharing-regulations/">California Regulator Passes First Ridesharing Rules, A Big Win For Lyft, SideCar, And Uber</a></p>
+<p>我把這篇 TechCrunch 的新聞貼在我的 FB 上，反應不佳，所以只好幫他做個中文補述：</p>
+<p>因為既有的私人出租車、共乘服務，與既有的加州法規不相容，所以『加州公共事業委員會』在七月提出一個建議案，經過一個半月的討論，在 9/19 通過生效，這種行政單位的效率，是台灣遠遠不及的，才花一個半月就解決一個問題。</p>
+<p>Lyft 這種服務的殺傷力很大，以後學生暑假打工又多一個選擇，可以開計程車，或是跑機場接送，別人一趟要 60 ，學生半價就好，然後還可以接到朋友開的 AirBnb etc&#8230;</p>
+<p>所以我前一篇才寫 this only happens in California ，在短短的一段時間內，又一個破壞性創新發生了。</p>
+<p>如果是社會主義國家如台灣，大概是要炒說乘客的安全誰來保障（乘客都不在乎了，你管那麼多幹麻），出了事誰負責（現在坐計程車車禍，還是健保買單啊，車子也沒保險）？最後，就是長官出來，官僚式的說一聲：「我們再研究，這問題很好，要從長計議&#8230;.」</p>
 
 ]]></content>
   </entry>
