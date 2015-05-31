@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2015-04-24T00:57:49+08:00</updated>
+  <updated>2015-06-01T00:42:42+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[遺失停車代幣的解決方案]]></title>
+    <link href="http://blog.yunglinho.com/blog/2015/06/01/parking-token-failover/"/>
+    <updated>2015-06-01T00:40:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2015/06/01/parking-token-failover</id>
+    <content type="html"><![CDATA[<p>停車把代幣給搞丟，結果意外的上了兩課。</p>
+
+<p>原來停車場收費機，往四個角點兩下，可以叫出隱藏的控制面板，輸入密碼後，繳當日最高停車費及罰金後，會掉一個不一樣顏色的代幣出來，可以讓你直接出場。</p>
+
+<p>第二課是，我拿到的代幣壞了(運氣真好)，停車場管理員，雖然下班了，還是可以透過手機，直接看監視器跟操作停車桿，直接放我出場。</p>
+
+<p>這次我運氣不錯，兩年前，代幣被嘟嘟房的機器吃掉，繳完錢不退我代幣，打過去是 0800 中心接的，一點忙都幫不上，還好機器過了五分鐘後，良心發現，退給我。</p>
+
+<p>不知道這系統是誰做的，把例外處理做的這麼好，前前後後才擔誤我十分鐘，我還以為要等收費員從家裡趕來，還是說隔天早上才能取車。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Type Inference 在實務上碰上的問題]]></title>
@@ -1056,21 +1073,6 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 </table>
 <p>[2] 從計程車看人生 <a class="reference external" href="http://i-chentsai.blogspot.tw/2010/12/blog-post.html">http://i-chentsai.blogspot.tw/2010/12/blog-post.html</a></p>
 <p>[3] 圖片來源：<a class="reference external" href="http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/">http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/</a></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[加州公共事業委員會通過共乘法案]]></title>
-    <link href="http://blog.yunglinho.com/blog/2013/09/23/california-legalize-ridesharing/"/>
-    <updated>2013-09-23T02:04:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2013/09/23/california-legalize-ridesharing</id>
-    <content type="html"><![CDATA[<p><a class="reference external" href="http://techcrunch.com/2013/09/19/cpuc-ridesharing-regulations/">California Regulator Passes First Ridesharing Rules, A Big Win For Lyft, SideCar, And Uber</a></p>
-<p>我把這篇 TechCrunch 的新聞貼在我的 FB 上，反應不佳，所以只好幫他做個中文補述：</p>
-<p>因為既有的私人出租車、共乘服務，與既有的加州法規不相容，所以『加州公共事業委員會』在七月提出一個建議案，經過一個半月的討論，在 9/19 通過生效，這種行政單位的效率，是台灣遠遠不及的，才花一個半月就解決一個問題。</p>
-<p>Lyft 這種服務的殺傷力很大，以後學生暑假打工又多一個選擇，可以開計程車，或是跑機場接送，別人一趟要 60 ，學生半價就好，然後還可以接到朋友開的 AirBnb etc&#8230;</p>
-<p>所以我前一篇才寫 this only happens in California ，在短短的一段時間內，又一個破壞性創新發生了。</p>
-<p>如果是社會主義國家如台灣，大概是要炒說乘客的安全誰來保障（乘客都不在乎了，你管那麼多幹麻），出了事誰負責（現在坐計程車車禍，還是健保買單啊，車子也沒保險）？最後，就是長官出來，官僚式的說一聲：「我們再研究，這問題很好，要從長計議&#8230;.」</p>
 
 ]]></content>
   </entry>

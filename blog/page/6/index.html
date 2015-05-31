@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="最近兩周，我開始參加 GTUG 的活動，在活動間，有人問起，為什麼我公司選用DBMS(MySQL)來做資料分析，而不用 Hadoop。在這邊，我把跟公司的DB怪才同事的討論結果，稍為簡單敘述一下。首先，要先理解到的一點是，在 MapReduce 及 Hadoop 出現之前，Data &hellip;">
+  <meta name="description" content="嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/08/lucene-on-android/">Lucene on Android</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-08T18:20:00+08:00" pubdate data-updated="true">Dec 8<span>th</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class='post'>
+嘗試性的把 Lucene 放到 Android 上面來跑，結果不是太理想，但仍是一些心得分享出來，省去後人嘗試的時間。<br /><br />Lucene 要跑在 Android 上，第一個碰上的問題是，如何把 index files 傳到手機上去，在 Lucene 中，對 index 的讀取，是以目錄為單位的，所以說，無法把 index files 放在 apk 中直接讀取，一定要存放在 device or external storage 上，才能夠使用；或者是自己弄個虛擬目錄出來，不過，這會耗用過多的計憶體空間。<br /><br />我是選用把 index 放在 &#8216;src/res/raw&#8217; 底下，讓他變成 apk 的一部份，省去在網路上找個空間來放置 index 的問題，當要更新 index 時，就重編個 apk 叫使用者更新就好。<br /><br />在放 lucene index 時，如果你想用 compound format 的話，可以用底下的指令，把多個 index files 包裹成單一檔案 .cfs <br /><br /><pre class="brush: scala;">// run REPL with 'scala -cp luke-3.4.0_1-all.jar'<br /><br />import org.apache.lucene.store.FSDirectory<br />import org.apache.lucene.index._<br />import org.apache.lucene.analysis.standard._<br /><br />val source = FSDirectory.open(new java.io.File("source"))<br />val dest = FSDirectory.open(new java.io.File("dest"))<br /><br />// open source index<br />val reader = IndexReader.open(source)<br /><br />// create writer for compound index.<br />val analyzer = new StandardAnalyzer(org.apache.lucene.util.Version.LUCENE_34)<br />val writer = new org.apache.lucene.index.IndexWriter(dir, analyzer, IndexWriter.MaxFieldLength.UNLIMITED)<br /><br />// force writer always use compound index format.<br />writer.getMergePolicy.asInstanceOf[LogByteSizeMergePolicy].setNoCFSRatio(1.0)<br /><br /><br />// add source index to dest index.<br />writer.addIndexes(reader)<br />writer.optimized<br />writer.close<br /><br />reader.close<br /></pre><br />接著，是把產生的 segment, segments_1, _0.cfs 拷到 src/res/raw 底下，讓這些檔案變成 .apk 的一部份。<br /><br /><br />接著，是要在第一次執行時，把這些 index 從 apk 中覆製到 SD 卡上或是機子上，這邊，我寫了個小工具來做這件事<br /><br /><pre class="brush: scala;">import android.content.Context<br />import android.os.Environment<br />import android.util.Log<br /><br />import com.bluetangstudio.android.disastermap.TaipeiDisasterApp.LogTag<br /><br />import org.apache.commons.io.FileUtils<br />import org.apache.lucene.store.{FSDirectory, Directory}<br /><br />import scala.collection.JavaConversions._<br />import java.io.File<br /><br />/**<br /> *  Helper class that search for lucene index directories on the device. The search order is<br /> *  external storage first then local storage. If lucene index does not exist on device, this<br /> *  class will copy the index from the apk to the device storage.<br /> *<br /> * @param context  the application context<br /> * @param path     the root folder name of the index directory to use and to look for.<br /> * @param source   the source of index resource to copy if index does not exist on the device.<br /> *                 format: Seq[(filename, resourceId)]<br /> */<br />case class LuceneOpenHelper(context: Context, path: String, source: Seq[Tuple2[String, Int]]) {<br /><br />    /**<br />     * create or open an Directory.<br />     */<br />    def open(): Option[Directory] = {<br />        val candidates = Seq(externalFolder, internalFolder).flatten<br /><br />        // find the folder with index in it.<br />        val folder = candidates.filter(f => f.exists() && f.list().length > 0).headOption<br />        val withIndex = folder.orElse(<br />            candidates.find(<br />                f => {<br />                    // ensure folder is available.<br />                    f.exists() || f.mkdirs() match {<br />                        // folder is not accessible<br />                        case false => false<br /><br />                        case _ => {<br />                            Log.d(LogTag, "Duplicating index from apk to %s...".format(f))<br />                            source.foreach(<br />                                s => {<br />                                    val is = context.getResources.openRawResource(s._2)<br />                                    try {<br />                                        FileUtils.copyInputStreamToFile(is, new File(f, s._1))<br />                                    } finally {<br />                                        is.close()<br />                                    }<br />                                }<br />                            )<br />                            true<br />                        }<br />                    }<br />                }<br />            )<br />        )<br /><br />        return withIndex.map(FSDirectory.open(_))<br />    }<br /><br />    private def externalFolder: Option[File] = {<br />        Environment.getExternalStorageState match {<br />            case Environment.MEDIA_MOUNTED => Option(context.getExternalFilesDir(path))<br />            case _ => None<br />        }<br />    }<br /><br />    private def internalFolder: Option[File] = {<br />        return Option(new File(context.getFilesDir, path))<br />    }<br /><br />}<br /></pre><br />最後，是在 *App 上加上這段<br /><br /><pre class="brush: scala;">object MyApp {<br />    private val INDEX_DIRECTORY = "idx"<br /><br />    private val INDEX_FILES = Seq(<br />        ("_0.cfs", R.raw.idx_0), <br />        ("segments", R.raw.segments), <br />        ("segments_1", R.raw.segments_1)<br />    )<br />}<br />class MyApp extends android.app.Application {<br /><br />    import MyApp._<br /><br />    private var _luceneSearcher: Option[IndexSearcher] = None<br /><br />    def luceneSearcher: Option[IndexSearcher] = {<br />        if (_luceneSearcher.isEmpty) {<br />            Log.d(LogTag, "Initializing new IndexSearcher...")<br />            _luceneSearcher = LuceneOpenHelper(this, INDEX_DIRECTORY, INDEX_FILES).open().map(new IndexSearcher(_))<br />        }<br />        _luceneSearcher<br />    }<br />   <br />    override def onLowMemory() {<br />        _luceneSearcher.foreach(s => s.close())<br />        _luceneSearcher = None<br />    }<br />}<br /></pre><br />這樣一來，就能在 Android 上面跑 lucene-core 了.</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -425,43 +462,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/06/">轉換台北市政府公開資料的格式</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-06T17:01:00+08:00" pubdate data-updated="true">Oct 6<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-在台北市政府公開的資料中，有一大部份是用shapefile的格式開放的，如何把這些資料轉換出來，變成是一個問題，在這邊把我怎麼把TWD67座標的shapefile，轉換成WSG84的 GeoJSON格式。<br /><br />首先，請參考前文把里介圖在QGIS中打開。<br /><br />再來按<a href="http://gis-tech.blogspot.com/2008/11/quantum-gis_24.html">這邊</a>講的，把TWD67的定義加入到 QGIS 中<br /><br />接著，選Layer Property -&gt; Set Layer CRS -&gt; TWD 67<br /><br />然後，指定專案用的CRS定意，FIle -&gt; Project Property -&gt; CRS -&gt; WSG 84<br /><br />最後，是把Layer另存新檔，Layer -&gt; Save As -&gt; File Format: GeoJSON, Encoding: UTF-8<br /><br />這樣，就可以把shapefile的內容匯出來，變成像下述的格式<br /><br />{ &#8220;type&#8221;: &#8220;Feature&#8221;, &#8220;id&#8221;: 0, &#8220;properties&#8221;: { &#8220;AREA&#8221;: 16326625.055040, &#8220;NEW&#8221;: 6301200042.000000, &#8220;FULL&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PERF_ID&#8221;: 63012.000000, &#8220;COUN_ID&#8221;: &#8220;6301200&#8221;, &#8220;CPID&#8221;: &#8220;63012&#8221;, &#8220;CPTID&#8221;: &#8220;6301200&#8221;, &#8220;CPTVID&#8221;: &#8220;6301200042&#8221;, &#8220;NPID&#8221;: 63012.000000, &#8220;NPTID&#8221;: 6301200.000000, &#8220;NPTVID&#8221;: 6301200042.000000, &#8220;PNAME&#8221;: &#8220;臺北市&#8221;, &#8220;TNAME&#8221;: &#8220;北投區&#8221;, &#8220;VNAME&#8221;: &#8220;湖田里&#8221;, &#8220;PTVNAME&#8221;: &#8220;臺北市北投區湖田里&#8221;, &#8220;PTNAME&#8221;: &#8220;臺北市北投區&#8221;, &#8220;TVNAME&#8221;: &#8220;北投區湖田里&#8221;, &#8220;TM2_MAX_X&#8221;: 306973.245000, &#8220;TM2_MAX_Y&#8221;: 2789383.300000, &#8220;TM2_MIN_X&#8221;: 301490.096000, &#8220;TM2_MIN_Y&#8221;: 2783263.350000, &#8220;MAX_X&#8221;: 0.000000, &#8220;MAX_Y&#8221;: 0.000000, &#8220;MIN_X&#8221;: 0.000000, &#8220;MIN_Y&#8221;: 0.000000 }, &#8220;geometry&#8221;: { &#8220;type&#8221;: &#8220;Polygon&#8221;, &#8220;coordinates&#8221;: [ [ [ 121.522589, 25.174993 ], [ 121.522587, 25.174995 ], [ 121.522557, 25.175033 ], [ 121.522408, 25.175170 ], [ 121.522317, 25.175324 ], [ 121.522314, 25.175367 ], [ 121.522323, 25.175569 ], [ 121.522315, 25.175789 ], [ 121.522322, 25.175950 ], [ 121.522270, 25.176082 ], [ 121.522158, 25.176302 ], [ 121.522043, 25.176548 ], [ 121.522002, 25.176598 ], [ 121.521997, 25.176648 ], [ 121.522278, 25.177273 ], [ 121.522359, 25.177825 ], [ 121.522384, 25.178200 ], [ 121.522338, 25.178332 ], [ 121.522127, 25.178615 ], [ 121.521821, 25.178986 ], [ 121.521780, 25.179026 ], [ 121.521691, 25.179134 ], [ 121.522349, 25.179671 ], [ 121.522623, 25.179892 ], [ 121.522810, 25.179997 ], [ 121.522949, 25.180089 ], [ 121.523101, 25.180244 ], [ 121.523337, 25.180539 ], [ 121.523425, 25.180655 ], [ 121.523550, 25.180683 ], [ 121.523641, 25.180779 ], [ 121.523652, 25.180779 ], [ 121.523816, 25.1809<br /><br /><br /><br /></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -479,6 +479,10 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/06/01/parking-token-failover/">遺失停車代幣的解決方案</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/04/23/type-inference-and-code-review/">Type Inference 在實務上碰上的問題</a>
       </li>
     
@@ -492,10 +496,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
       <li class="post">
         <a href="/blog/2014/04/03/cross-strait-trade-agreement/">我看服貿</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/03/26/role-model/">典範</a>
       </li>
     
   </ul>
