@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2015-06-01T00:42:42+08:00</updated>
+  <updated>2015-06-01T10:52:14+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[遺失停車代幣的解決方案]]></title>
-    <link href="http://blog.yunglinho.com/blog/2015/06/01/parking-token-failover/"/>
+    <link href="http://blog.yunglinho.com/blog/2015/06/01/parking-token-exception-handling/"/>
     <updated>2015-06-01T00:40:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2015/06/01/parking-token-failover</id>
+    <id>http://blog.yunglinho.com/blog/2015/06/01/parking-token-exception-handling</id>
     <content type="html"><![CDATA[<p>停車把代幣給搞丟，結果意外的上了兩課。</p>
 
 <p>原來停車場收費機，往四個角點兩下，可以叫出隱藏的控制面板，輸入密碼後，繳當日最高停車費及罰金後，會掉一個不一樣顏色的代幣出來，可以讓你直接出場。</p>
