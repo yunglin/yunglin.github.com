@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2015-06-01T10:52:14+08:00</updated>
+  <updated>2015-09-24T15:42:36+08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,51 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[關帳戶]]></title>
+    <link href="http://blog.yunglinho.com/blog/2015/09/24/struggling-in-taiwan/"/>
+    <updated>2015-09-24T15:40:00+08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2015/09/24/struggling-in-taiwan</id>
+    <content type="html"><![CDATA[<p>啊，我的修養還是不夠，沒想到在台灣關個銀行戶頭，都要叫經理出來，還不能解決 Orz&#8230;.</p>
+
+<p>我有一間自己的公司，因為要長期出國，要把公司跟公司戶關掉，打去銀行問要帶什麼文件。</p>
+
+<p>結果今天去，才跟我說缺公司登記文件。</p>
+
+<p>回家，下午再來，又跟我說，要關甲存要連未用完的支票都帶來。</p>
+
+<p>然後我就爆氣了，要行員幫我寫一樣樣下，到底關帳號要那些文件才可以關&#8230;.</p>
+
+<p>然後又被台灣的金融制度上了一堂課，原來關甲存帳戶，過去為用完的支票全部都要帶來，要不然一張要罰 240元跟簽切結書。</p>
+
+<hr />
+
+<p>話說我三年前，人在台灣，還透過 email &amp; skype out 開了 Wells Fargo 的戶頭，後來要關時，也是兩封 email 就關掉了，不用負責人親自到、不用把 debit card 寄回去、不用把支票簿寄回去</p>
+
+<hr />
+
+<p>我可以理解，為什麼中華民國會要求支票要還回去，因為過去台灣芭樂票盛行，而中華民國又是個 nanny state ，什麼事都要政府負責，所以連個支付工具都要上層層的鎖。</p>
+
+<p>在美國，個人支票就是沒什麼保障，要保障，請去買銀行本票 cashier check 。我當年要賣車時，就是跟買主約在銀行裡面，請他當場買 cashier check 給我，我再存進戶頭，而他把車子跟車籍資料帶走，當下就結清交易。</p>
+
+<p>至於為什麼要用 cashier check 還有一個原因，因為在美國支票存進戶頭，帳戶上暫時會顯示這一筆進帳，但是還是要三到五天才能結清，所以既使存進去還是可能會跳票。</p>
+
+<p>而當下結清，是商業運作上很重要的，因為當下就可以把風險減到零。反而在台灣，沒有這種安全、有紀錄、一手交錢一手交貨的運作的機制。</p>
+
+<p>在台灣買車、買結婚戒指，還是要先到銀行轉帳給賣主的個人戶頭，才能領貨。非常沒保障。</p>
+
+<hr />
+
+<p>最後，講到影響最大的，其實是台灣商業跟生活的雙軌制太嚴重。</p>
+
+<p>我在美國只有生活七年，個人的金融交易方式，就是公司的金融交易方式，並沒有什麼太大的差易，都可以用經驗、常理判斷。</p>
+
+<p>而在台灣，我是一個商學院畢業的學生，我自認對台灣社會運行的方式在同儕間算是不錯的了，念過會計，幫忙 &#8220;手工&#8221; 過帳過，上週才把我的公司法、商事法課本給丟掉，但是在過去幾年間，被台灣的會計及金融制度還是撞上許多的問題。</p>
+
+<p>無法把生活經驗推演到商業上的運作，我想是台灣在賠養商業人材上，很大的問題。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[遺失停車代幣的解決方案]]></title>
@@ -1042,37 +1087,6 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 <p>台灣最近一年研發替代役的名額是 7500 人，約是理工科大學畢業生的一成(目前是碩士才能申請替代役但是明年是大學就可以了)，差不多就是有即戰力的人數。除非是大公司的篩選機制出了漏網之魚，或者是因個人生涯規劃不申請，要不然，大多數的即戰力，就這樣被政府，趕鴨子似的，送給了大企業</p>
 <p>而這些大企業是怎麼使用這些人材的呢？既然能把人材綁著四年，年年都有新人進來，所以台灣的產業都把案子弄的很專案導向，能夠在短期內做完就好，沒有人會去想長期性的投資。反正有簡單的路走，為什麼要捨易求難呢？</p>
 <p>所以，各家公司就是一堆新人在走，反而不見公司投資在長期的流程改善及工程方法論當中。資深的員工，在台商薪水也上不來，只能逃到外商去。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[談紐約的計程車如何降低乘客及司機間的不信任感]]></title>
-    <link href="http://blog.yunglinho.com/blog/2013/09/30/new-york-taxi/"/>
-    <updated>2013-09-30T21:41:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2013/09/30/new-york-taxi</id>
-    <content type="html"><![CDATA[<p>既然大家特愛看寫美國的制度，就再多來寫幾篇吧～～</p>
-<p>今天老婆去郵局開戶，結果鎩羽而歸，因為老婆是新竹人，嫁到台北後，戶籍不在台北，所以不給在台北開戶，要拿我的證件去證明她是住在台北的，才可以開戶。</p>
-<p>郵局人員對這限制也滿反感的，這限制是多年前詐騙盛行、人頭戶盛行，所以金管會下了個命令，禁止在非戶籍地開戶，連台北市內跨區開戶都不行。我是對這政策是非常的不能理解，人頭戶盛行就罰人頭戶罰他賠幾十萬幾百萬算了，台灣現在這樣做，把整個國家的競爭力給賠上去了。</p>
-<p>事情的源頭就是，台灣人對弱勢，有莫明沒道理的同情心過剩，認為弱勢做什麼都不該罰，連把個人的資料拿去賣，讓詐騙集團使用，都覺得不該罰。</p>
-<p>這一種同情心過剩，衍生到社會的各個層面去，把 <strong>無效率</strong> 、 <strong>守舊</strong> 當做 <strong>社會救助</strong> 的一環去了；前幾天跟同事吃飯時，聊到 Uber 等計程車服務，我講，未來 Uber 將會在第三式世界國家很盛行，因為在這些地區的計程車詐騙盛行，亂叫價亂繞路是常態，對許多來自已開發國家的商務人士很頭痛，若是要減低不確定性，未來商務人士可以直接叫 Uber ，透過 Uber 這個品牌的篩選，幫忙選用較佳的車行，同時，在服務有爭執時，可以調出行車路線圖解決紛爭。</p>
-<p>事實上，在這個禮拜，已有某外商銀行的朋友跟我說，他們公司考慮撤掉目前雇用的黑頭車及司機，直接透過 Uber 叫車，減少管理成本及費用的支出。</p>
-<p>另外，我也跟同事談到我在 2009 年到紐約機場坐計程車的經驗，在 2009 年時，紐約市的計程車上已經有 GPS / Map 供後座的乘客使用，我從市區坐車要到布魯克林去，透過 GPS 地圖就可以看出來計程車司機有沒有在繞路。</p>
-<img alt="/images/2013-09-30/map_on_taxi.jpg" class="align-left" src="http://blog.yunglinho.com/images/2013-09-30/map_on_taxi.jpg" style="width: 800px;" />
-<p>另外再早個一兩年，我在紐華克機場叫車到紐澤西的郊區拜訪親戚，在機場的叫車區就有服務人員，一個個的問你要去那裡，然後印出來類似下圖的乘車券，上面會有說你從那裡出發，要到那裡，大約的車資是多少，乘坐的車號是多少。</p>
-<p>紐約就是紐約，在制度上還是領先其它地區，對商務旅遊來說，還是有他獨到的地方，同事也說，如果這樣他多付十塊美金買安心也願意。</p>
-<img alt="/images/2013-09-30/airport_receipt.jpg" class="align-left" src="http://blog.yunglinho.com/images/2013-09-30/airport_receipt.jpg" style="width: 360px;" />
-<img alt="/images/2013-09-30/receipt.jpg" class="align-left" src="http://blog.yunglinho.com/images/2013-09-30/receipt.jpg" style="width: 360px;" />
-<p>接著事情就急轉直下了，我接著談到，台灣政府也有在考慮在計程車安裝新的計費表，能夠列印出制式的收據、統一發票，方便商務人士報帳，當然，背後的原因是政府要破產了，所以要擴大徵稅的對像；此時就有另一位同事說，開計程車的都是弱勢怎麼可以跟他們徵稅呢？</p>
-<p>我想，這就是台灣目前無法更上一層樓的原因，我們寧願犧牲國家競爭力，把對社會制度的修正跟對弱勢的補助綁在一起，甚至是對弱勢的定意都無法拿捏的清楚 <a class="footnote-reference" href="#id2" id="id1">[1]</a> ，就這樣和稀泥的過了 20 年，就停滯在開發中國家的頂邊，無法邁入已開發國家之列。</p>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>計程車司機若是能遵守車隊的規範，加入一級的車隊，扣掉費用，收入在四萬以上，高出貧戶補助的標準許多。</td></tr>
-</tbody>
-</table>
-<p>[2] 從計程車看人生 <a class="reference external" href="http://i-chentsai.blogspot.tw/2010/12/blog-post.html">http://i-chentsai.blogspot.tw/2010/12/blog-post.html</a></p>
-<p>[3] 圖片來源：<a class="reference external" href="http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/">http://www.bridgeandtunnelclub.com/bigmap/citywide/taxi/</a></p>
 
 ]]></content>
   </entry>

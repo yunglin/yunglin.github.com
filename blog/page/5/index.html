@@ -9,8 +9,9 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="這是 4/23 要在 Scala Taiepi Meeting 3 用的講稿，先打出來放這。 Dependency Injection &amp; Inversion of Control
-Dependency Injection &amp; Inversion of Control 是 &hellip;">
+  <meta name="description" content="MongoDB 的 Java Driver 支援透過 Transformer 去掛上 encodingHook 及 decodingHook，
+使用方式可以參考 Salat URISerializer.
+原本我以為透過這樣，我就可以透過自定 encoding and decoding Hook ， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +77,135 @@ Dependency Injection &amp; Inversion of Control 是 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/26/mongodb-java-driver-sucks/">Problem in Mongodb&#8217;s Java and Scala Driver.</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-26T18:45:00+08:00" pubdate data-updated="true">Apr 26<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>MongoDB 的 Java Driver 支援透過 <a class="reference external" href="http://api.mongodb.org/java/2.5/org/bson/Transformer.html">Transformer</a> 去掛上 encodingHook 及 decodingHook，
+使用方式可以參考 <a class="reference external" href="https://github.com/novus/salat/blob/9d7988fbd212b6a1423cb2be72065ebff3570777/salat-core/src/test/scala/com/novus/salat/test/util/UriConversionHelper.scala">Salat URISerializer</a>.</p>
+<p>原本我以為透過這樣，我就可以透過自定 encoding and decoding Hook ，去動態
+的把 MongoDB 內部的資料型態，在抓取時，自動轉成我要的形態。</p>
+<p>例如透過底下的程式碼，就在呼叫 <a class="reference external" href="http://api.mongodb.org/scala/casbah/2.1.5.0/scaladoc/com/mongodb/casbah/commons/MongoDBObject.html#getAs[A](String)(Manifest[A]):Option[A]">getAs[URL](&quot;url&quot;)</a> 時，才即時的把 String 轉成 URL 。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="nc">BSON</span><span class="o">.</span><span class="n">addEncodingHook</span><span class="o">(</span><span class="n">class</span><span class="o">[</span><span class="kt">URL</span><span class="o">],</span> <span class="k">new</span> <span class="nc">Transformer</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">def</span> <span class="n">transform</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">AnyRef</span><span class="o">)</span><span class="k">:</span> <span class="kt">AnyRef</span> <span class="o">=</span> <span class="n">o</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="n">u</span><span class="k">:</span> <span class="kt">URL</span> <span class="o">=&gt;</span> <span class="n">u</span><span class="o">.</span><span class="n">toExternalForm</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span>      <span class="k">=&gt;</span> <span class="n">o</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">})</span>
+</span><span class="line"><span class="nc">BSON</span><span class="o">.</span><span class="n">addDecodingHook</span><span class="o">(</span><span class="n">class</span><span class="o">[</span><span class="kt">URL</span><span class="o">],</span> <span class="k">new</span> <span class="nc">Transformer</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">def</span> <span class="n">transform</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">AnyRef</span><span class="o">)</span><span class="k">:</span> <span class="kt">AnyRef</span> <span class="o">=</span> <span class="n">o</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="n">s</span><span class="k">:</span><span class="kt">String</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nc">URL</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="k">throw</span> <span class="k">new</span> <span class="nc">IllegalArgumentException</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">toString</span><span class="o">)</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">})</span>
+</span></code></pre></td></tr></table></div></figure><p>結果，事情不如我預期所想的， <cite>decodingHook</cite> 是掛在 MongoDB 儲存的資料
+型態上，而不是你所需要的資料型態上；換個方法講， <cite>decodingHook</cite> 是在
+BSON driver 把資料讀出來時，就呼叫的。</p>
+<p>實作上，如果你去細看 Salat URISerializer ，他的 <cite>decodingHook</cite> 是註冊
+在 <cite>String Type</cite> 而非 <cite>URI Type</cite> ，而實作時，是把字串加上了 &quot;<cite>URI~</cite>&quot; 來
+判斷，這個字串是否是該被 URI Serializer 轉型成 URI。</p>
+<p>如果你去看 <cite>org.bson.BSON</cite> 的實作，你會看到底下這段恐怖的程式碼，BSON
+在讀出資料時，會把對該型別的 <cite>Transformer</cite> 全跑一遍，而這個東西又是個
+Gloabal Variable，這樣一來出了三個問題</p>
+<ul class="simple">
+<li>所有 Custom Data Type 都需要被轉成 String 並加上 Prefix 才可以寫入，
+你不可以把一個 Custom Data Type 轉成 Integer ，如果你這麼做了，所有
+的 Integer ，包含本來就該是 Integer 的欄位，未來在讀出來時，全都會變成
+這個 Custom Data Type ！</li>
+<li>你的 MongoDB Driver 仰賴所有的使用者都清楚他在做什麼，也清楚別人在
+做什麼，如果有一個 Transformer 出錯了，或者是 Prefix 重覆了，那麼
+你自定的 Custom Data Type 也會出錯。</li>
+<li>你 MongoDB 中的資料，為了儲存 Data Type 於資料欄位中而被污染了！</li>
+</ul>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">addDecodingHook</span><span class="o">(</span> <span class="n">Class</span> <span class="n">c</span> <span class="o">,</span> <span class="n">Transformer</span> <span class="n">t</span> <span class="o">){</span>
+</span><span class="line">    <span class="n">_decodeHooks</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class="line">    <span class="n">List</span><span class="o">&lt;</span><span class="n">Transformer</span><span class="o">&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="n">_decodingHooks</span><span class="o">.</span><span class="na">get</span><span class="o">(</span> <span class="n">c</span> <span class="o">);</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span> <span class="n">l</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">){</span>
+</span><span class="line">        <span class="n">l</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">Transformer</span><span class="o">&gt;();</span>
+</span><span class="line">        <span class="n">_decodingHooks</span><span class="o">.</span><span class="na">put</span><span class="o">(</span> <span class="n">c</span> <span class="o">,</span> <span class="n">l</span> <span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">    <span class="n">l</span><span class="o">.</span><span class="na">add</span><span class="o">(</span> <span class="n">t</span> <span class="o">);</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="kd">public</span> <span class="kd">static</span> <span class="n">Object</span> <span class="nf">applyDecodingHooks</span><span class="o">(</span> <span class="n">Object</span> <span class="n">o</span> <span class="o">){</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span> <span class="o">!</span> <span class="n">_anyHooks</span><span class="o">()</span> <span class="o">||</span> <span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span>
+</span><span class="line">        <span class="k">return</span> <span class="n">o</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">    <span class="n">List</span><span class="o">&lt;</span><span class="n">Transformer</span><span class="o">&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="n">_decodingHooks</span><span class="o">.</span><span class="na">get</span><span class="o">(</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">);</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span> <span class="n">l</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span>
+</span><span class="line">        <span class="k">for</span> <span class="o">(</span> <span class="n">Transformer</span> <span class="n">t</span> <span class="o">:</span> <span class="n">l</span> <span class="o">)</span>
+</span><span class="line">            <span class="n">o</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="na">transform</span><span class="o">(</span> <span class="n">o</span> <span class="o">);</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">o</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure><p><a class="reference external" href="https://jira.mongodb.org/browse/SCALA-66">SCALA-66</a> 說 3.0.0 release 時，會有一個 per field, per data type 的
+type conversion機制，不過 3.0.0-M2 時還沒把這塊做進去，所以看來有得等了</p>
+<p>我是自己有參照 <a class="reference external" href="https://github.com/aboisvert/simplistic">simplistic</a> 刻一個機制，可以在 DAO 中讀進讀出物件時做轉
+換，但是在寫 Query 時，仍是有些不便。</p>
+<p>如果你有這需求的話，可以跟我連絡，我把 source code 給你。</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1338,43 +1468,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/01/03/how-to-protect-a-webservice/">How to Protect a WebService.</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-01-03T23:27:00+08:00" pubdate data-updated="true">Jan 3<span>rd</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-最近做了不少Restful WebService的案子，也用了不少外部的WebService API，看到許多的系統，在安全性上，有許多的漏洞，因此想寫篇文章來說說，到底要怎樣保護好你的WebService，必竟，<a href="http://plainpass.com/">台灣主流網站</a>的<a href="http://www.ithome.com.tw/itadm/article.php?c=71134">安全性</a>已經夠糟了，不用再多幾個有問題的API來把環境弄更糟。<br /><br />大家用Web API，最常碰到的保護機制是 ApiKey ，但是，請不要以為 ApiKey 有什麼保護做用，HTTP Request的東西都是明碼，你傳什麼，網路上流過的機器都可以看的一清二楚，假設你做的 client 端程式是用 ApiKey 來保護 client &lt;-&gt; server 間的通訊的話，要破的人，只要在 client 所在的區網內，安裝 packet sniffer 就可以拿到 client 內包的 ApiKey 了。 <br /><br />ApiKey通常是WebService Provider拿來統計流量用的，不要以為他有什麼安全機制存在。<br /><br />再來，有些 Web API 要求你要登入，才可以使用他們的 API ，如 chargify or <a href="http://code.google.com/googleapps/faq.html#gmailatomfeed">GMail</a>，這些服務所使用的機制是HTTP Basic Authentication ；但是非常不幸的是，HTTP Basic Authentication只不過變形的ApiKey，Basic Auth的運作方式是把 username:password 用 base64 編碼後，放在 HTTP Request Header 當成密碼傳到 server 端，因此，一樣可以被 sniffer 直接偷出來用。<br /><br />當然，你會問，我們不是有用 HTTPS 來把封包加密了嗎？然而，除非你把 certificate 預載在 client 端，要不然 client &lt;-&gt; server 第一次的通訊是危險的，會受到 <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in the middle attack</a> ，直接從中間把雙方收送的 certificate 換掉。<br /><br /><br />較安全的做法是，使用HTTPS Client Authentication，在包 client 就把 client 端該用的 server-signed certificate 包進 client 端裡面；這樣一來，少了透過 internet 交換 certificate 的機制，能夠確保 certificate 不會被偷換掉。<br /><br />另外，使用 Client Authentication 的好處是，只有 server 端認可的 client 可以使用 API ，縱始是第三方拿到了username, password, apikey，還是沒有辦法使用你的服務。<br /><br />至於有那些大廠，用了不安全的方式來保護他們的 web service api 呢？<a href="http://support.unblock-us.com/customer/portal/articles/291570-supported-and-unsupported-sites"> unblock-us 這邊</a>有幾個名單<br /><br /><br /><blockquote>unblock-us 是怎麼破解幾大影音網站的 geo-location check 的呢？<br /><br />一般的解決方案是用 VPN，但是影音串流不適合透過 VPN 來做 proxy。<br /><br />就我的猜測 unblock-us 等用的解決方案應該是這樣，在 DNS 那層把 server 端的 ip 反解成他們自己的機器，當 client 端送 request 給 http://api.poorguy.com, unblock-us 會先檢查這個 call 的用途，如果是做 geo-location 反解的，就送個假的回應給 client 端，如果是其他的方式，就轉送到正常的機器。<br /><br />等 client 端把這些處理做完後，要做影音串流的 rstp://stream.poorguy.com 又是傳回正常的 ip ，所以這樣用到的流量最小。<br /><br />這樣等於是直接的違反人家的授權去 hack API，這種服務可以活的很久嗎？？我不清楚<br /><br />不過從這一點也可以看到，各大廠做 operation 的能力優劣，像我的前雇主 <a href="http://rhapsody.com">rhapsody</a>就有利用 client authentication 在各式各樣的 client 端上。所以讓我想在台灣用都沒得用 :(  <br /></blockquote><br /><br />公商服務時間：<br /><br />小弟的公司，目前有時間接設計 WebService API 的案子，若是有合作機會的，<a href="mailto:yunglin@gmail.com">請與我連絡</a>。</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/6/">&larr; Older</a>
@@ -1392,6 +1485,10 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/09/24/struggling-in-taiwan/">關帳戶</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/06/01/parking-token-exception-handling/">遺失停車代幣的解決方案</a>
       </li>
     
@@ -1405,10 +1502,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
     
       <li class="post">
         <a href="/blog/2014/05/13/tdd/">TDD</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/04/03/cross-strait-trade-agreement/">我看服貿</a>
       </li>
     
   </ul>
