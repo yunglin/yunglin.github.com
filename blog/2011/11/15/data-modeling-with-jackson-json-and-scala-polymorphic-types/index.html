@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Data Modeling With Jackson Json and Scala - lazy val - 碎碎唸</title>
+  <title>Data Modeling With Jackson Json and Scala - Polymorphic Types - 碎碎唸</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個public volatile int bitmap$0;若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object &hellip;">
+  <meta name="description" content="關於 Jackson Json 對多型的支援，原開發者已經有一篇 blog 很清楚的解釋該怎麼做，因此，我只寫下在 scala 上面要注意的眉角。首先，我先寫下理想中，Jackson在Scala上該怎麼使用，在來談，為什麼不能這麼用@JsonTypeInfo(use = JsonTypeInfo &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-lazy-val">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -78,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">Data Modeling With Jackson Json and Scala - Lazy Val</h1>
+      <h1 class="entry-title">Data Modeling With Jackson Json and Scala - Polymorphic Types</h1>
     
     
       <p class="meta">
@@ -94,7 +94,7 @@
   
 
 
-<time datetime="2011-11-16T00:50:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+<time datetime="2011-11-15T08:21:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
         
       </p>
     
@@ -102,7 +102,7 @@
 
 
 <div class="entry-content"><div class='post'>
-Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個<br /><pre class="brush: java">public volatile int bitmap$0;</pre><br />若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object 中，所有的lazy val，都會仍是 null ，不會被初始化。<br /><br />這個問題，只有做好unit-testing可以避免，因為這個欄位是 public 的，所以不需要setter or constructor， Jackson 就可以直接把值設定進去，只用unit-test仔細檢查生成的，確定沒有預料之外的欄位被寫入到 json 中，才可以免去後來在 runtime 發生不可預料的問題。<br /><br />至於怎麼去除這欄位呢，只要在class上標上<code>@JsonIgnoreProperties({"bitmap$0"})</code>即可</div>
+關於 Jackson Json 對多型的支援，原開發者已經有一篇 <a href="http://www.cowtowncoder.com/blog/archives/2010/03/entry_372.html">blog</a> 很清楚的解釋該怎麼做，因此，我只寫下在 scala 上面要注意的眉角。<br /><br />首先，我先寫下理想中，Jackson在Scala上該怎麼使用，在來談，為什麼不能這麼用<br /><pre class="brush: scala">@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")<br />@JsonSubTypes(Array(<br />     new JsonSubTypes.Type(name = "flood", value = classOf[Flood]),<br />     new JsonSubTypes.Type(name = "mountainslide", value = classOf[MountainSlide])<br />)) <br />trait Disaster {}<br /><br />case class Flood @JsonCreator()(<br />    @BeanProperty @JsonProperty("event") event: String,<br />    @BeanProperty @JsonProperty("address") address: String<br />) extends Disaster<br /><br />case class MountainSlide @JsonCreator()(<br />    @BeanProperty @JsonProperty("event") event: String,<br />    @BeanProperty @JsonProperty("landmark") landmark: String<br />) extends Disaster<br /><br /></pre><br />在 scala 2.8.0 上面，我碰上的問題是<a href="https://issues.scala-lang.org/browse/SI-2764">不能在annotation內使用 java enum</a> 如： <code>use = JsonTypeInfo.Id.NAME</code> <br /><br />在 scala 2.9.1 上，上面的問題消失了，不過碰上另一個問題，當一個 annotation 上面有兩個 java enum，scala compiler 及 java compiler 都不會吐出錯誤，但是annotations從bytecode中消失了，<a href="https://issues.scala-lang.org/browse/SI-5165">SI-5165</a>中紀錄了這問題。<br /><br />不管怎樣，在現在這時間，若是你想用Jackson + Scala來處理多型，那麼，最頂層類別，一定要用Java來寫，才不會碰上上述兩個問題。</div>
 </div>
 
 
@@ -125,7 +125,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
   
 
 
-<time datetime="2011-11-16T00:50:00+08:00" pubdate data-updated="true">Nov 16<span>th</span>, 2011</time>
+<time datetime="2011-11-15T08:21:00-08:00" pubdate data-updated="true">Nov 15<span>th</span>, 2011</time>
       
 
 
@@ -133,7 +133,7 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-lazy-val/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-lazy-val/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -146,10 +146,10 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-polymorphic-types/" title="Previous Post: Data Modeling With Jackson Json and Scala - Polymorphic Types">&laquo; Data Modeling With Jackson Json and Scala - Polymorphic Types</a>
+        <a class="basic-alignment left" href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/" title="Previous Post: Data Modeling With Jackson Json and Scala">&laquo; Data Modeling With Jackson Json and Scala</a>
       
       
-        <a class="basic-alignment right" href="/blog/2011/11/16/data-modeling-with-jackson-json-and-scala-proguard/" title="Next Post: Data Modeling With Jackson Json and Scala - Proguard">Data Modeling With Jackson Json and Scala - Proguard &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val/" title="Next Post: Data Modeling With Jackson Json and Scala - lazy val">Data Modeling With Jackson Json and Scala - lazy val &raquo;</a>
       
     </p>
   </footer>
@@ -162,6 +162,10 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/11/26/energy-meter/">智慧電表</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/09/24/struggling-in-taiwan/">關帳戶</a>
@@ -177,10 +181,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
     
       <li class="post">
         <a href="/blog/2014/06/05/on-compensation-of-youth/">談台灣年輕人低薪問題</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/05/13/tdd/">TDD</a>
       </li>
     
   </ul>

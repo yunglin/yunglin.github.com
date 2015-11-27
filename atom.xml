@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2015-09-24T15:47:19+08:00</updated>
+  <updated>2015-11-26T22:01:18-08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -14,9 +14,24 @@
 
   
   <entry>
+    <title type="html"><![CDATA[智慧電表]]></title>
+    <link href="http://blog.yunglinho.com/blog/2015/11/26/energy-meter/"/>
+    <updated>2015-11-26T21:56:00-08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2015/11/26/energy-meter</id>
+    <content type="html"><![CDATA[<p>美國的電力公司真誇張，五年內進化到了讓使用者知道每小時的用電量，然後已經可以按照不同時段來收電費。</p>
+
+<p><img src="http://blog.yunglinho.com/images/2015-11-26/pge.png" alt="pg&amp;e" /></p>
+
+<p>反觀台灣，台電領了經濟部一堆補助，說是要在 2015 年完成安裝智慧電表到百萬戶，結果只有安裝一萬戶，然後就用成本不符不繼續執行計劃，反正國營企業，全民買單就好</p>
+
+<p>http://news.ltn.com.tw/news/focus/paper/880231</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[關帳戶]]></title>
     <link href="http://blog.yunglinho.com/blog/2015/09/24/struggling-in-taiwan/"/>
-    <updated>2015-09-24T15:40:00+08:00</updated>
+    <updated>2015-09-24T15:40:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2015/09/24/struggling-in-taiwan</id>
     <content type="html"><![CDATA[<p>啊，我的修養還是不夠，沒想到在台灣關個銀行戶頭，都要叫經理出來，還不能解決 Orz&#8230;.</p>
 
@@ -61,7 +76,7 @@
   <entry>
     <title type="html"><![CDATA[遺失停車代幣的解決方案]]></title>
     <link href="http://blog.yunglinho.com/blog/2015/06/01/parking-token-exception-handling/"/>
-    <updated>2015-06-01T00:40:00+08:00</updated>
+    <updated>2015-06-01T00:40:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2015/06/01/parking-token-exception-handling</id>
     <content type="html"><![CDATA[<p>停車把代幣給搞丟，結果意外的上了兩課。</p>
 
@@ -78,7 +93,7 @@
   <entry>
     <title type="html"><![CDATA[Type Inference 在實務上碰上的問題]]></title>
     <link href="http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review/"/>
-    <updated>2015-04-23T23:36:00+08:00</updated>
+    <updated>2015-04-23T23:36:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review</id>
     <content type="html"><![CDATA[<p>最近在讀 <strong>Implementing Domain-Driven Design</strong> 這本書，學習一下別人
 是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。</p>
@@ -170,7 +185,7 @@
   <entry>
     <title type="html"><![CDATA[談台灣年輕人低薪問題]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/06/05/on-compensation-of-youth/"/>
-    <updated>2014-06-05T01:35:00+08:00</updated>
+    <updated>2014-06-05T01:35:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/06/05/on-compensation-of-youth</id>
     <content type="html"><![CDATA[<p>台灣這幾年商界、政界、很喜歡對年輕人指指點點，說只要努力就可以脫離 22K ，年輕人收入不好的問題根源是在年輕人上，所以在這邊寫一下我的看法。</p>
 
@@ -187,7 +202,7 @@
   <entry>
     <title type="html"><![CDATA[TDD]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/05/13/tdd/"/>
-    <updated>2014-05-13T22:46:00+08:00</updated>
+    <updated>2014-05-13T22:46:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/05/13/tdd</id>
     <content type="html"><![CDATA[<p>總算是把 TDD 的戰文看完了，看完後我對 DHH 的評估仍是沒變。</p>
 
@@ -219,7 +234,7 @@
   <entry>
     <title type="html"><![CDATA[我看服貿]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/04/03/cross-strait-trade-agreement/"/>
-    <updated>2014-04-03T00:10:00+08:00</updated>
+    <updated>2014-04-03T00:10:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/04/03/cross-strait-trade-agreement</id>
     <content type="html"><![CDATA[<p>幫大家用自由經濟的角度，來看看新光三越在中國被坑殺的例子好了～</p>
 
@@ -245,7 +260,7 @@
   <entry>
     <title type="html"><![CDATA[典範]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/03/26/role-model/"/>
-    <updated>2014-03-26T21:31:00+08:00</updated>
+    <updated>2014-03-26T21:31:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/03/26/role-model</id>
     <content type="html"><![CDATA[<p>這篇寫的真好，在國外渡過我二十歲的歲月，三十歲回到台灣來，發覺，台灣人最缺的就是一個典範跟一個夢想。</p>
 
@@ -371,7 +386,7 @@
   <entry>
     <title type="html"><![CDATA[從立法院長王金平談遵守法定程序]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/03/22/wang-jin-pyng/"/>
-    <updated>2014-03-22T23:02:00+08:00</updated>
+    <updated>2014-03-22T23:02:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/03/22/wang-jin-pyng</id>
     <content type="html"><![CDATA[<h1>紙牌屋</h1>
 
@@ -425,7 +440,7 @@
   <entry>
     <title type="html"><![CDATA[消基會抽查預付卡100%違規設使用期限，NCC：將要求業者改善]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/03/15/prepaid-card-lifetime-limit/"/>
-    <updated>2014-03-15T11:47:00+08:00</updated>
+    <updated>2014-03-15T11:47:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/03/15/prepaid-card-lifetime-limit</id>
     <content type="html"><![CDATA[<p>這是鬧劇嗎？兩邊都是笑話。</p>
 
@@ -463,7 +478,7 @@
   <entry>
     <title type="html"><![CDATA[從壓力測試回想到一些老故事]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/02/19/on-load-testing/"/>
-    <updated>2014-02-19T00:55:00+08:00</updated>
+    <updated>2014-02-19T00:55:00-08:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/02/19/on-load-testing</id>
     <content type="html"><![CDATA[<p>最近壓力測試因為 <a href="http://www.cna.com.tw/news/aipl/201402180446-1.aspx">戶政系統</a> 的原因，上了幾天的新聞，講到壓力測試，就想到我這輩子職場上的一個恥辱，把一個產品搞倒的紀錄。</p>
 
@@ -484,7 +499,7 @@
   <entry>
     <title type="html"><![CDATA[Mongodb vs MySQL/RDBMS]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/02/12/mongodb-mysql/"/>
-    <updated>2014-02-12T16:24:00+08:00</updated>
+    <updated>2014-02-12T16:24:00-08:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/02/12/mongodb-mysql</id>
     <content type="html"><![CDATA[<p>許多人從 RDBMS 跳到 NoSQL 的第一站都是 MongoDB ，所以這一篇，就是特別寫來解釋，為什麼很多人選用 MongoDB ，以及解釋你為什麼不該用 MongoDB 來換掉 RDBMS 。</p>
 
@@ -621,7 +636,7 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
   <entry>
     <title type="html"><![CDATA[Mongodb - Schemaless]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/02/12/mongodb-schemaless/"/>
-    <updated>2014-02-12T15:08:00+08:00</updated>
+    <updated>2014-02-12T15:08:00-08:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/02/12/mongodb-schemaless</id>
     <content type="html"><![CDATA[<p>我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。</p>
 
@@ -666,7 +681,7 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
   <entry>
     <title type="html"><![CDATA[MongoDB - Sharding]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key/"/>
-    <updated>2014-02-12T14:27:00+08:00</updated>
+    <updated>2014-02-12T14:27:00-08:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key</id>
     <content type="html"><![CDATA[<p><a class="reference external" href="http://docs.mongodb.org/manual/tutorial/choose-a-shard-key/">Sharding</a> 是一個我非常討厭 MongoDB 的地方，在多台 DB 的解決方案中，免不了要用一個方式來決定那個 object 該放在那台機器上，一個解決方式就是用某個欄位來當 shard key 。</p>
 <p>在 MongoDB 中，這個 Shard Key 一決定後就不能改了，然後 MongoDB 會幫你把 object 按 shard key 的值域，平均分配在 n 台機器上。</p>
@@ -683,7 +698,7 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
   <entry>
     <title type="html"><![CDATA[QNAP Sucks]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/01/26/qnap-sucks/"/>
-    <updated>2014-01-26T23:08:00+08:00</updated>
+    <updated>2014-01-26T23:08:00-08:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/01/26/qnap-sucks</id>
     <content type="html"><![CDATA[<p>是我太多年沒裝機、還是這年頭的機構設計師都是天才？高高興興的把新買的 QNAP TS-212P 打開來，嗯&#8230; 好樣的，竟然沒有說明書。</p>
 <p>好吧，就自己硬幹了，開始裝第一顆硬碟，右側索好兩顆螺絲後，換鎖左側，好樣的，孔位對不上！那就鎖一側好了。</p>
@@ -707,7 +722,7 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
   <entry>
     <title type="html"><![CDATA[德國人為什麼強大]]></title>
     <link href="http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german/"/>
-    <updated>2014-01-16T14:17:00+08:00</updated>
+    <updated>2014-01-16T14:17:00-08:00</updated>
     <id>http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german</id>
     <content type="html"><![CDATA[<iframe width="420" height="315" src="http://blog.yunglinho.com//www.youtube.com/embed/9bTKSin4JN4" frameborder="0" allowfullscreen></iframe><p>德國人為什麼強大，沒空看影片的，這邊做個簡述</p>
 <ol class="arabic simple">
@@ -727,7 +742,7 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
   <entry>
     <title type="html"><![CDATA[project-manager-and-product-manager]]></title>
     <link href="http://blog.yunglinho.com/blog/2013/12/15/project-manager-and-product-manager/"/>
-    <updated>2013-12-15T19:39:00+08:00</updated>
+    <updated>2013-12-15T19:39:00-08:00</updated>
     <id>http://blog.yunglinho.com/blog/2013/12/15/project-manager-and-product-manager</id>
     <content type="html"><![CDATA[
 ]]></content>
@@ -736,7 +751,7 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
   <entry>
     <title type="html"><![CDATA[矽谷為什麼是矽谷 - 談中小企業放款]]></title>
     <link href="http://blog.yunglinho.com/blog/2013/12/12/small-business-banking-in-silicon-valley/"/>
-    <updated>2013-12-12T17:53:00+08:00</updated>
+    <updated>2013-12-12T17:53:00-08:00</updated>
     <id>http://blog.yunglinho.com/blog/2013/12/12/small-business-banking-in-silicon-valley</id>
     <content type="html"><![CDATA[<p>自從加入新工作後，對新創公司的體會又多了一些，由其是在行銷找案子上，發覺台美兩地有很大的不同。</p>
 <dl class="docutils">
@@ -781,7 +796,7 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
   <entry>
     <title type="html"><![CDATA[經 ARTC 認證之兒童車用座椅清單]]></title>
     <link href="http://blog.yunglinho.com/blog/2013/10/28/artc-certified-car-seat/"/>
-    <updated>2013-10-28T00:39:00+08:00</updated>
+    <updated>2013-10-28T00:39:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2013/10/28/artc-certified-car-seat</id>
     <content type="html"><![CDATA[<ul class="simple">
 <li>資料來源：<a class="reference external" href="http://m.artc.org.tw/chinese/03_service/03_search.aspx?nPage=1&amp;pid=2&amp;skeyword=&amp;skeyword2=&amp;skeyword3=">財團法人車輛研究測試中心</a></li>
@@ -1058,7 +1073,7 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
   <entry>
     <title type="html"><![CDATA[我們的政府很有錢啊]]></title>
     <link href="http://blog.yunglinho.com/blog/2013/10/26/island-of-greed/"/>
-    <updated>2013-10-26T17:13:00+08:00</updated>
+    <updated>2013-10-26T17:13:00-07:00</updated>
     <id>http://blog.yunglinho.com/blog/2013/10/26/island-of-greed</id>
     <content type="html"><![CDATA[<iframe width="420" height="315" src="http://blog.yunglinho.com//www.youtube.com/embed/f6cfO7rAEeM" frameborder="0" allowfullscreen></iframe><p>我們的政府真的很有錢，今年擔任我社區的管委會委員，比較常聽到大樓跟市政府打交道的細節，才知道政府有多浪費。</p>
 <p>三年前市政府施工，不知道為什麼，會在我們社區外的電線杆間，遷了一條明線的電線，經過我們的圍牆，三年來有住戶反應要移除，找市議員關切都沒用，都說排修中。</p>
@@ -1069,24 +1084,6 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 <p>然候再幾個月，因為排污問題，我們又要再開挖一遍 Orz&#8230;</p>
 <p>我們的政府真的很有錢啊～～～</p>
 <p>ref: <a class="reference external" href="http://tw.news.yahoo.com/%E5%8F%B0%E5%8C%97%E5%B8%82%E8%B7%AF%E5%B9%B3%E5%B0%88%E6%A1%88%E7%A0%B4%E5%8A%9F-%E8%BF%AA%E5%8C%96%E8%A1%97%E4%B8%89%E5%B9%B4%E6%8C%96188%E6%AC%A1-195527923.html">台北市路平專案破功　迪化街三年挖188次</a></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[談政府干預怎麼摧毀了台灣的軟體業]]></title>
-    <link href="http://blog.yunglinho.com/blog/2013/10/19/government-intervention/"/>
-    <updated>2013-10-19T18:27:00+08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2013/10/19/government-intervention</id>
-    <content type="html"><![CDATA[<p>看到今天大家又再吵無薪實習，把前一陣子在 FB 上寫的貼過來</p>
-<div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-post" data-href="https://www.facebook.com/photo.php?fbid=207806502725706&amp;set=a.123958594443831.22510.123957401110617&amp;type=1" data-width="550"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/photo.php?fbid=207806502725706&amp;set=a.123958594443831.22510.123957401110617&amp;type=1">Post</a> by <a href="https://www.facebook.com/ilove22K">揭露22K</a>.</div></div><div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-<div class="fb-post" data-href="https://www.facebook.com/shihjieh.hsu/posts/2987682786688" data-width="550"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/shihjieh.hsu/posts/2987682786688">Post</a> by <a href="https://www.facebook.com/shihjieh.hsu">David Hsu</a>.</div></div><p>我舉個台灣軟體業被政府消滅的例子，來讓各位體會到，政府幫企業找人，是件多麼可怕的事。</p>
-<p>台灣20年前，台灣有軟體產業，有自製中文系統、排板軟體、繪圖軟體、資料庫等，但是在12,13年前，被國防役制度，把整個軟體產業給摧毀了。</p>
-<p>研發替代役，是下一個將摧毀台灣新興產業的政策，朋友問，台灣startup請新鮮人要多少薪水？我直接丟核彈，講：不用想了，因為研發替代役政策，小公司跟本不要想說招的到有能力的新鮮人，因為，有能力的，都去大公司上班當替代役，不能申請替代役的小公司，跟本不用去想招社會新鮮人這個問題。</p>
-<p>台灣最近一年研發替代役的名額是 7500 人，約是理工科大學畢業生的一成(目前是碩士才能申請替代役但是明年是大學就可以了)，差不多就是有即戰力的人數。除非是大公司的篩選機制出了漏網之魚，或者是因個人生涯規劃不申請，要不然，大多數的即戰力，就這樣被政府，趕鴨子似的，送給了大企業</p>
-<p>而這些大企業是怎麼使用這些人材的呢？既然能把人材綁著四年，年年都有新人進來，所以台灣的產業都把案子弄的很專案導向，能夠在短期內做完就好，沒有人會去想長期性的投資。反正有簡單的路走，為什麼要捨易求難呢？</p>
-<p>所以，各家公司就是一堆新人在走，反而不見公司投資在長期的流程改善及工程方法論當中。資深的員工，在台商薪水也上不來，只能逃到外商去。</p>
 
 ]]></content>
   </entry>
