@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2015-11-26T22:04:08-08:00</updated>
+  <updated>2015-12-12T00:27:32-08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[重回美國心得 - 金融業]]></title>
+    <link href="http://blog.yunglinho.com/blog/2015/12/12/financial-service/"/>
+    <updated>2015-12-12T00:24:00-08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2015/12/12/financial-service</id>
+    <content type="html"><![CDATA[<p>離開美國五年再回來，金融業變化還真大啊。</p>
+
+<p>GE Capital 的零售銀行被分割出來，變成 Synchrony Bank ， GE 要把主力放在投資銀行的事業上。</p>
+
+<p>Intuit 要把 30 年前開發，到目前都還是業界獨佔的 Quicken 賣掉，不再繼續開發，要把主力放在中小企業用的 Quickbook 跟 SaaS 的 Mint.com 上面。</p>
+
+<p>FinTech 開了許多家，Personal Capital, Betterment WealthFront, Acorns ，雖然說整體的產品仍是比不上直接買 Vanguard Target Retirement Fund 的投資報酬率高，但是方便及充滿資訊的 UI ，讓許多年輕一代逃過收取 2% 手續費的傳統理專的魔掌。</p>
+
+<p>兩年前就有聽過這些東西，不過直到回到美國，把自己的帳戶再調整一下，才發現變化還真大。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[智慧電表]]></title>
@@ -1066,24 +1083,6 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 </tr>
 </tbody>
 </table>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[我們的政府很有錢啊]]></title>
-    <link href="http://blog.yunglinho.com/blog/2013/10/26/island-of-greed/"/>
-    <updated>2013-10-26T17:13:00-07:00</updated>
-    <id>http://blog.yunglinho.com/blog/2013/10/26/island-of-greed</id>
-    <content type="html"><![CDATA[<iframe width="420" height="315" src="http://blog.yunglinho.com//www.youtube.com/embed/f6cfO7rAEeM" frameborder="0" allowfullscreen></iframe><p>我們的政府真的很有錢，今年擔任我社區的管委會委員，比較常聽到大樓跟市政府打交道的細節，才知道政府有多浪費。</p>
-<p>三年前市政府施工，不知道為什麼，會在我們社區外的電線杆間，遷了一條明線的電線，經過我們的圍牆，三年來有住戶反應要移除，找市議員關切都沒用，都說排修中。</p>
-<p>後來管委會發函給市政府，如果在XX日前，市政府不遷走，我們就自己剪線剪掉，市政府才來函說，這條線剪不得，一剪我們幾條街的路燈就不會亮。</p>
-<p>故事進入正題；四月時總算開始排隊準備整修，當時管委會想說，六月時，我們這邊要開始路平專案，路平專案後，三年不能挖馬路，不知道排修的事情會不會拖到六月後，變成要再等三年才可以把電線遷走。</p>
-<p>沒想到，原來路平專案是假的，這個月，路平專案做完四個月，市政府就來把我們門口的路，兩個禮拜，整條開挖兩次 Orz&#8230;</p>
-<p>而且，在六月的路平專案後，九月間隔壁條路也開挖過，有挖到同一個垂直的道路上，所以，一條路就一個月間挖了三次 Orz&#8230;</p>
-<p>然候再幾個月，因為排污問題，我們又要再開挖一遍 Orz&#8230;</p>
-<p>我們的政府真的很有錢啊～～～</p>
-<p>ref: <a class="reference external" href="http://tw.news.yahoo.com/%E5%8F%B0%E5%8C%97%E5%B8%82%E8%B7%AF%E5%B9%B3%E5%B0%88%E6%A1%88%E7%A0%B4%E5%8A%9F-%E8%BF%AA%E5%8C%96%E8%A1%97%E4%B8%89%E5%B9%B4%E6%8C%96188%E6%AC%A1-195527923.html">台北市路平專案破功　迪化街三年挖188次</a></p>
 
 ]]></content>
   </entry>

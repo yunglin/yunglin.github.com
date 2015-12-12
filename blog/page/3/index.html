@@ -9,8 +9,9 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="看到今天大家又再吵無薪實習，把前一陣子在 FB 上寫的貼過來 Post by 揭露22K. Post by David Hsu.我舉個台灣軟體業被政府消滅的例子，來讓各位體會到，政府幫企業找人，是件多麼可怕的事。
-台灣20年前，台灣有軟體產業，有自製中文系統、排板軟體、繪圖軟體、資料庫等， &hellip;">
+  <meta name="description" content="我們的政府真的很有錢，今年擔任我社區的管委會委員，比較常聽到大樓跟市政府打交道的細節，才知道政府有多浪費。
+三年前市政府施工，不知道為什麼，會在我們社區外的電線杆間，遷了一條明線的電線，經過我們的圍牆，三年來有住戶反應要移除，找市議員關切都沒用，都說排修中。
+後來管委會發函給市政府，如果在XX日前 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +77,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/26/island-of-greed/">我們的政府很有錢啊</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-26T17:13:00-07:00" pubdate data-updated="true">Oct 26<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><iframe width="420" height="315" src="//www.youtube.com/embed/f6cfO7rAEeM" frameborder="0" allowfullscreen></iframe><p>我們的政府真的很有錢，今年擔任我社區的管委會委員，比較常聽到大樓跟市政府打交道的細節，才知道政府有多浪費。</p>
+<p>三年前市政府施工，不知道為什麼，會在我們社區外的電線杆間，遷了一條明線的電線，經過我們的圍牆，三年來有住戶反應要移除，找市議員關切都沒用，都說排修中。</p>
+<p>後來管委會發函給市政府，如果在XX日前，市政府不遷走，我們就自己剪線剪掉，市政府才來函說，這條線剪不得，一剪我們幾條街的路燈就不會亮。</p>
+<p>故事進入正題；四月時總算開始排隊準備整修，當時管委會想說，六月時，我們這邊要開始路平專案，路平專案後，三年不能挖馬路，不知道排修的事情會不會拖到六月後，變成要再等三年才可以把電線遷走。</p>
+<p>沒想到，原來路平專案是假的，這個月，路平專案做完四個月，市政府就來把我們門口的路，兩個禮拜，整條開挖兩次 Orz&#8230;</p>
+<p>而且，在六月的路平專案後，九月間隔壁條路也開挖過，有挖到同一個垂直的道路上，所以，一條路就一個月間挖了三次 Orz&#8230;</p>
+<p>然候再幾個月，因為排污問題，我們又要再開挖一遍 Orz&#8230;</p>
+<p>我們的政府真的很有錢啊～～～</p>
+<p>ref: <a class="reference external" href="http://tw.news.yahoo.com/%E5%8F%B0%E5%8C%97%E5%B8%82%E8%B7%AF%E5%B9%B3%E5%B0%88%E6%A1%88%E7%A0%B4%E5%8A%9F-%E8%BF%AA%E5%8C%96%E8%A1%97%E4%B8%89%E5%B9%B4%E6%8C%96188%E6%AC%A1-195527923.html">台北市路平專案破功　迪化街三年挖188次</a></p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1157,77 +1203,6 @@ broadband for all Kiwi's
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/03/move-erp-to-cloud/">中小企業ERP系統上雲端？</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-03T17:11:00-08:00" pubdate data-updated="true">Feb 3<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><pre class="literal-block">
-※ 引述《NightWind (gin and tonic)》之銘言：
-: 我們是一家中小企業
-: 大約三年前才把古早的DOS系統
-: 換裝成鼎新的ERP
-: 現在當初買的伺服器主機保固也要到了
-: 老闆突發奇想把ERP系統裝在中華HiCloud那樣的雲端虛擬主機上
-: 節省定期維護主機與擔心主機突然掛掉的費用
-: 請問真的有人會這樣做的嗎？
-: 又如果有的話，台北地區有沒有規劃的廠商？
-</pre>
-<p>HiCloud 沒用過，所以用 <a class="reference external" href="http://aws.amazon.com">AWS</a> 的例子來解釋要這麼做會碰上那些例子。</p>
-<p>第一個問題是 VM 的可靠度是比你自己買伺服器等級的機器還來的低的， AWS EC2 的
-合約是說 99.95% Available ，但是這不包括你 VM 被 AWS會有隨機關掉的機會。當
-被關掉後，你是要自己手動或自動重啟才有 99.95%</p>
-<p>第二個問題是，台灣多數的 ERP是2-tier的架構而非 3 tier 的，若是用 2-tier 的
-軟體，使用者端要從本機連到 AWS去，一個來回的時間從 &lt;10ms跳到 100ms 以上，如
-果程式寫的不好，本來一個流程的轉換要跑兩個 SQL command，原來是 (10ms*2 + SQL execution time) * 2，
-還有機會是小於 100ms看起來很即時就可以反應，一搬到雲端，時間就跳昇到 100ms * 4，變的超級鈍。</p>
-<p>再來，放到 AWS 去，還要考慮台美專線速度的問題，過去幾年來，台灣對外的海纜，幾乎
-每兩年都會斷線超過一天。所以放在雲端你的架構能提供的，就只剩不到 99.5%</p>
-<p>在 EC2 上，如果要用 EBS讓 VM 當機後資料還在的話， EBS的效能是有口皆呸的
-，但是如果不用 EBS，那 VM 一死，上面的資料又全消失了，變成你自己要做 Data Replication</p>
-<p>最後，如果要用台灣的雲端，不用要 HiCloud，比較建議的環境會是開發資源及支援較多
-的 <a class="reference external" href="http://www.microsoft.com/taiwan/windowsazure/">MS Azure</a> 或是使用 <a class="reference external" href="http://joyent.com/">joynet</a> 技術的 <a class="reference external" href="http://micloud.tw/">MiCloud</a> 會比較妥當。</p>
-<p>縱觀來講，搬到雲端有其它新的挑戰要處理，第一個看軟體要先 3tier 化，再來是要
-做DB online replication 保護資料，最後，是公司對外的專線要能跟的上資料量。</p>
-<p>如果前述問題都能解決的話，貴公司得到的會是</p>
-<ol class="arabic simple">
-<li>更短的錯誤迴復時間：伺服器一死，跟廠商搬機器來迴復也要一個工作天以上，用雲端可以降到一兩小時</li>
-<li>更敏捷的硬體效能：如果硬體效能不夠，使用雲端系統，是直接選更高等級的VM重開，當下就可以昇級。
-不用等採買硬體所需的數星期到數個月的時間，也不必擔心折舊週期還沒到就又要昇級。</li>
-</ol>
-<p>在是否該選用雲端方案的話，就看你們目前的 ERP是否是 3-tier 的，另外就是找顧問來來編
-寫相關的工具及作業流程。</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/4/">&larr; Older</a>
@@ -1245,6 +1220,10 @@ broadband for all Kiwi's
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/12/12/financial-service/">重回美國心得 - 金融業</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2015/11/26/energy-meter/">智慧電表</a>
       </li>
     
@@ -1258,10 +1237,6 @@ broadband for all Kiwi's
     
       <li class="post">
         <a href="/blog/2015/04/23/type-inference-and-code-review/">Type Inference 在實務上碰上的問題</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2014/06/05/on-compensation-of-youth/">談台灣年輕人低薪問題</a>
       </li>
     
   </ul>
