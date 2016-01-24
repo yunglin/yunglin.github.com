@@ -4,7 +4,7 @@
   <title><![CDATA[碎碎唸]]></title>
   <link href="http://blog.yunglinho.com/atom.xml" rel="self"/>
   <link href="http://blog.yunglinho.com/"/>
-  <updated>2016-01-16T23:48:39-08:00</updated>
+  <updated>2016-01-23T20:35:23-08:00</updated>
   <id>http://blog.yunglinho.com/</id>
   <author>
     <name><![CDATA[]]></name>
@@ -12,6 +12,33 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何教出一個雙語的小孩]]></title>
+    <link href="http://blog.yunglinho.com/blog/2016/01/23/raising-a-bilingual-child/"/>
+    <updated>2016-01-23T20:33:00-08:00</updated>
+    <id>http://blog.yunglinho.com/blog/2016/01/23/raising-a-bilingual-child</id>
+    <content type="html"><![CDATA[<p>推薦一本書 Raising a Bilingual Child ，相對於訪間口耳相傳的八卦，本書是由學者寫成，引用美國數個研究單位的研究成果，來告訴大家如何教養出雙語的兒童。</p>
+
+<p>書中主要引用的研究資料是來自佛羅里達，因為佛州有眾多的西語系移民，家庭的社經環境各種都有，所以在統計上去掉一些其它因素的造成的誤差。</p>
+
+<p>我讀到目前讀到比較有用的有幾點：</p>
+
+<p>五歲以下的移民，在上 K5 前，若是只用母語，並不會影響未來的英語學習，反過來，若是在上 K5 前就開始學習雙語，只有 20% 的小孩未來還能學好母語，某一天就會轉成用英語為主。</p>
+
+<p>母語的學習，並不會影響到英語的學習成果，既使是五歲才開始學習英文，到十一歲後，就在統計上看不出來英語學習的差易。</p>
+
+<p>如果要學習好母語，除了日常對話外，還是要增加字彙的種類，雙語學校(immersion school)的教學就很有幫助。</p>
+
+<p>以高中及大學 GPA 來看，雙語的學生表現跟英語的學生一樣好。但是很不幸的是， SAT 的測驗中，雙語的學生會比英語的學生低 50 分，這是未來 SAT 要努力的方向，為什麼測驗沒有鑑別能力。</p>
+
+<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="http://blog.yunglinho.com//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=tf_til&ad_type=product_link&tracking_id=murmur-20&marketplace=amazon&region=US&placement=1400023343&asins=1400023343&linkId=BKBCZ5UKBYTVKERJ&show_border=true&link_opens_in_new_window=true">
+</iframe>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[矽谷科技業的面試規則]]></title>
@@ -789,51 +816,6 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
     <updated>2013-12-15T19:39:00-08:00</updated>
     <id>http://blog.yunglinho.com/blog/2013/12/15/project-manager-and-product-manager</id>
     <content type="html"><![CDATA[
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[矽谷為什麼是矽谷 - 談中小企業放款]]></title>
-    <link href="http://blog.yunglinho.com/blog/2013/12/12/small-business-banking-in-silicon-valley/"/>
-    <updated>2013-12-12T17:53:00-08:00</updated>
-    <id>http://blog.yunglinho.com/blog/2013/12/12/small-business-banking-in-silicon-valley</id>
-    <content type="html"><![CDATA[<p>自從加入新工作後，對新創公司的體會又多了一些，由其是在行銷找案子上，發覺台美兩地有很大的不同。</p>
-<dl class="docutils">
-<dt>在這邊，我覺得很大的一塊差異就是在資本市場及資訊流這一塊，銀行的業務有六大塊，除了大家熟悉的幾樣 CB IB 外，有</dt>
-<dd><ul class="first last simple">
-<li>Retail / Commercial Banking 做一般存放款、房貸業務的</li>
-<li>Investment Banking 協助大型公司賣公債或是 IPO 的業務</li>
-<li>Merchant banks  銀行的自營商部門</li>
-<li>Private Banking 資產管理</li>
-<li>Private Equity 銀行自己介入對中小企業經營的單位</li>
-<li>Small Business Banking 對中小企業從放款的單位，也是今天要講的重點。</li>
-</ul>
-</dd>
-</dl>
-<p>我工作的公司算是 A 輪之前的公司，只有老闆及一些天使投資人投資，資金就放在我們的銀行當中，同時，我們的銀行同時也是我們的投資人之一。</p>
-<p>我們許多的合約，是透過我們的銀行拿到的，甚至一些併購案，也是我們銀行仲介來的；我們合作的中小企銀有多放款的對向，為了確保債權回收，所以會當做資訊流通的中介媒介，幫忙介紹一些潛在的客戶給我們。</p>
-<p>而我們有幾個併購案，其實是其它跟我們銀行貸款的公司，在撐不下去倒閉時，銀行為了回收債權，所以開始兜售公司資產而找上我們的，銀行把公司的數位資產、商務合約、及人力資源拿來兜售。就這樣，我們用幾成的價錢買下了幾張商務合約。</p>
-<p>有趣的是，往往自己的商務合約不夠多，但是多收幾間公司簽下來的合約，湊一湊，反而就可以賺錢了 :)</p>
-<div class="section" id="id1">
-<h2>信用貸款</h2>
-<p>我曾問過台灣的銀行的中小企業企業處，有沒有在經營「企業資訊交流」這一塊，答案是沒有；我猜想原因是台灣這邊銀行不流行信用貸款的因素。</p>
-<p>在國外，新創公司是可以靠跟銀行長期的合作，慢慢的累積信用，拿到不少的信用額度，讓公司可以做短期的資金調度，像我前公司就跟銀行有「六百萬美金」的額度可以調動。</p>
-<p>對「信用額度」不熟悉的，可以假設你是一間餐廳的老闆，平時就是早上買東西進來晚上賣，賺點微薄的利潤；但是今天碰上過年，休市五天，要增加庫存但沒資金怎麼辦；這時就是可以靠過去跟銀行的往來，靠著信用就跟銀行借資金來週轉。</p>
-<p>當然這信用額度不是你可以一次拿太多來用的，若是你一次提領太多，銀行就會把額度收減。</p>
-<p>由於這些貸款是信用貸款，所以若是公司倒閉，公司的股東老闆是不用負責承擔的 \(O_O)/~~ 但是為了下次再跟銀行借到錢，公司的老闆在公司倒閉時，也會收尾收的漂亮的；像是幫買下公司資產的公司再工作個半年，讓資產的轉移順利進行。</p>
-<p>在台灣就沒有這一回事了，中小企業放款，還是多是要求企業的經營者，用個人資產（房子）做抵押，因為公司的債務受到了保障，自然就沒有放那麼多心力在仲介客戶業務、確保債權能回收之上。</p>
-<p>另外台灣多是製造業，只要有機台就可以生產可以搶客戶，商務合約不值錢，所以不能當成公司資產來看。</p>
-<div class="section" id="id2">
-<h3>題外話</h3>
-<p>我猜想美國能有這麼多信用貸款而台灣沒有的一個原因，是因為台灣不是國家，因為台灣無法跟外國遷引渡條約，要是有人用信用貸款弄了幾千萬台幣，人卻跑到中國或美國去，那銀行就無法回收債權了，因此都會要求要用不動產設定抵押</p>
-</div>
-</div>
-<div class="section" id="id3">
-<h2>結語</h2>
-<p>矽谷就這樣，不只是技術流通的快，商務資訊流通的速度也快，因此，才造就了創業的土壤。</p>
-<p>不知道台灣這麼多銀行，那天才會有一家跳下來開始玩「資訊服務產業放款」的這一塊，除了資金外，也做資訊傳播的中間人。</p>
-</div>
-
 ]]></content>
   </entry>
   
