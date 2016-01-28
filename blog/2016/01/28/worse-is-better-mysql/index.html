@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>關於北市府開放資料授權方式的一些想法 - 碎碎唸</title>
+  <title>MySQL 劣即是夯 - 碎碎唸</title>
   <meta name="author" content="">
 
   
-  <meta name="description" content="在某些人士運作之下，中華民國政府及台北市政府，示範性值的，開放了一些資料出來，開放出來的資料及品質，大家自己去看就好，我懶得去說了。我比較有意見的是，這些開放資料的授權方式。目前北市府網站已故障，找不到合約。跟據我的印象，第二條是寫『資料的使用必須要就有公益性的部份，提供免費版』&nbsp; &hellip;">
+  <meta name="description" content="MySQL transactional lock 在 throughout 上 遠遠不及實作 mvcc 的 PostgrSQL，但在使用上，卻是大大的勝過 pg 原因是因為，在 pg 在寫程式裡，要處理很多因為碰撞產生的 rollback ，即使 db 會幫你處理，但是如果有外部系統呢？ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/2011/09/04">
+  <link rel="canonical" href="http://blog.yunglinho.com/blog/2016/01/28/worse-is-better-mysql">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   
@@ -78,7 +78,7 @@
   
   <header>
     
-      <h1 class="entry-title">關於北市府開放資料授權方式的一些想法</h1>
+      <h1 class="entry-title">MySQL 劣即是夯</h1>
     
     
       <p class="meta">
@@ -94,15 +94,20 @@
   
 
 
-<time datetime="2011-09-04T23:05:00-07:00" pubdate data-updated="true">Sep 4<span>th</span>, 2011</time>
+<time datetime="2016-01-28T00:42:00-08:00" pubdate data-updated="true">Jan 28<span>th</span>, 2016</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><div class='post'>
-在某些人士運作之下，中華民國政府及台北市政府，示範性值的，開放了一些資料出來，開放出來的資料及品質，大家自己去看就好，我懶得去說了。<br /><br />我比較有意見的是，這些開放資料的授權方式。目前北市府網站已故障，找不到合約。跟據我的印象，第二條是寫『資料的使用必須要就有公益性的部份，提供免費版』&nbsp;很明顯，這個條約是個蠢左派公務員定的，當大家都是喝空氣過活當神仙。<br /><br />公益性，是個很好打嘴砲的東西，但是，什麼叫公益性質呢？簡單說來就是，『當一個人把自己的勞力或財產，無償供應其它人使用』就變成有公益性；例如，我無償打掃公司外路口的走道，叫有公益性，我無償把土地借出來讓大家開會，也叫有公益性，問題在於，若是那一天我開始收費，同一個行為就變成無公益性了。<br /><br />不知你有看出來這授權問題了嗎？只要有人跳出來說，某程式很多人用不應該收費，那開發商馬上要變成做白工，這種授權方式，會有認真的開發商想跳下去嗎？當然是沒有。<br /><br />所以我說，這授權方式是蠢左派定的，再者，公益性跟營利並不起衝突阿；若是有衝突，那，負責收集這些資料的公務員，可不可以也不支薪來做事啊。</div>
+<div class="entry-content"><p>MySQL transactional lock 在 throughout 上 遠遠不及實作 mvcc 的 PostgrSQL，但在使用上，卻是大大的勝過 pg</p>
+
+<p>原因是因為，在 pg 在寫程式裡，要處理很多因為碰撞產生的 rollback ，即使 db 會幫你處理，但是如果有外部系統呢？是要去招回還是要用 2 phase commit 呢？還有在 UI 上是要讓使用者馬上再試一次，還是請他五分鐘後再試一次了？</p>
+
+<p>所以最簡單的實作就是乾脆把整個 table 鎖住，一次一個人寫入，這樣就不用做例外處理了。</p>
+
+<p>科科科 <a href="https://gist.github.com/audreyt/3985324#%E5%8A%A3%E5%8D%B3%E6%98%AF%E5%A4%AF">劣即是夯</a> 啊</p>
 </div>
 
 
@@ -125,7 +130,7 @@
   
 
 
-<time datetime="2011-09-04T23:05:00-07:00" pubdate data-updated="true">Sep 4<span>th</span>, 2011</time>
+<time datetime="2016-01-28T00:42:00-08:00" pubdate data-updated="true">Jan 28<span>th</span>, 2016</time>
       
 
 
@@ -133,7 +138,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2011/09/04/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2011/09/04/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://blog.yunglinho.com/blog/2016/01/28/worse-is-better-mysql/" data-via="yunglinho" data-counturl="http://blog.yunglinho.com/blog/2016/01/28/worse-is-better-mysql/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -146,14 +151,18 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2011/09/01/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/" title="Previous Post: Having a good build system is like living in the heaven, and having a bad.....">&laquo; Having a good build system is like living in the heaven, and having a bad.....</a>
+        <a class="basic-alignment left" href="/blog/2016/01/23/raising-a-bilingual-child/" title="Previous Post: 如何教出一個雙語的小孩">&laquo; 如何教出一個雙語的小孩</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2011/09/06/-mac-osx/" title="Next Post: 如何在Mac OSX上，讀取台北市政府放出來的地圖資料">如何在Mac OSX上，讀取台北市政府放出來的地圖資料 &raquo;</a>
       
     </p>
   </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -228,6 +237,22 @@ alt="tumblr stats" style="border:none;"></a></section>
 
 </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = 'yunglin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.yunglinho.com/blog/2016/01/28/worse-is-better-mysql/';
+        var disqus_url = 'http://blog.yunglinho.com/blog/2016/01/28/worse-is-better-mysql/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 
