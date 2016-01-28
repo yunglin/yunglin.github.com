@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="MySQL transactional lock 在 throughout 上 遠遠不及實作 mvcc 的 PostgrSQL，但在使用上，卻是大大的勝過 pg 原因是因為，在 pg 在寫程式裡，要處理很多因為碰撞產生的 rollback ，即使 db 會幫你處理，但是如果有外部系統呢？ &hellip;">
+  <meta name="description" content="推薦一本書 Raising a Bilingual Child ，相對於訪間口耳相傳的八卦，本書是由學者寫成，引用美國數個研究單位的研究成果，來告訴大家如何教養出雙語的兒童。 書中主要引用的研究資料是來自佛羅里達，因為佛州有眾多的西語系移民，家庭的社經環境各種都有， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,48 +75,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/01/28/worse-is-better-mysql/">MySQL 劣即是夯</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-01-28T00:42:00-08:00" pubdate data-updated="true">Jan 28<span>th</span>, 2016</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>MySQL transactional lock 在 throughout 上 遠遠不及實作 mvcc 的 PostgrSQL，但在使用上，卻是大大的勝過 pg</p>
-
-<p>原因是因為，在 pg 在寫程式裡，要處理很多因為碰撞產生的 rollback ，即使 db 會幫你處理，但是如果有外部系統呢？是要去招回還是要用 2 phase commit 呢？還有在 UI 上是要讓使用者馬上再試一次，還是請他五分鐘後再試一次了？</p>
-
-<p>所以最簡單的實作就是乾脆把整個 table 鎖住，一次一個人寫入，這樣就不用做例外處理了。</p>
-
-<p>科科科 <a href="https://gist.github.com/audreyt/3985324#%E5%8A%A3%E5%8D%B3%E6%98%AF%E5%A4%AF">劣即是夯</a> 啊</p>
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -215,6 +173,48 @@
 <p>至於說招人一定要按照職位敘述來評分，我猜想是因為 H1B 外籍白領招募時，要先證明找不到本地人才可以招外國人，所以才要這麼重視招進來的人跟職位敘述合不合。</p>
 
 <p>目前矽谷各科技業大頭都很怕被告，像是某公司，最後一個非裔高層離職了，公司甩不開種族歧視的惡名，還特別創造一個高層的職位出來請了個非裔的進來。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/21/worse-is-better-mysql/">MySQL 劣即是夯</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-21T00:42:00-08:00" pubdate data-updated="true">Dec 21<span>st</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>MySQL transactional lock 在 throughout 上 遠遠不及實作 mvcc 的 PostgrSQL，但在使用上，卻是大大的勝過 pg</p>
+
+<p>原因是因為，在 pg 在寫程式裡，要處理很多因為碰撞產生的 rollback ，即使 db 會幫你處理，但是如果有外部系統呢？是要去招回還是要用 2 phase commit 呢？還有在 UI 上是要讓使用者馬上再試一次，還是請他五分鐘後再試一次了？</p>
+
+<p>所以最簡單的實作就是乾脆把整個 table 鎖住，一次一個人寫入，這樣就不用做例外處理了。</p>
+
+<p>科科科 <a href="https://gist.github.com/audreyt/3985324#%E5%8A%A3%E5%8D%B3%E6%98%AF%E5%A4%AF">劣即是夯</a> 啊</p>
 </div>
   
   
@@ -661,15 +661,15 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2016/01/28/worse-is-better-mysql/">MySQL 劣即是夯</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2016/01/23/raising-a-bilingual-child/">如何教出一個雙語的小孩</a>
       </li>
     
       <li class="post">
         <a href="/blog/2016/01/16/affirmative-action/">矽谷科技業的面試規則</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/12/21/worse-is-better-mysql/">MySQL 劣即是夯</a>
       </li>
     
       <li class="post">
