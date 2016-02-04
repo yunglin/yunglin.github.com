@@ -9,7 +9,9 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="<!-- ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved. --> 台灣媒體從業人員笨死了，成天在媒體上獵女巫，檢討別人的成本結構；殊不知，(除了原物料必需品外)，售價是由供需曲線決定的，而不是由成本所決定的，成本， &hellip;">
+  <meta name="description" content="Introduction
+市面上大部份講 Android 的書，多數都是在講 API 要怎麼樣使用，但是，許多的書都沒有提到一個重要的問題，就是什
+麼是 UI Thread (有時被稱做Main Thread) ，為什麼要有 UI Thread 以及為什麼不可以在 UI Thread &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +77,358 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/">Lesson Learned Form Developing Locadz SDK</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-20T23:07:00-07:00" pubdate data-updated="true">Apr 20<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="section" id="introduction">
+<h2>Introduction</h2>
+<p>市面上大部份講 Android 的書，多數都是在講 API 要怎麼樣使用，但是，許多的書都沒有提到一個重要的問題，就是什
+麼是 UI Thread (有時被稱做Main Thread) ，為什麼要有 UI Thread 以及為什麼不可以在 UI Thread 中執行耗時間的運算。</p>
+<p>在本文中，我講談一談我們在開發Locadz SDK所使用到的一些技巧。</p>
+</div>
+<div class="section" id="ui-thread">
+<h2>UI Thread</h2>
+<p>UI Thread是Android(or other GUI library)用來處理 Event 的 thread ，這些 Event 可能是使用者處發的，如
+Touch Event，或者是其它程式或者是系統底層的事件，如 Intent 或 <a class="reference external" href="http://developer.android.com/reference/android/location/LocationListener.html">Location Updates</a>.</p>
+<p>在 UI Thread 處理完一個事件後， UI Thread 會重畫整個 Application ，而前面這句話解釋了處理 ANR 的兩個原則</p>
+<ul class="simple">
+<li>UI事件的處理要越快越好，在處理完前，UI不會有反應</li>
+<li>UI的更新，一定要發生在UI Thread，要不然，要等到下次UI Event被處發時才會一併被處理</li>
+</ul>
+</div>
+<div class="section" id="lesson-i-use-weakreference-to-avoid-strong-reference-and-memory-leak">
+<h2>Lesson I: Use WeakReference to Avoid Strong Reference and Memory Leak</h2>
+<p>有許多的文章談到如何用 <a class="reference external" href="http://developer.android.com/reference/android/os/AsyncTask.html">AsyncTask</a> 或 <a class="reference external" href="http://stackoverflow.com/questions/3197335/restful-api-service/3197456#3197456">ResultReceiver</a> 來把需要大量運算的程式，放在另一個 Thread 來做處理。</p>
+<p>然而，這些範例都有著一個常備忽略的問題，那就是，這些 AsyncTask or ResultReceiver 常會把前景的Activity包進來
+，如果說你的程式只有一個 Activity 的話，這或許不是什麼問題，但是若是你的 App 有多個畫面的話，這些在背景執行的程
+式可能就會讓你的程式有 memory leak 的問題；如某家廣告商的 SDK 就有此問題。</p>
+<p>一個可能的發生狀況是，Activity A透過 AsyncTask 去遠端下載一個圖片來顯示在 <em>Activity A</em> 之上，但因為某些因素
+(如忘了設 connection timeout)，這個下載的程緒卡住了，既使 User 以從 <em>Activity A</em> 切換到 <em>Activity B</em> 之
+上，這個 <em>Activity A</em> 還是不會被 GC 回收掉。</p>
+<p>要避開因為有個 Strong Reference 造成 Activity 無法被回收的問題，我們在把有可能被回收的物件傳到另一個 Thread 中
+被延後執行時，必需用 <a class="reference external" href="http://docs.oracle.com/javase/1.5.0/docs/api/java/lang/ref/WeakReference.html">WeakReference</a> 包住這個物件；如此一來，當Garbage Collector碰到一個已經不在前景的 Activity
+時，Garbage Collector會把這物件處理掉，如此一來，就不會有 memory leak 的問題。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> *  AsyncTask to Load Image</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DownloadImagesTask</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Uri</span><span class="o">,</span> <span class="n">Void</span><span class="o">,</span> <span class="n">Bitmap</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">imageview</span><span class="o">&gt;</span> <span class="n">imageViewWeakReference</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">  <span class="kd">public</span> <span class="nf">DownloadImagesTask</span><span class="o">(</span><span class="n">ImageView</span> <span class="n">imageView</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">imageViewWeakReference</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">Imageview</span><span class="o">&gt;(</span><span class="n">imageView</span><span class="o">);</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">  <span class="nd">@Override</span>
+</span><span class="line">  <span class="kd">protected</span> <span class="n">Bitmap</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Uri</span><span class="o">...</span> <span class="n">uri</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">return</span> <span class="nf">downloadImage</span><span class="o">(</span><span class="n">uri</span><span class="o">);</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">  <span class="nd">@Override</span>
+</span><span class="line">  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPostExecute</span><span class="o">(</span><span class="n">Bitmap</span> <span class="n">result</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">ImageView</span> <span class="n">imageView</span> <span class="o">=</span> <span class="n">imageViewWeakReference</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">imageView</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">imageView</span><span class="o">.</span><span class="na">setImageBitmap</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">  <span class="kd">private</span> <span class="n">Bitmap</span> <span class="nf">downloadImage</span><span class="o">(</span><span class="n">Uri</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">     <span class="o">...</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="lesson-ii-use-intentservice-to-run-business-logic">
+<h2>Lesson II: Use IntentService to Run Business Logic</h2>
+<p>AsyncTask是 Android 最常被用來處理複雜運算時用的工具，透過AsyncTask，我們可以在背景處裡
+一些複雜的運算，再把結果放回前景之上。</p>
+<p>但據我的經驗，使用 AsyncTask 同時間來擔任 MVC 中的 View &amp; Controller 的工作，最後往往是
+把程式碼弄成一團麵線。因此，在開發 Locadz SDK 時，我們把一些跟 UI 無關的運算，都切出來
+變成 IntentService 或者是非 Inner class 的 AsyncTask ，把所有的運算邏輯從 Activity 中切出
+來，增加重用的可能。</p>
+<p>然後運算的結果，再透過 <a class="reference external" href="http://developer.android.com/reference/android/os/Handler.html#post(java.lang.Runnable)">getHandler().post(&#8230;)</a> 更新到 UI 之上.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="cm">/** Service that retrieve the ad unit allocations from external source and cache locally in SharedPreference. */</span>
+</span><span class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AdUnitAllocationService</span> <span class="kd">extends</span> <span class="n">IntentService</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CACHE_EXPIRATION_PERIOD</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="o">;</span> <span class="c1">// 30 minutes.</span>
+</span><span class="line">
+</span><span class="line">  <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">PREFS_STRING_TIMESTAMP</span> <span class="o">=</span> <span class="s">&quot;timestamp&quot;</span><span class="o">;</span>
+</span><span class="line">  <span class="kd">private</span> <span class="kd">final</span> <span class="kd">static</span> <span class="n">String</span> <span class="n">PREFS_STRING_CONFIG</span> <span class="o">=</span> <span class="s">&quot;config&quot;</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// response code for possible result.</span>
+</span><span class="line">  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">RESULT_OK</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">  <span class="kd">public</span> <span class="nf">AdUnitAllocationService</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">    <span class="kd">super</span><span class="o">(</span><span class="n">AdUnitAllocationService</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getCanonicalName</span><span class="o">());</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">  <span class="nd">@Override</span>
+</span><span class="line">  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onHandleIntent</span><span class="o">(</span><span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">    <span class="n">AdUnitContext</span> <span class="n">adUnitContext</span> <span class="o">=</span>
+</span><span class="line">     <span class="o">(</span><span class="n">AdUnitContext</span><span class="o">)</span> <span class="n">intent</span><span class="o">.</span><span class="na">getParcelableExtra</span><span class="o">(</span><span class="n">IntentConstants</span><span class="o">.</span><span class="na">EXTRA_ADUNIT_CONTEXT</span><span class="o">);</span>
+</span><span class="line">
+</span><span class="line">    <span class="n">AdUnitAllocation</span> <span class="n">adUnitAllocation</span> <span class="o">=</span> <span class="n">getAdUnitAllocation</span><span class="o">(</span><span class="n">adUnitContext</span><span class="o">);</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">adUnitAllocation</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">Ration</span> <span class="n">ration</span> <span class="o">=</span> <span class="n">getRandomRation</span><span class="o">(</span><span class="n">adUnitAllocation</span><span class="o">.</span><span class="na">getRations</span><span class="o">());</span>
+</span><span class="line">
+</span><span class="line">      <span class="c1">// send response through ResultReceiver.</span>
+</span><span class="line">      <span class="n">ResultReceiver</span> <span class="n">receiver</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="na">getParcelableExtra</span><span class="o">(</span><span class="n">IntentConstants</span><span class="o">.</span><span class="na">EXTRA_RECEIVER</span><span class="o">);</span>
+</span><span class="line">
+</span><span class="line">      <span class="n">Bundle</span> <span class="n">resultData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bundle</span><span class="o">();</span>
+</span><span class="line">      <span class="n">resultData</span><span class="o">.</span><span class="na">putString</span><span class="o">(</span><span class="n">IntentConstants</span><span class="o">.</span><span class="na">EXTRA_ADUNIT_ID</span><span class="o">,</span> <span class="n">adUnitContext</span><span class="o">.</span><span class="na">getAdUnitId</span><span class="o">());</span>
+</span><span class="line">      <span class="n">resultData</span><span class="o">.</span><span class="na">putSerializable</span><span class="o">(</span><span class="n">IntentConstants</span><span class="o">.</span><span class="na">EXTRA_RATION</span><span class="o">,</span> <span class="n">ration</span><span class="o">);</span>
+</span><span class="line">      <span class="n">resultData</span><span class="o">.</span><span class="na">putSerializable</span><span class="o">(</span><span class="n">IntentConstants</span><span class="o">.</span><span class="na">EXTRA_EXTRA</span><span class="o">,</span>
+</span><span class="line">                                 <span class="n">adUnitAllocation</span><span class="o">.</span><span class="na">getExtra</span><span class="o">());</span>
+</span><span class="line">
+</span><span class="line">      <span class="n">receiver</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">RESULT_OK</span><span class="o">,</span> <span class="n">resultData</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">  <span class="cm">/**</span>
+</span><span class="line"><span class="cm">   * Select a random ration form the provided rations.</span>
+</span><span class="line"><span class="cm">   * @param rations   the candidates.</span>
+</span><span class="line"><span class="cm">   * @return a random ration from the candidates.</span>
+</span><span class="line"><span class="cm">   */</span>
+</span><span class="line">  <span class="kd">private</span> <span class="n">Ration</span> <span class="nf">getRandomRation</span><span class="o">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Ration</span><span class="o">&gt;</span> <span class="n">rations</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="c1">//...</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">  <span class="cm">/**</span>
+</span><span class="line"><span class="cm">   * Get the allocation configuration for the adunit.</span>
+</span><span class="line"><span class="cm">   * @param adUnitContext the context of the adunit.</span>
+</span><span class="line"><span class="cm">   * @return the allocation configuration for the adunit.</span>
+</span><span class="line"><span class="cm">   */</span>
+</span><span class="line">  <span class="n">AdUnitAllocation</span> <span class="nf">getAdUnitAllocation</span><span class="o">(</span><span class="n">AdUnitContext</span> <span class="n">adUnitContext</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="c1">//...</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="lesson-iii-use-disk-cache-instead-of-main-memory-cache">
+<h2>Lesson III: Use Disk Cache instead of (Main) Memory Cache</h2>
+<p>底下的圖表，是Jeff Dean發表的，在談的是讀取資料的的效率，我們把這幾個數字先記起來，
+再加一個代表UI設計時人體覺得是即時反應的反應時間上限 100 ms。然後我們再來談 Android UI 的設計。</p>
+<img alt="/images/2012-04-20/numbers-everyone-should-know.png" src="/images/2012-04-20/numbers-everyone-should-know.png" />
+<p>大家可以看到 Main Memory Reference(0.001ms) 與 Disk Seek(10ms) Disk Read(30ms) 的重大差
+距，然而，後者的數字在 Mobile Phone 上就不是這樣了。在 Mobile Phone 上，傳統的硬碟扮演的角色，
+被NAND Flash Memory, External SD Card所取代了。在存取效率上 NAND Flash Memory 雖然不
+比 RAM 快，但是，也仍是 seek time ~1ms 的狠角色。</p>
+<p>這 1ms 的負擔，雖比 0.001ms 的負擔高上百倍，以上，但是在 100ms 這UI 反應需求上，卻又變得很渺小了。</p>
+<p>因此，在這邊，我會建議大家，若是有 cache 的需求時，直接往 <a class="reference external" href="http://developer.android.com/guide/topics/data/data-storage.html#filesInternal">Internal Storage</a> 塞吧，不要放
+在Main memory上，或用個SoftReferenceMap包著。</p>
+</div>
+<div class="section" id="lesson-iv-make-all-public-method-async-to-avoid-ui-update-issue">
+<h2>Lesson IV: Make All Public Method Async to Avoid UI Update Issue</h2>
+<p>在上面第一個範例中有個錯誤，那就是DownloadImagesTask.onPostExecute()會在呼叫DownloadImagesTask.execute(&#8230;)的
+那個 Thread 上執行，如果說，很不幸的，這個 DownloadImagesTask 並不是從 UI Thread 上來呼叫的話，那
+麼，imageView.setImageBitmap(result)便有可能不會即時更新到UI之上。</p>
+<p>如果你的開發環境會有這種問題，在包在層層呼叫後，無法確保 Method 是否是在 UI Thread 上執行；那麼我
+會建議你把會更新 UI 的 Method ，標成 protected ，然後開放一個 public async method 出來，範例如下：</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm">  * Remove old ad views and push the new one.</span>
+</span><span class="line"><span class="cm">  *</span>
+</span><span class="line"><span class="cm">  * @param subView the adview to push.</span>
+</span><span class="line"><span class="cm">  */</span>
+</span><span class="line"><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">pushSubView</span><span class="o">(</span><span class="n">ViewGroup</span> <span class="n">subView</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">  <span class="c1">//....</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> *  submit a push view request to Android&#39;s handler. This will remove</span>
+</span><span class="line"><span class="cm"> *  old ad view and push a new one to this layout asynchronously.</span>
+</span><span class="line"><span class="cm"> *</span>
+</span><span class="line"><span class="cm"> * @param subView   the adview to push.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">submitPushSubViewRequest</span><span class="o">(</span><span class="n">ViewGroup</span> <span class="n">subView</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">  <span class="n">Log</span><span class="o">.</span><span class="na">d</span><span class="o">(</span><span class="n">LOG_TAG</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;Scheduled pushSubView(%s)&quot;</span><span class="o">,</span> <span class="n">subView</span><span class="o">));</span>
+</span><span class="line">  <span class="n">getHandler</span><span class="o">().</span><span class="na">post</span><span class="o">(</span><span class="k">new</span> <span class="n">ViewAdRunnable</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">subView</span><span class="o">));</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Runnable runs on the Main Thread that pushes an AdView to the layout.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">ViewAdRunnable</span> <span class="kd">implements</span> <span class="n">Runnable</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="kd">private</span> <span class="kd">final</span> <span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">Adunitlayout</span><span class="o">&gt;</span> <span class="n">locadzLayoutWeakReference</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">  <span class="kd">private</span> <span class="n">ViewGroup</span> <span class="n">subView</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">  <span class="kd">public</span> <span class="nf">ViewAdRunnable</span><span class="o">(</span><span class="n">AdUnitLayout</span> <span class="n">layout</span><span class="o">,</span> <span class="n">ViewGroup</span> <span class="n">subView</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">locadzLayoutWeakReference</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WeakReference</span><span class="o">&lt;</span><span class="n">Adunitlayout</span><span class="o">&gt;(</span><span class="n">layout</span><span class="o">);</span>
+</span><span class="line">    <span class="k">this</span><span class="o">.</span><span class="na">subView</span> <span class="o">=</span> <span class="n">subView</span><span class="o">;</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">  <span class="nd">@Override</span>
+</span><span class="line">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">AdUnitLayout</span> <span class="n">locadzLayout</span> <span class="o">=</span> <span class="n">locadzLayoutWeakReference</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">locadzLayout</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">locadzLayout</span><span class="o">.</span><span class="na">pushSubView</span><span class="o">(</span><span class="n">subView</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -421,43 +775,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/22/source-code-of-my-scala-on-android-project/">Source Code of My Scala on Android Project.</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-22T00:21:00-08:00" pubdate data-updated="true">Nov 22<span>nd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class='post'>
-把前面幾回講的用Scala寫的Android程式，放上 bitbucket 了，有興趣的可以自己去下載來看。<br /> <br />https://bitbucket.org/bluetang/android-taipei-disaster</div>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/7/">&larr; Older</a>
@@ -475,6 +792,10 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/03/a-normal-day-in-san-francisco-ii/">舊金山正常的一日 &#8211; 細數過去三個月的瘋狂案例</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/02/03/a-normal-day-in-san-francisco/">舊金山正常的一日</a>
       </li>
     
@@ -488,10 +809,6 @@ spotify&#8217;s app is pretty good business model. 之前我抱怨 #spotify 的 
     
       <li class="post">
         <a href="/blog/2015/12/21/worse-is-better-mysql/">MySQL 劣即是夯</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/12/12/financial-service/">重回美國心得 - 金融業</a>
       </li>
     
   </ul>
