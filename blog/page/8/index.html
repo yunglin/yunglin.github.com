@@ -9,7 +9,7 @@
   <meta name="author" content="">
 
   
-  <meta name="description" content="講一下我理解中，為什麼Apple 辦得到（合乎中華民國消保法）Google 辦不到的原因。要知道，在AppStore &amp; Android Market上交易，可不是只有Apple/Google與消費者，交易的過程中，還有軟體開發商這單位。Google面對的不是只有消費者這塊， &hellip;">
+  <meta name="description" content="<!-- ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved. --> Having a good build system is like living in the heaven, and having a bad &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/01/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/">Having a Good Build System Is Like Living in the Heaven, and Having a Bad&#8230;..</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-01T11:09:00-07:00" pubdate data-updated="true">Sep 1<span>st</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><!--
+  ~ Copyright (c) 2012. Blue Tang Studio LLC. All rights reserved.
+  -->
+
+<div class='post'>
+Having a good build system is like living in the heaven, and having a bad build system is like living in the hell. I am just tired of dealing with all kind of build system. In short, all build systems are either suck or sucks more.<br /><br />Yesterday, I spent 4 hours to help a coworker to deal with library projects in Android. It wasn&#8217;t a pleasure experience. Today, I spent another 4 hours to figure out how to configure an integration-test phase in SBT.<br /><br />Just to save you some time, here is how to do it with SBT&#8217;s quick configuration DSL, build.sbt.<br /><br /><pre>import sbt._
+<br />
+<br />{
+<br />    lazy val IntegrationTest = config("it") extend(Test) extend(Provided) extend(Optional)
+<br />    lazy val itSettings: Seq[Project.Setting[_]] =
+<br />        inConfig(IntegrationTest)(Defaults.testSettings) ++
+<br />        Seq(
+<br />             ivyConfigurations += IntegrationTest
+<br />        )
+<br />    seq(itSettings : _*)
+<br />}
+<br /></pre><br />That is all you need. The first line in the block defines a new configuration, it. The &#8216;it&#8217; configuration extends all the dependencies from &#8216;Test&#8217;. And the fifth line exposes this configuration to ivy and sbt.<br /><br /></div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -177,6 +229,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/02/03/a-normal-day-in-san-francisco/">舊金山正常的一日</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/23/raising-a-bilingual-child/">如何教出一個雙語的小孩</a>
       </li>
     
@@ -190,10 +246,6 @@
     
       <li class="post">
         <a href="/blog/2015/12/12/financial-service/">重回美國心得 - 金融業</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/26/energy-meter/">智慧電表</a>
       </li>
     
   </ul>
