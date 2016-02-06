@@ -1,331 +1,228 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/06/30/-google-android-market/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/06/30/-apple-google/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2011/09/01/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/
-        </loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/09/04/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/09/06/-mac-osx/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/10/06/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/10/17/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/11/15/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/
-        </loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types/
-        </loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val/
-        </loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-proguard/
-        </loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/11/16/my-experience-with-scala-on-android/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2011/11/22/source-code-of-my-scala-on-android-project/
-        </loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/11/24/analytics-hadoop-v-s-dbms/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2011/12/08/lucene-on-android/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/01/03/how-to-protect-a-webservice/</loc>
-        <lastmod>2013-08-26T14:29:06-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/02/07/-costco/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/02/17/music-for-my-wedding/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/03/07/-job-job-market-in-us/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/03/27/bravo-to-spotify-apps/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2012/03/27/-service-how-to-debian-ize-your-web-application/
-        </loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/04/17/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/
-        </loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/04/22/migrate-to-octopress/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/04/22/dependency-injection-in-scala/</loc>
-        <lastmod>2012-04-26T09:50:42-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/04/26/mongodb-java-driver-sucks/</loc>
-        <lastmod>2012-04-30T02:09:52-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/04/30/mongodb-dao/</loc>
-        <lastmod>2012-04-30T02:09:38-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/05/08/shall-patent-apply-to-business-model/</loc>
-        <lastmod>2012-05-08T01:23:21-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/05/17/ridiculous-rule-change/</loc>
-        <lastmod>2012-05-16T09:56:22-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/05/17/runtime-quality-metrics-series-1/</loc>
-        <lastmod>2012-05-24T23:21:24-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/05/22/runtime-quality-metrics-series-2/</loc>
-        <lastmod>2012-06-27T03:52:57-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/05/23/runtime-quality-metrics-series-3/</loc>
-        <lastmod>2012-06-27T03:53:04-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/06/27/pricing-error/</loc>
-        <lastmod>2012-06-27T04:25:45-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/07/11/spatial-search-with-lucene/</loc>
-        <lastmod>2012-07-13T01:08:47-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/07/19/introduction-to-actor-model/</loc>
-        <lastmod>2012-08-22T09:56:26-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/08/23/corrupted-software-company/</loc>
-        <lastmod>2012-08-22T10:02:22-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2012/08/23/cloud-computing-and-rocket-science/</loc>
-        <lastmod>2012-08-22T21:51:19-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/02/03/move-erp-to-cloud/</loc>
-        <lastmod>2013-02-03T01:24:58-08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/
-        </loc>
-        <lastmod>2013-02-04T03:56:42-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/03/19/clean-future-api-design-sort.rst/</loc>
-        <lastmod>2013-07-28T08:16:18-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/03/19/parallel-external-merge-sort/</loc>
-        <lastmod>2013-03-19T19:30:57-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/09/12/us-trip/</loc>
-        <lastmod>2013-09-14T22:44:11-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/09/12/politics-or-not-politics/</loc>
-        <lastmod>2013-09-12T09:13:30-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/09/17/on-hr/</loc>
-        <lastmod>2013-09-16T21:41:13-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/09/23/california-legalize-ridesharing/</loc>
-        <lastmod>2014-07-09T22:05:05-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/09/30/new-york-taxi/</loc>
-        <lastmod>2013-09-30T08:12:27-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/10/19/government-intervention/</loc>
-        <lastmod>2013-10-19T04:32:02-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/10/26/island-of-greed/</loc>
-        <lastmod>2013-10-26T02:41:57-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/10/28/artc-certified-car-seat/</loc>
-        <lastmod>2013-10-27T10:58:27-07:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://blog.yunglinho.com/blog/2013/12/12/small-business-banking-in-silicon-valley/
-        </loc>
-        <lastmod>2013-12-12T04:46:53-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2013/12/15/project-manager-and-product-manager/</loc>
-        <lastmod>2013-12-15T03:39:07-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/01/16/make-me-a-german/</loc>
-        <lastmod>2014-01-15T22:53:13-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/01/26/qnap-sucks/</loc>
-        <lastmod>2014-01-26T07:53:44-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key/</loc>
-        <lastmod>2014-02-11T23:08:06-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/02/12/mongodb-schemaless/</loc>
-        <lastmod>2014-02-12T00:14:34-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/02/12/mongodb-mysql/</loc>
-        <lastmod>2014-02-12T05:54:44-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/02/19/on-load-testing/</loc>
-        <lastmod>2014-02-18T08:58:57-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/03/15/prepaid-card-lifetime-limit/</loc>
-        <lastmod>2014-03-14T20:53:08-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/03/22/wang-jin-pyng/</loc>
-        <lastmod>2014-03-22T10:04:20-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/03/26/role-model/</loc>
-        <lastmod>2014-03-26T07:19:40-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/04/03/cross-strait-trade-agreement/</loc>
-        <lastmod>2014-04-02T11:42:53-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/05/13/tdd/</loc>
-        <lastmod>2014-05-13T07:48:22-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2014/06/05/on-compensation-of-youth/</loc>
-        <lastmod>2014-06-04T10:36:23-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review/</loc>
-        <lastmod>2015-04-23T09:57:46-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2015/06/01/parking-token-exception-handling/</loc>
-        <lastmod>2015-05-31T09:42:37-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2015/09/24/struggling-in-taiwan/</loc>
-        <lastmod>2015-09-24T00:47:15-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2015/11/26/energy-meter/</loc>
-        <lastmod>2015-11-26T22:04:04-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2015/12/12/financial-service/</loc>
-        <lastmod>2015-12-12T00:27:23-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2015/12/21/worse-is-better-mysql/</loc>
-        <lastmod>2016-01-28T00:47:13-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2016/01/16/affirmative-action/</loc>
-        <lastmod>2016-01-16T23:48:35-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2016/01/23/raising-a-bilingual-child/</loc>
-        <lastmod>2016-01-23T23:47:27-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2016/02/03/a-normal-day-in-san-francisco/</loc>
-        <lastmod>2016-02-03T21:03:09-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/2016/02/03/a-normal-day-in-san-francisco-ii/</loc>
-        <lastmod>2016-02-03T22:50:38-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/404.html</loc>
-        <lastmod>2012-04-27T03:14:38-07:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/blog/archives/</loc>
-        <lastmod>2016-02-03T22:50:38-08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://blog.yunglinho.com/</loc>
-        <lastmod>2016-02-03T22:50:38-08:00</lastmod>
-    </url>
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>http://yourdomain.com/blog/2016/02/03/a-normal-day-in-san-francisco-ii/</loc>
+<lastmod>2016-02-03T21:06:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2016/02/03/a-normal-day-in-san-francisco/</loc>
+<lastmod>2016-02-03T20:04:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2016/01/23/raising-a-bilingual-child/</loc>
+<lastmod>2016-01-23T20:33:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2016/01/16/affirmative-action/</loc>
+<lastmod>2016-01-16T23:38:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2015/12/21/worse-is-better-mysql/</loc>
+<lastmod>2015-12-21T00:42:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2015/12/12/financial-service/</loc>
+<lastmod>2015-12-12T00:24:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2015/11/26/energy-meter/</loc>
+<lastmod>2015-11-26T21:56:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2015/09/24/struggling-in-taiwan/</loc>
+<lastmod>2015-09-24T15:40:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2015/06/01/parking-token-exception-handling/</loc>
+<lastmod>2015-06-01T00:40:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2015/04/23/type-inference-and-code-review/</loc>
+<lastmod>2015-04-23T23:36:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2013/03/19/parallel-external-merge-sort/</loc>
+<lastmod>2013-03-19T21:43:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/</loc>
+<lastmod>2013-02-04T19:21:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2013/02/03/move-erp-to-cloud/</loc>
+<lastmod>2013-02-03T17:11:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/08/23/cloud-computing-and-rocket-science/</loc>
+<lastmod>2012-08-23T11:26:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/08/23/corrupted-software-company/</loc>
+<lastmod>2012-08-23T00:44:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/07/19/introduction-to-actor-model/</loc>
+<lastmod>2012-07-19T14:42:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/07/11/spatial-search-with-lucene/</loc>
+<lastmod>2012-07-11T16:06:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/06/27/pricing-error/</loc>
+<lastmod>2012-06-27T18:52:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/05/23/runtime-quality-metrics-series-3/</loc>
+<lastmod>2012-05-23T14:45:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/05/22/runtime-quality-metrics-series-2/</loc>
+<lastmod>2012-05-22T17:49:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/05/17/runtime-quality-metrics-series-1/</loc>
+<lastmod>2012-05-17T11:01:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/05/17/ridiculous-rule-change/</loc>
+<lastmod>2012-05-17T00:35:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/05/08/shall-patent-apply-to-business-model/</loc>
+<lastmod>2012-05-08T14:27:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/04/30/mongodb-dao/</loc>
+<lastmod>2012-04-30T11:50:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/04/26/mongodb-java-driver-sucks/</loc>
+<lastmod>2012-04-26T18:45:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/04/22/dependency-injection-in-scala/</loc>
+<lastmod>2012-04-22T22:44:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/04/22/migrate-to-octopress/</loc>
+<lastmod>2012-04-22T04:31:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/04/20/lesson-learned-from-developing-locadz-sdk/</loc>
+<lastmod>2012-04-20T23:07:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/04/17/</loc>
+<lastmod>2012-04-17T10:01:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/03/27/service-how-to-debian-ize-your-web-application/</loc>
+<lastmod>2012-03-27T08:19:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/03/27/bravo-to-spotify-apps/</loc>
+<lastmod>2012-03-27T01:14:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/03/07/job-job-market-in-us/</loc>
+<lastmod>2012-03-07T07:05:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/02/17/music-for-my-wedding/</loc>
+<lastmod>2012-02-17T00:20:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/02/07/costco/</loc>
+<lastmod>2012-02-07T19:55:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2012/01/03/how-to-protect-a-webservice/</loc>
+<lastmod>2012-01-03T07:27:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/12/08/lucene-on-android/</loc>
+<lastmod>2011-12-08T02:20:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/11/24/analytics-hadoop-v-s-dbms/</loc>
+<lastmod>2011-11-24T00:55:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/11/22/source-code-of-my-scala-on-android-project/</loc>
+<lastmod>2011-11-22T00:21:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/11/16/my-experience-with-scala-on-android/</loc>
+<lastmod>2011-11-16T00:53:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-proguard/</loc>
+<lastmod>2011-11-15T19:32:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val/</loc>
+<lastmod>2011-11-15T08:50:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-polymorphic-types/</loc>
+<lastmod>2011-11-15T08:21:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/</loc>
+<lastmod>2011-11-15T01:59:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/11/15/</loc>
+<lastmod>2011-11-15T01:49:00-08:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/10/17/</loc>
+<lastmod>2011-10-17T20:29:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/10/06/</loc>
+<lastmod>2011-10-06T02:01:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/09/06/mac-osx/</loc>
+<lastmod>2011-09-06T23:39:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/09/04/</loc>
+<lastmod>2011-09-04T23:05:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/09/01/having-a-good-build-system-is-like-living-in-the-heaven-and-having-a-bad/</loc>
+<lastmod>2011-09-01T11:09:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/06/30/apple-google/</loc>
+<lastmod>2011-06-30T12:08:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/2011/06/30/google-android-market/</loc>
+<lastmod>2011-06-30T11:11:00-07:00</lastmod>
+</url>
+<url>
+<loc>http://yourdomain.com/archives/</loc>
+</url>
+<url>
+<loc>http://yourdomain.com/</loc>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/page/2/</loc>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/page/3/</loc>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/page/4/</loc>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/page/5/</loc>
+</url>
+<url>
+<loc>http://yourdomain.com/blog/page/6/</loc>
+</url>
 </urlset>

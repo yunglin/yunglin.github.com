@@ -1,34 +1,18 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
+<html>
+
+  <head>
   <meta charset="utf-8">
-  <title>碎碎唸</title>
-  <meta name="author" content="">
-
-  
-  <meta name="description" content="台灣這幾年商界、政界、很喜歡對年輕人指指點點，說只要努力就可以脫離 22K ，年輕人收入不好的問題根源是在年輕人上，所以在這邊寫一下我的看法。 我在美國念書畢業一年後，在 26 歲時，底薪收入就有八萬美金，後來我又幹了四年，回台灣又幹了四年，但我的收入連八年前的一半都沒有，所以說，是我能力退步了嗎 &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  
-  <link rel="canonical" href="http://blog.yunglinho.com/blog/page/2">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <link href="http://feeds.feedburner.com/yunglinho" rel="alternate" title="碎碎唸" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+  <title>碎碎念</title>
+  <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://yourdomain.com/blog/page/2/">
+  <link rel="alternate" type="application/rss+xml" title="碎碎念" href="http://yourdomain.com/feed.xml">
 
   
   <script type="text/javascript">
@@ -46,949 +30,1838 @@
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">碎碎唸</a></h1>
-  
-</hgroup>
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">碎碎念</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/archives/">Archives</a>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="http://feeds.feedburner.com/yunglinho" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="home">
+
+  <h1 class="page-heading">Posts</h1>
+
+  <!-- This loops through the paginated posts -->
   
-</ul>
-  
-<form action="http://google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:blog.yunglinho.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
+  <h1><a href="/blog/2013/03/19/parallel-external-merge-sort/">parallel external merge sort</a></h1>
+  <p class="author">
+    <span class="date">2013-03-19 21:43:00 -0700</span>
+  </p>
+  <div class="content">
+    <p>Last week, I was working on importing a large input file into the system. Part of the process involved with
+reading a large file (~10GB) from remote server and them sort the inputs locally.</p>
+<p>At that moment, I decided to give Scala's new <a class="reference external" href="http://docs.scala-lang.org/sips/pending/futures-promises.html">Future API</a> a try. Within one day, I wrote a parallel external
+merge sort that can</p>
+<blockquote>
+<ol class="arabic simple">
+<li>Read the file from remote server and split it into smaller chunks.</li>
+<li>Use in-memory quicksort to sort each chunk and then save chunks into files.</li>
+<li>Perform merge sort on the files generated in the previous step.</li>
+</ol>
+</blockquote>
+<p>The most amazing thing is that multiple threads could work on these tasks simultanously. While one thread is busy
+reading bytes from remote server, other threads would perform quicksort on the part that has already been read. Once,
+all of the data has been written to file system. Another thread will start to merge sort these files.</p>
+<p>Here is how I do it.</p>
+<div class="section" id="read-lines-from-inputstream">
+<h2>Read Lines From InputStream</h2>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">soure</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure><p>The above code will turn a <strong>InputStream</strong> into a <strong>Stream[Int]</strong> , and then allow us to perform operation on it
+without having to fully read it into memory first. But still, this is a huge Stream. Because we are going to use
+in-memory sort, I need to split it into smaller pieces first.</p>
+<p>The following code will <strong>lift</strong> a Stream into a Stream of Stream. Again, this operation does not require read the whole
+original stream into memory. All the operation only happens logically.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Lift a Stream into a Stream of Stream. The size of each sub-stream is specified by the chunkSize</span>
+</span><span class="line"><span class="cm"> * @param stream        the origin stream.</span>
+</span><span class="line"><span class="cm"> * @param chunkSize     the size of each substream</span>
+</span><span class="line"><span class="cm"> * @tparam A</span>
+</span><span class="line"><span class="cm"> * @return              chunked stream of the original stream.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">lift</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">stream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">remaining</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">remaining</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">  <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="perform-quick-sort">
+<h2>Perform Quick Sort</h2>
+<p>After we have split <strong>InputStream</strong> into <strong>Streams</strong>, we can start to read each sub-stream into memory and perform
+quicksort on them.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">linesStream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line"><span class="k">val</span> <span class="n">chunkCounter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">sortedFileDir</span> <span class="k">=</span> <span class="nc">Files</span><span class="o">.</span><span class="n">createTempDir</span><span class="o">()</span>
+</span><span class="line"><span class="n">sortedFileDir</span><span class="o">.</span><span class="n">deleteOnExit</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// read source stream, read n entries into memory and save it to file in parallel.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">fileFutures</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="n">linesStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span>
+</span><span class="line">  <span class="n">s</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">chunk</span> <span class="k">=</span> <span class="n">chunkCounter</span><span class="o">.</span><span class="n">getAndIncrement</span>
+</span><span class="line">    <span class="nc">Future</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">sorted</span> <span class="k">=</span> <span class="n">s</span><span class="o">.</span><span class="n">sorted</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="s">&quot;%d&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">chunk</span> <span class="o">*</span> <span class="n">chunkSize</span><span class="o">))</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">sorted</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">      <span class="n">ret</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}).</span><span class="n">toList</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="perform-merge-sort">
+<h2>Perform Merge Sort</h2>
+<p>Because I want to perform mergesort on all of results, I have to turn <strong>List[Future[File]]</strong> into <strong>Future[List[File]]</strong>
+first. So that I can instruct the <strong>Future</strong> to do merge sort once it has all the pieces.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+<span class="line-number">65</span>
+<span class="line-number">66</span>
+<span class="line-number">67</span>
+<span class="line-number">68</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">saveTmpFiles</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">fileFutures</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">ret</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="n">saveTmpFiles</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">files</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">var</span> <span class="n">merged</span> <span class="k">=</span> <span class="n">files</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">while</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">splited</span> <span class="k">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
+</span><span class="line">    <span class="k">val</span> <span class="n">tuple</span> <span class="k">=</span> <span class="n">splited</span><span class="o">.</span><span class="n">_1</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">splited</span><span class="o">.</span><span class="n">_2</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">val</span> <span class="n">m2</span> <span class="k">=</span> <span class="n">tuple</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">case</span> <span class="o">(</span><span class="n">f1</span><span class="o">,</span> <span class="n">f2</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">getName</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="n">f2</span><span class="o">.</span><span class="n">getName</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">val</span> <span class="n">source1</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">source2</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">          <span class="k">val</span> <span class="n">stream1</span> <span class="k">=</span> <span class="n">source1</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">          <span class="k">val</span> <span class="n">stream2</span> <span class="k">=</span> <span class="n">source2</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">          <span class="n">merge</span><span class="o">(</span><span class="n">stream1</span><span class="o">,</span> <span class="n">stream2</span><span class="o">).</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">          <span class="n">ret</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">          <span class="n">source1</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">          <span class="n">source2</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line">          <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">          <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">    <span class="n">merged</span> <span class="k">=</span> <span class="k">if</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">m2</span> <span class="o">:+</span> <span class="n">merged</span><span class="o">.</span><span class="n">last</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">m2</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="n">merged</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Merge two streams into one stream.</span>
+</span><span class="line"><span class="cm"> * @param streamA</span>
+</span><span class="line"><span class="cm"> * @param streamB</span>
+</span><span class="line"><span class="cm"> * @return</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">merge</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">streamA</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">streamB</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">ord</span><span class="k">:</span> <span class="kt">Ordering</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">b</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">streamA</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="n">streamB</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">if</span> <span class="o">(</span><span class="n">ord</span><span class="o">.</span><span class="n">compare</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">.</span><span class="n">tail</span><span class="o">,</span> <span class="n">streamB</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="give-this-method-a-pretty-face">
+<h2>Give this Method a Pretty Face.</h2>
+<p>So how does the method signature of this parallel external merge sort look like?</p>
+<p>In fact, it is quite simple. It takes an <strong>InputStream</strong> and returns a <strong>Future[File]</strong>. So that, everything
+happens asynchronously, nothing blocks the main thread. You can send an inputStream to this method, go to do other
+things first and then come back to wait for the result.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="limits-number-of-threads-running-at-the-same-time">
+<h2>Limits Number of Threads Running at the Same Time.</h2>
+<p>Because this parallel external mergesort is an IO and memory intense operations, we can not run too many of it
+simultaneously. We must put a constraint on the number of threads it can use at a time. Otherwise, we may receive
+OutOfMemoryError or having many threads writing to disk simultaneously.</p>
+<p>Also, this constraint must be a global constraint. No matter how many requests has been sent to this method at the
+same time, it should only use up-to <em>N</em> threads.</p>
+<p>Luckly, this is quite easy to do with Scala's Future API. All we need to do is to provide a fixed size thread pool
+for this method. So that it won't spawn new thread by itself, instead, it uses threads provided by this global thread
+pool.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * limits number of reading and sorting can be executed simultaneously. Because this is an IO</span>
+</span><span class="line"><span class="cm"> * bound operation, unless the inputstream is coming from a slow http connection, otherwise, 5</span>
+</span><span class="line"><span class="cm"> * is more than enough.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">val</span> <span class="nc">GLOBAL_THREAD_LIMIT</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="nc">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="o">.</span><span class="n">availableProcessors</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span class="line">  <span class="k">if</span> <span class="o">(</span><span class="n">ret</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="mi">5</span>
+</span><span class="line">  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">ret</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">private</span> <span class="k">lazy</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">executionContext</span> <span class="k">=</span>
+</span><span class="line">  <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="nc">GLOBAL_THREAD_LIMIT</span><span class="o">))</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="put-everything-alltogether">
+<h2>Put Everything Alltogether</h2>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+<span class="line-number">65</span>
+<span class="line-number">66</span>
+<span class="line-number">67</span>
+<span class="line-number">68</span>
+<span class="line-number">69</span>
+<span class="line-number">70</span>
+<span class="line-number">71</span>
+<span class="line-number">72</span>
+<span class="line-number">73</span>
+<span class="line-number">74</span>
+<span class="line-number">75</span>
+<span class="line-number">76</span>
+<span class="line-number">77</span>
+<span class="line-number">78</span>
+<span class="line-number">79</span>
+<span class="line-number">80</span>
+<span class="line-number">81</span>
+<span class="line-number">82</span>
+<span class="line-number">83</span>
+<span class="line-number">84</span>
+<span class="line-number">85</span>
+<span class="line-number">86</span>
+<span class="line-number">87</span>
+<span class="line-number">88</span>
+<span class="line-number">89</span>
+<span class="line-number">90</span>
+<span class="line-number">91</span>
+<span class="line-number">92</span>
+<span class="line-number">93</span>
+<span class="line-number">94</span>
+<span class="line-number">95</span>
+<span class="line-number">96</span>
+<span class="line-number">97</span>
+<span class="line-number">98</span>
+<span class="line-number">99</span>
+<span class="line-number">100</span>
+<span class="line-number">101</span>
+<span class="line-number">102</span>
+<span class="line-number">103</span>
+<span class="line-number">104</span>
+<span class="line-number">105</span>
+<span class="line-number">106</span>
+<span class="line-number">107</span>
+<span class="line-number">108</span>
+<span class="line-number">109</span>
+<span class="line-number">110</span>
+<span class="line-number">111</span>
+<span class="line-number">112</span>
+<span class="line-number">113</span>
+<span class="line-number">114</span>
+<span class="line-number">115</span>
+<span class="line-number">116</span>
+<span class="line-number">117</span>
+<span class="line-number">118</span>
+<span class="line-number">119</span>
+<span class="line-number">120</span>
+<span class="line-number">121</span>
+<span class="line-number">122</span>
+<span class="line-number">123</span>
+<span class="line-number">124</span>
+<span class="line-number">125</span>
+<span class="line-number">126</span>
+<span class="line-number">127</span>
+<span class="line-number">128</span>
+<span class="line-number">129</span>
+<span class="line-number">130</span>
+<span class="line-number">131</span>
+<span class="line-number">132</span>
+<span class="line-number">133</span>
+<span class="line-number">134</span>
+<span class="line-number">135</span>
+<span class="line-number">136</span>
+<span class="line-number">137</span>
+<span class="line-number">138</span>
+<span class="line-number">139</span>
+<span class="line-number">140</span>
+<span class="line-number">141</span>
+<span class="line-number">142</span>
+<span class="line-number">143</span>
+<span class="line-number">144</span>
+<span class="line-number">145</span>
+<span class="line-number">146</span>
+<span class="line-number">147</span>
+<span class="line-number">148</span>
+<span class="line-number">149</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">import</span> <span class="nn">com.google.common.io.Files</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">java.io.</span><span class="o">{</span><span class="nc">PrintWriter</span><span class="o">,</span> <span class="nc">File</span><span class="o">,</span> <span class="nc">InputStream</span><span class="o">}</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">java.util.concurrent.Executors</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">java.util.concurrent.atomic.AtomicInteger</span>
+</span><span class="line">
+</span><span class="line"><span class="k">import</span> <span class="nn">org.apache.commons.io.FileUtils</span>
+</span><span class="line">
+</span><span class="line"><span class="k">import</span> <span class="nn">scala.concurrent.</span><span class="o">{</span><span class="nc">ExecutionContext</span><span class="o">,</span> <span class="nc">Future</span><span class="o">}</span>
+</span><span class="line"><span class="k">import</span> <span class="nn">scala.io.Source</span>
+</span><span class="line">
+</span><span class="line"><span class="k">object</span> <span class="nc">InputStreams</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * limits number of reading and sorting can be executed simultaneously. Because</span>
+</span><span class="line"><span class="cm"> * this is an IO bound operation, unless the inputstream is coming from a slow</span>
+</span><span class="line"><span class="cm"> * http connection, otherwise, 5 is more than enough.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">val</span> <span class="nc">GLOBAL_THREAD_LIMIT</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="nc">Runtime</span><span class="o">.</span><span class="n">getRuntime</span><span class="o">.</span><span class="n">availableProcessors</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span>
+</span><span class="line">  <span class="k">if</span> <span class="o">(</span><span class="n">ret</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="mi">5</span>
+</span><span class="line">  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">ret</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">private</span> <span class="k">lazy</span> <span class="k">implicit</span> <span class="k">val</span> <span class="n">executionContext</span> <span class="k">=</span>
+</span><span class="line">  <span class="nc">ExecutionContext</span><span class="o">.</span><span class="n">fromExecutorService</span><span class="o">(</span><span class="nc">Executors</span><span class="o">.</span><span class="n">newFixedThreadPool</span><span class="o">(</span><span class="nc">GLOBAL_THREAD_LIMIT</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// open source stream</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">soure</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">linesStream</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">chunkCounter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">val</span> <span class="n">sortedFileDir</span> <span class="k">=</span> <span class="nc">Files</span><span class="o">.</span><span class="n">createTempDir</span><span class="o">()</span>
+</span><span class="line">  <span class="n">sortedFileDir</span><span class="o">.</span><span class="n">deleteOnExit</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// read source stream, read n entries into memory and save it to file in parallel.</span>
+</span><span class="line">  <span class="k">val</span> <span class="n">saveTmpFiles</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span>
+</span><span class="line">    <span class="n">linesStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">s</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">chunk</span> <span class="k">=</span> <span class="n">chunkCounter</span><span class="o">.</span><span class="n">getAndIncrement</span>
+</span><span class="line">      <span class="nc">Future</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">sorted</span> <span class="k">=</span> <span class="n">s</span><span class="o">.</span><span class="n">sorted</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="s">&quot;%d&quot;</span><span class="o">.</span><span class="n">format</span><span class="o">(</span><span class="n">chunk</span> <span class="o">*</span> <span class="n">chunkSize</span><span class="o">))</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">sorted</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">        <span class="n">ret</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}).</span><span class="n">toList</span>
+</span><span class="line">  <span class="o">)</span>
+</span><span class="line">
+</span><span class="line">  <span class="c1">// perform merge sort.</span>
+</span><span class="line">  <span class="n">saveTmpFiles</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">files</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">var</span> <span class="n">merged</span> <span class="k">=</span> <span class="n">files</span>
+</span><span class="line">      <span class="k">while</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">splited</span> <span class="k">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">/</span> <span class="mi">2</span><span class="o">)</span>
+</span><span class="line">        <span class="k">val</span> <span class="n">tuple</span> <span class="k">=</span> <span class="n">splited</span><span class="o">.</span><span class="n">_1</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">splited</span><span class="o">.</span><span class="n">_2</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">        <span class="k">val</span> <span class="n">m2</span> <span class="k">=</span> <span class="n">tuple</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
+</span><span class="line">          <span class="k">case</span> <span class="o">(</span><span class="n">f1</span><span class="o">,</span> <span class="n">f2</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">            <span class="k">val</span> <span class="n">ret</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="n">sortedFileDir</span><span class="o">,</span> <span class="n">f1</span><span class="o">.</span><span class="n">getName</span> <span class="o">+</span> <span class="s">&quot;-&quot;</span> <span class="o">+</span> <span class="n">f2</span><span class="o">.</span><span class="n">getName</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">            <span class="k">val</span> <span class="n">source1</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">            <span class="k">val</span> <span class="n">source2</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromFile</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">            <span class="k">val</span> <span class="n">out</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">PrintWriter</span><span class="o">(</span><span class="n">ret</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line">            <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">              <span class="k">val</span> <span class="n">stream1</span> <span class="k">=</span> <span class="n">source1</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">              <span class="k">val</span> <span class="n">stream2</span> <span class="k">=</span> <span class="n">source2</span><span class="o">.</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</span><span class="line">              <span class="n">merge</span><span class="o">(</span><span class="n">stream1</span><span class="o">,</span> <span class="n">stream2</span><span class="o">).</span><span class="n">foreach</span><span class="o">(</span><span class="n">out</span><span class="o">.</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+</span><span class="line">              <span class="n">ret</span>
+</span><span class="line">            <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class="line">              <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">              <span class="n">source1</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">              <span class="n">source2</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line">              <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f1</span><span class="o">)</span>
+</span><span class="line">              <span class="nc">FileUtils</span><span class="o">.</span><span class="n">deleteQuietly</span><span class="o">(</span><span class="n">f2</span><span class="o">)</span>
+</span><span class="line">            <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">          <span class="o">}</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">        <span class="n">merged</span> <span class="k">=</span> <span class="k">if</span> <span class="o">(</span><span class="n">merged</span><span class="o">.</span><span class="n">length</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">m2</span> <span class="o">:+</span> <span class="n">merged</span><span class="o">.</span><span class="n">last</span>
+</span><span class="line">        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">          <span class="n">m2</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">      <span class="n">merged</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Lift a Stream into a Stream of Stream. The size of each sub-stream is specified</span>
+</span><span class="line"><span class="cm"> * by the chunkSize.</span>
+</span><span class="line"><span class="cm"> *</span>
+</span><span class="line"><span class="cm"> * @param stream        the origin stream.</span>
+</span><span class="line"><span class="cm"> * @param chunkSize     the size of each substream</span>
+</span><span class="line"><span class="cm"> * @tparam A</span>
+</span><span class="line"><span class="cm"> * @return              chunked stream of the original stream.</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">lift</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">stream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="k">def</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">remaining</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">remaining</span><span class="o">.</span><span class="n">isEmpty</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">empty</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">remaining</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">      <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line">  <span class="k">val</span> <span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tail</span><span class="o">)</span> <span class="k">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">splitAt</span><span class="o">(</span><span class="n">chunkSize</span><span class="o">)</span>
+</span><span class="line">  <span class="k">return</span> <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">head</span><span class="o">,</span> <span class="n">tailFn</span><span class="o">(</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="cm">/**</span>
+</span><span class="line"><span class="cm"> * Merge two streams into one stream.</span>
+</span><span class="line"><span class="cm"> * @param streamA</span>
+</span><span class="line"><span class="cm"> * @param streamB</span>
+</span><span class="line"><span class="cm"> * @return</span>
+</span><span class="line"><span class="cm"> */</span>
+</span><span class="line"><span class="k">private</span> <span class="k">def</span> <span class="n">merge</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">streamA</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">streamB</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">ord</span><span class="k">:</span> <span class="kt">Ordering</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span> <span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">  <span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">)</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span>
+</span><span class="line">    <span class="k">case</span> <span class="o">(</span><span class="nc">Stream</span><span class="o">.</span><span class="nc">Empty</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">b</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="o">{</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">a</span> <span class="k">=</span> <span class="n">streamA</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">      <span class="k">val</span> <span class="n">b</span> <span class="k">=</span> <span class="n">streamB</span><span class="o">.</span><span class="n">head</span>
+</span><span class="line">
+</span><span class="line">      <span class="k">if</span> <span class="o">(</span><span class="n">ord</span><span class="o">.</span><span class="n">compare</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">b</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">.</span><span class="n">tail</span><span class="o">,</span> <span class="n">streamB</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">        <span class="nc">Stream</span><span class="o">.</span><span class="n">cons</span><span class="o">(</span><span class="n">b</span><span class="o">,</span> <span class="n">merge</span><span class="o">(</span><span class="n">streamA</span><span class="o">,</span> <span class="n">streamB</span><span class="o">.</span><span class="n">tail</span><span class="o">))</span>
+</span><span class="line">      <span class="o">}</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
 
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/05/on-compensation-of-youth/">談台灣年輕人低薪問題</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-05T01:35:00-07:00" pubdate data-updated="true">Jun 5<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>台灣這幾年商界、政界、很喜歡對年輕人指指點點，說只要努力就可以脫離 22K ，年輕人收入不好的問題根源是在年輕人上，所以在這邊寫一下我的看法。</p>
-
-<p>我在美國念書畢業一年後，在 26 歲時，底薪收入就有八萬美金，後來我又幹了四年，回台灣又幹了四年，但我的收入連八年前的一半都沒有，所以說，是我能力退步了嗎？不對啊，我現在寫程式碼比以前快不知道多少倍，還帶一個團隊，怎麼可以說我退步了呢？</p>
-
-<p>一個人所能領的薪水，是相對於他所能創造的產值，而一個人能創造的產值，則是基於他所在的團隊以及社會之上，我過去還是一兩年經驗的新人能領高薪，是因為我所處在的團隊、社會可以創造高價值，因此我所做的邊邊角角的工作，依附在團隊上仍是有價值的，公司就我當下及未來可能的貢獻，給我高的報酬。</p>
-
-<p>所以說穿了，年輕人能領的薪水，很大的決定因素是在於這個社會能夠如何運用他們，這個社會的掌權者、這個社會的中監份子，能為年輕人創造怎樣的舞台，如果掌權者創造的社會有價值，能夠利用年輕人創造更多的價值，那麼年輕人自然能夠領高薪。</p>
-
-<p>如過這個社會的掌權者，只在乎金錢遊戲，忽視產業，那麼年輕人沒有舞台，自然只能領低薪</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/13/tdd/">TDD</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-13T22:46:00-07:00" pubdate data-updated="true">May 13<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>總算是把 TDD 的戰文看完了，看完後我對 DHH 的評估仍是沒變。</p>
-
-<p>DHH 在 Rework 中自述到，他偏好帶領一個三十人的團隊自在的工作，而不要把組織擴大到上百上千人把自己搞的焦頭濫額。 DHH 在組織架構跟應用範圍的偏好偏食，讓我在讀 DHH 文章時都會先考慮過他的出發點跟局限性。</p>
-
-<p>以程式設計師的角色來說， DHH 的精兵政策當然看起來很爽，我自己也做過類似的選擇，捨棄 Java 而就 Scala ，追求更高的個人產值。</p>
-
-<p>然而若是以一個架構師的角度來說，我的目標是成為像 Martin Fowler 的角色，相較於只有 36 個員工的 37 signals ，ThoughtWorks 是個有超過 2500 個員工的專業代工廠，在 ThoughtWorks 掛頭牌的 Martin Fowler 在技術的選用上，自然的考量要更全面，顧慮到不同應用領域的開發需求、以及不同程度的程式設計師該怎麼管理。</p>
-
-<p>DHH 對 TDD 的批評我多數同意，尤其是 Testing / DI 對 Design 的入侵也是一直困擾我的問題，但是我是把 Testing 當成一個需求來看，所以是多一個需求造成的額外成本在困擾我，而不是降低可讀性等問題在困擾我。
-在目前看不到較好的替代品之前，我還是會繼續用 TDD (w/o test first) 來做設計上的工法。</p>
-
-<p>我目前對程式的想法是從資料做起，我做的系統，多數就是把輸入的資料，透過一串串的轉換，Map, Filter, Count, Sum, Aggregation 後，變成最後要的樣子，在A -> B -> C -> D 中間，可能會有一些中介型態的出現。</p>
-
-<p>在我的設計中就會變成，在每一次的轉換的過程中，讓輸入輸出是可以被測試的，在設計階段就預先考量到要怎麼測試這些轉換。</p>
-
-<p>至於會不會做 Unit Test, Test First, 我是看有多少時間做多少事的，但至少模組內的一串流程的測試是會去做的。</p>
-
-<p>另外我會把 DAO &amp; Data Transformer(Service) 分開來，資料轉換的運算，是可以不用靠 DB 來的資料直接做測試，這樣跑起來才會快。</p>
-
-<p>許多的商業邏輯，我會在 DAO -> Service 上再多架一層 Controller ，這個 Controller 就會很醜，因為只有三(四)層，所以一個 Controller 可能換串個十來個 Service ，但是醜的就是在這裡面而以。</p>
-
-<p>測試的時候，至少是可以分層把底層容易測的都測好是穩定不容易出錯的，到時後上線有問題時，就可以知道是在 Controller 把東西串起來時出錯了。</p>
-
-<p>沒有 Test First 沒有 Unit Test ，但是會做 regression test, integration test 會在設計時預先留下容易稽核的點。這是不是 TDD??</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/03/cross-strait-trade-agreement/">我看服貿</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-03T00:10:00-07:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>幫大家用自由經濟的角度，來看看新光三越在中國被坑殺的例子好了～</p>
-
-<p>我非常不喜歡大家用「台商在中國被坑殺」這個理由，來當做反服貿的理由，因為商人天性就是計算風險而不是閃避風險的，商人是在種種的計算下，在有相對應的報酬下，自然會去冒險，所以用「怕被坑殺」這理由去跟商人講為什麼要反服貿，這是自己講話給自己聽，而不是跟對方在對話。</p>
-
-<p>世界不是繞著懦夫轉的，而是繞著喜愛風險的創業家在走的，若少了冒險的風氣，那台灣的未來就危險了。</p>
-
-<p>想當商人的我，當然是（從一萬英尺高的概念上看下來）是支持自由貿易、支持西進的，但在「現實」上我仍是「反服貿的」。</p>
-
-<p>為什麼呢？因為在細節的實作上，政府實在是談的太糟了，台商在中國會被坑殺是為什麼？是因為「中國法規的不穩定」及「中共政策的不穩定」所造成的，今天中國要吸引外資就開放產業，等那天反抗企業的母國，就用政府的力量在行政司法上去對抗民間企業。
-但企業是否是真的無力去跟中共對抗嗎？錯，在國際上仍有商務仲裁的機制、有 WTO 的爭議處理機制，有國家間互相角力的機制，可以去保護企業。</p>
-
-<p>但在「服貿」協議中，馬英九完全的出賣台灣，明知道中共會用台灣不是國家的方式否決掉上面的幾個機制，那麼，在談判時為什麼沒有把這問題拿出來討論？即使中共不承認台灣是個國家，但仍是可以在條約中寫入協商條款、保護台灣企業的權益。</p>
-
-<p>而不是如今天寫的「服貿內的條款若要修改只能放寬」，這一條一寫下去，台灣政府跟中共談判的空間全沒有了，那天要打貿易戰也打不起來，因為台灣自己就把自己的條約修改空間、談判空間限死了。</p>
-
-<p>這樣的「服貿」能說政府有用心去談而不是賣台嗎？能不反嗎？</p>
-
-<p>ref: <a href="http://china.twdetect.org.tw/news15.html">北京新光投資130億　吳家擬認賠出場</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/26/role-model/">典範</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-26T21:31:00-07:00" pubdate data-updated="true">Mar 26<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>這篇寫的真好，在國外渡過我二十歲的歲月，三十歲回到台灣來，發覺，台灣人最缺的就是一個典範跟一個夢想。</p>
-
-<p>台灣的年輕人活的很沒未來，常做一些很短期的事，像是一年換一次手機，一年就出國一次去玩，工作收入有個四五萬一個月好像就很滿足了。</p>
-
-<p>這些，我不會去怪這些年輕人，因為台灣這個社會讓年輕人沒有了夢想，把手機的錢存下來又怎樣，什麼都還是買不起，買車買房都無望，還是今朝有酒今朝醉吧，比別人多努力兩成又怎樣，生活又不會過比較好，反而還比較慘。</p>
-
-<p>我在美國單身的歲月裡，一年可以存下四成的薪水，工作了兩三年後，存下的錢在考慮要怎麼花，看是現金買部BMW M3圓夢、買個公寓省下房租、或投資做生意中做選擇，生活是一日比一日好。</p>
-
-<p>回來台灣後發現，台灣年輕人最缺的，其實是生命上的導師、一個可以遵從的典範，一個長你十多歲，一個你一直努力，就可以達到他的境界的目標。</p>
-
-<p>Ronald 是1.5代移民的香港人 30 歲幹到了 Director of Engineering ，Mak是日裔第一代移民 X-Window 中有他的名字，雖然英語不是他的母語，還是帶了 80 人，後來還跑去做了 Sims 3 ，Maidu 聯合國科學家的兒子，19歲大學畢業，30歲初頭時在兩年內在印度開了家公司，在舊金山生了小孩，還在 U of Chicago 拿 MBA，Stu 超級技術強人，幫我開了一輩子的眼界。</p>
-
-<p>這些人是我工作的同事，長我五到十歲，讓我知道，只要有目標，忍耐得了寂默苦修，有一天我也可以達到他們的境界。</p>
-
-<p>但是台灣的年輕人就沒什麼典範可以學習了，電視雜誌上報導的，多是六七十歲的大老，要不然就是官二代富二代；看這些人的故事，怎麼看都沒什麼好學的，反正再怎麼努力，你爺爺也不會變成姓蔣的，你無法去複製他們的成功經驗。</p>
-
-<p>台灣因為市場結構問題，要打入既有商業體系的，都只能靠「關係」，我這幾年下來，碰上創業成功的，多是做吃的，因為只有做吃的不用靠關係可以直接面對市場。或許就是這樣吧，年輕人就只能學著當個好寶寶，等著接收長輩的蔽蔭。</p>
-
-<p>所以看到陳為廷和林飛帆能幫年輕人立個典範，告訴大家，年輕人還是能改變社會，讓我非常的感動。</p>
-
-<div id="fb-root"></div>
-
-
-<p> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script></p>
-
-<div class="fb-post" data-href="https://www.facebook.com/nai.lai.12/posts/10200710575647101" data-width="466"><div class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/nai.lai.12/posts/10200710575647101">Post</a> by <a href="https://www.facebook.com/nai.lai.12">蔡坤霖</a>.</div></div>
-
-
-<blockquote><p>   蔡坤霖</p>
-
-<p>   以下是我的立場。</p>
-
-<p>   其實這樣寫很奇怪，為什麼會有人關心我的立場？不過既然臉書是私媒體，我不是公眾人物，也沒領稿費，那就當書寫為自瀆吧。</p>
-
-<p>   我首先要懺悔：從2012以後，我就是個心存逃避的失敗主義者。馬英九上台，我認為，台灣人民已經做了選擇，那就是統一。</p>
-
-<p>   既然要統一了，那我心態上可以提早做準備。我尊重台灣的民意，因此也沒想要多反映什麼，只想，啊，以後就當個共產黨治下的民眾吧。反正，我喜歡的東西是類型，如武俠、玄幻之類古代背景，沒有要談什麼高深的東西。</p>
-
-<p>   但我內心其實相信，台灣不統一比較好。台灣之所以重要是因為它不是中國的一份子，如果它是中國的一份子，那台灣就不特別了。</p>
-
-<p>   這句話很難簡單說明，但從對自己的經濟天賦失望之後，我就轉而將熱情投諸在不能量化的事物上。台灣保有獨立的主權，等於是為華人的政治實踐多了一所學校，畢竟華人作為地球上最龐大的民族，只有這個小小的島是民主的，只有這個小小的島，能夠提供集權之外的另一種可能。</p>
-
-<p>   想像需要典範，對現在以及未來的華人而言，台灣就可以是那個典範，前提是台灣值得成為典範。</p>
-
-<p>   既然台灣不願意成為這個特例，想要跟中國其他數十個省份一樣，那我接受台灣人民的選擇，所以我不再思考這件事情，只想著如果可以掌握好中國古代背景的類型電影，未來在華人市場應該都有飯吃。</p>
-
-<p>   政治與文化的多樣性，台灣可以為華人保存這一小小的孤島。可不可以把台灣像是太平洋上物種歧異度高的一個小島一樣保存下來，進行一點政治體制上的一點研究呢？我在選舉前是這樣想的。</p>
-
-<p>   這裡要先說兩點，我認為2012馬英九上台等於統一，和我認為統一之後台灣主體性會消失，並且成為文化上、思想上毫無特色的一個省份，這兩點是近乎宗教的信念，不在此論證由何而來。信者自信，疑者自疑，到處找找有很多說法、很多推測，但尚未發生，所以我沒有證據。</p>
-
-<p>   在我心中，台灣如同雅典，雖小，卻體現著罕見而且影響深遠的故事。如同余英時所說：「台灣雖小，但其實它大極了。」</p>
-
-<p>   等到未來某個世代的華人決定推翻共產黨時，他們知道他們可以看向哪裡。他們有機會知道，所謂華人不需要民主，是一個被兩千三百萬人證偽的謊言。</p>
-
-<p>   然後台灣的民意放棄這件事情了，在2012年，689萬票這樣說。那就算了吧，何必思考呢？再說一次，這是我主觀如同宗教般的解讀，沒有任何依據。</p>
-
-<p>   所以大埔，文林苑，我認為都更雖然執行粗糙，但有其必要性；核四，雖然粗糙，但確實能減碳，也高效率，很多議題我都覺得算了。幹麼想這些呢？有那麼多人不在乎政府違憲（是的，我先天上就覺得職業學生出身的馬英九從來沒在乎過憲法），反正遲早就要習慣沒有憲法的生活了不是嗎？</p>
-
-<p>   到時候那些可以扭轉歷史的40萬人再來後悔吧，我從來沒投過馬英九，我可沒什麼好後悔，是被拖下水的。</p>
-
-<p>   失敗主義、犬儒主義，自作聰明，未戰先退。我很懦弱。我不覺得我可以也必須抵抗689萬票，也不覺得有可能對抗13億。怎麼可能呢？世界上人口最多，最霸道，離我們最近的國家。</p>
-
-<p>   吐口水就淹死我們了，拔根毛就脹死我們了。想想怎麼過得好吧，不要太激憤，不然，很可能到時候統一時，會死一票人。</p>
-
-<p>   改朝換代，不都要血流成河？我們還看得少嗎？</p>
-
-<p>   服貿只是歷史巨輪下的一個小齒輪。之前很多事情，台灣人不吭聲，是的，包括鄭秀玲教授的那些文字，一點屁聲都沒激起，台灣人沒有資格擁有民主，那就順勢而行吧。之後很多事情，也不會吭聲。</p>
-
-<p>   到時候，就閉嘴，蘇軾不是說過了嗎？</p>
-
-<p>   「夫持法太急者，其鋒不可犯；而其勢未可乘。」</p>
-
-<p>   我是個聰明人，蒙田是我的偶像。蘇格拉底拿來意淫就好，不用仿效。</p>
-
-<p>   但是我看到，陳為廷和林飛帆，居然能在馬王政爭時攻下立法院！</p>
-
-<p>   我想都沒想過！居然還有這招？怎麼還有這樣的招數？從來沒有人攻打立法院呀！為什麼立法院居然可以被攻下來，而且還有人想到要去打下它？而且打下它之後，王金平居然真的不趕走他們？</p>
-
-<p>   天哪，還有這一招！我嚇傻了。從沒想過鬥爭、反抗，以為選票就是一切的我被嚇傻了。我以為一切都已經注定好了，提早投降了。他們在實踐中獲得了我想像力之外的智慧與勇氣。我不覺得他們就比我聰明，書就讀得比我好，但他們年紀比我小，用這麼簡單、異想天開的方式，就告訴了全台灣，告訴了全世界。</p>
-
-<p>   我不服，我有話要說，我想說的是，公民不服從。</p>
-
-<p>   我知道公民不服從，我讀過梭羅，我知道甘地、曼德拉。但剛剛說過，想像需要典範，這兩個年輕人給我了典範，讓我敢想像。然後我發現，我還沒有年輕過，就已經老了。我在沒有天真前，就先世故了，我在還沒思考作戰前，我就先規劃好投降了。</p>
-
-<p>   那之前，我以為人生最好是去美國，然後是去中國，離開台灣，離開被自己人放棄主權的悲情島嶼。我好懦弱。</p>
-
-<p>   台灣，這個小小的島嶼，從以前就是強權間的遊戲，未來也一直都會是。當中國和平崛起，美國重新調整戰略思維，台灣民意悶不吭聲，我知道，事就這樣成了。</p>
-
-<p>   我想像的台灣價值會被一個文革之後失去靈魂的國族吞吃乾淨，文革的火燒乾了中國的血性與道德，焦土之上只剩下消費主義的荊棘可以怒放，然後很快輪到台灣。</p>
-
-<p>   但陳為廷和林飛帆讓我知道，事情還有可轉圜的餘地，大聲讓世界知道，我們不服從。畢竟，這句話這天不說，很快就不能說了。</p>
-
-<p>   我一向很懦弱，所以我逃避思考，逃避現實，在故事的世界裡面永遠找得到避風港。我以為這樣我就不用害怕。</p>
-
-<p>   但這時候我才知道我真正害怕什麼。</p>
-
-<p>   我害怕，未來有一雙澄澈的眼睛，看著我，問我說當台灣被統一的時候，我做了什麼。</p>
-
-<p>   我知道，我不能聳聳肩，冷笑說：「我怎麼知道，你老子我沒投過國民黨，那不關我的事。」</p>
-
-<p>   那關我的事。</p>
-
-<p>   高牆與雞蛋之間，雞蛋不可能贏。</p>
-
-<p>   但人活著，要有骨氣。不可以什麼都還沒做，就先認輸。</p>
-
-<p>   膝蓋還沒好，不能跑、不能久站、不能盤腿坐太久。那找兩天睡在外面吧，未來我可以告訴我的小孩，我那天晚上，看到的夜空很美，很年輕。</p>
-
-<p>   最後，我還可以跟我孩子吹噓：「你老爸年輕時超會考試，考上了台大，那裡有個校長叫傅斯年；死過很多人，其中一個人是陳文成；那裡發生過哲學系事件。出過很多敗類，但也發生一些值得記住的事情。還是有些值得驕傲的地方。」</p>
-
-<p>   我以身為台灣人為榮，我以身為台大人為榮。</p>
-
-<p>   2014/03/25</p>
-
-<p>   最後，請讓我打上這行超過四年沒有寫的頭銜：</p>
-
-<p>   B93 台大經濟 蔡坤霖
-   獻給B91鄧之皓</p></blockquote>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/22/wang-jin-pyng/">從立法院長王金平談遵守法定程序</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-22T23:02:00-07:00" pubdate data-updated="true">Mar 22<span>nd</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1>紙牌屋</h1>
-
-<p>王金平果然是老狐狸，什麼政爭，有他就好看了許多，似乎全中華民國政界講法律的就只有他一人而已。</p>
-
-<p>先是學生佔領國會，行政單位用「國會自主」說國會殿堂歸立法院管，只有院長才可以動用警察權讓警察進入。</p>
-
-<p>王金平就用非開議期間的佔領，是單純行政問題，請行政單位自行處理。</p>
-
-<p>昨日總統要召開府院會議，調停行政跟立法的紛爭。</p>
-
-<p>王金平說，審法條是立院自己的事，跟行政單位無關，沒什麼糾紛，拒絕出席。</p>
-
-<p>今天行政院長跟學生會面，說考慮要逐條審察。</p>
-
-<p>王金平又說，行政院提的解決方案跟立法程序不合。此外，怎麼審是立法單位的事，不容行政單位插嘴。行政單位有問題的，可以自己撤案，從頭再來一次。</p>
-
-<p>這場戲，真的沒王金平不行啊，好好的幫台灣民眾上了一課什麼叫行政、立法、司法三權分立。</p>
-
-<p>而且直把箭頭指准國民黨主席馬英九，因為只有國民黨主席可以要求立委撤回服貿的同意案。</p>
-
-<h1>我想當好人</h1>
-
-<p>王金平是不是(道德上)的好人我不知道，至少就很多中華文化的標準來看，他不是個好人。但是就法律上來說，他是個守法的好公民，也幫我們守住了法治社會的底限。</p>
-
-<p>在學生佔領立法院的初期，有些人是期望王金平以立法院長的身份，去主張「國會自主權」並且同時不使用「警察權」去趨離學生的。</p>
-
-<p>就此標準來看，王金平不保護學生，是道德上的壞人，但是，因為他什麼都就法律來主張自己的看法，反而讓學生運動有了更強的理論基礎、正當性。</p>
-
-<p>學生運動本來是要求「行政單位跟立法單位要就法定程序來審服貿法案」。</p>
-
-<p><del>但當學生要求跟總統對話時，總統派出了行政院長來對談，行政院長在自己職權外答應了一些事，我新聞沒看很清楚，印像是學生並沒有嚴詞拒決了行政院長的提案。</del></p>
-
-<p><del>這時，學生已自己都踩了自己定下紅線而不自知，好險有王金平這老狐貍在旁，暗助了學生一把，說了行政院長所提的解決方案與法律不合，把大家的攻防，又拉回了「行政單位跟立法單位要就法定程序來審服貿法案」</del></p>
-
-<blockquote><p>3/23 補注：剛看完了行政院長到現場的對談，原來行政院長當場什麼也沒答應，而學生也把底線抓的很好，
-一直是都要求行政院就自己的職權來撤回法案。所以王金平只是補一刀而已</p></blockquote>
-
-<h1>野蠻時代</h1>
-
-<p>為什麼我們要看議事規範、要去就法律攻防，因為我們要避免回到今天的狀況，避免回到野蠻時代。</p>
-
-<p>兩百年前，法國國會是議員有爭論，就是拔劍決鬥，但人家還是走過了那個階段，現在都是就議事規範來較競，不是再用武力對決，所以人家國會會有那種一講二十個小時，就為了阻擾法案通過。野蠻嗎？總比拔劍決鬥文明多了。</p>
-
-<p>今天為什麼服貿的審議會讓那麼多人走上街頭，就是因為我們的國會往回走到了野蠻時期，主席可以跑到廁所門口，獨自宣佈表決通過，如果這樣子人民都還可以忍受，下次就是睡夢中就通過，或者行政單位直接執行，事後再補程序就好。</p>
-
-<p>這種事情若還能接受，那就離獨裁不遠了</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/15/prepaid-card-lifetime-limit/">消基會抽查預付卡100%違規設使用期限，NCC：將要求業者改善</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-15T11:47:00-07:00" pubdate data-updated="true">Mar 15<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>這是鬧劇嗎？兩邊都是笑話。</p>
-
-<p>電信公司給預付卡一個門號跟維持一個門號是有成本的，為什麼 NCC 可以要求業者要無限期的維持一個沒有使用中的門號，設使用期限或者是有每月低消本來就是很合理的事，中華民國政府的 &#8220;行政單位NCC&#8221; 竟然可笑的定了這種 &#8220;規定&#8221; 出來。</p>
-
-<p>更可笑的是， NCC 自己定的 &#8220;規定&#8221; ，卻連自己都不去強制遵守，要求業者遵循規定。</p>
-
-<p>「上下交相賊」，上個求個美名所以定個便民的規範，但是卻不去執行，把責任推給商家，真是好個「儒家社會」啊</p>
-
-<blockquote><p>消基會抽查預付卡100%違規設使用期限，NCC：將要求業者改善
-消基會抽查國內11件預付卡商品，發現100%都違反規定設有使用期限，應記載資訊也沒有完整詳細說明，NCC表示將進行查核，督促業者依規定落實改善。</p>
-
-<p>文/蘇文彬 | 2014-03-14發表</p>
-
-<p>消基會抽查11件電信預付卡商品，發現全部違反國內電信禮券定型化契約規定設定使用期限。</p>
-
-<p>消基會調查電信業者推出的預付卡發現，預付卡雖然免綁約，且提供消費者控制通話費，但都訂有使用時間限制。對此NCC表示，電信儲值卡不應限制使用期限，將督促業者改善。</p>
-
-<p>消基會這次一共抽查11件預付卡商品，其中7件為金額儲值型，4件為計量型上網儲值卡，並依據「電信商品或服務禮券定型化契約應記載及不得記載事項」不應限制用戶使用期限的規定，檢視抽查的預付卡服務內容說明是否有違反法律規定的情形。抽查的預付卡銷售商包括遠傳、台灣大哥大、中華電信、威寶、亞太、家樂福、7-Eleven等。</p>
-
-<p>結果卻發現抽查的預付卡商品全部都設有使用期限，用戶每次儲值需在一定的時間內使用，業者通常限制為180天，上網儲值卡更只有30天，用戶在期限內再次儲值才能再展延180天或30天。</p>
-
-<p>消基會指出，抽查的預付卡100%違反規定，並非消費者儲值後就能一直使用到儲值金額用完為止。一般購買禮券不因只消費部份金額，就被要求將剩餘金額在一定期限內消費完，但電信儲值卡卻有使用期限，除非再次儲值才能延後使用，但儲值金額用不完還要消費者再儲值才能繼續使用並不合理，且違反規定。</p>
-
-<p>預付卡儲值金額若在時限內未使用完，部份電信業者可以申請退費，但部份業者規定只能辦理移轉，將預付卡內剩餘金額轉移到同一家業者月租費門號帳上，若用戶超過6個月沒有申辦轉移，剩餘儲值金額會保留，但會收取保管費直到扣完為止。</p>
-
-<p>除了使用期限，消基會也發現其他資訊，例如業者名稱、地址、發售編號、履約保證、餘額處理方式、遣失處理等資訊在包裝或業者官網上說明不夠明確。</p>
-
-<p>消基會表示，「電信商品或服務禮券定型化契約應記載及不得記載事項」在2007年通過，該年6月消基會首次抽查即100%違反規定設定用戶使用期限，今年再再次調查仍是100%違反規定，部份業者甚至規定屆期金額歸零，NCC應加強督導業者，消費者選擇儲值卡也應注意業者相關規定。</p>
-
-<p>對於消基會抽查預付卡結果，NCC回應，依電信禮券定型化契約規定，逾期未使用完的傳輸量，用戶沒有特別聲明，應自動用以折抵通話費。消費者購買預付卡為不記名的禮券商品服務，依規定不得限制使用期限，NCC將會督促業者落實規定改善。</p></blockquote>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/19/on-load-testing/">從壓力測試回想到一些老故事</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-19T00:55:00-08:00" pubdate data-updated="true">Feb 19<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近壓力測試因為 <a href="http://www.cna.com.tw/news/aipl/201402180446-1.aspx">戶政系統</a> 的原因，上了幾天的新聞，講到壓力測試，就想到我這輩子職場上的一個恥辱，把一個產品搞倒的紀錄。</p>
-
-<p>2007 年我還在 Rhapsody.com 時，當時我是擔任我們 webservice api 的 QA Lead ，做一個有 40 個內外部客戶的服務的守門員，每一次的產品更新，都要我跑完了數萬個測試，說可以出貨了才可以出貨。</p>
-
-<p>四月時忙完跟 Tivo 的合作案，把系統的負荷量測到及調整到可以服務 500萬線上用戶的量後，另一個團隊又開發了新的 social 網站。</p>
-
-<p>那是 facebook 才上線三年，或者說才對外公開服務的第一年，當所有人都還不知道什麼是社交功能時，rhapsody就已經開發出來社交功能，可以互相推薦音樂清單、可以 follow 別人、還可以自定 avatar</p>
-
-<p>在上線前，我問了我的主管的主管，需不需要對 social web 的上線做測試，當時大主管是說不用。沒想到一上線，這 social web 非常的熱門，一下子就有數萬個用戶從標準的頁面轉換到 social 版去，似乎，一個新的 killer app 就要產生了。</p>
-
-<p>然而才上線兩三天，網站的速度就慢了下來，後來才知道，原來 social web 濫用了我們的一個 GET api ，我們的 GET api 允許一次抓多個 object ，結果 social web 一次一個 request 就抓了 500 object ，一個 object 4k 就好，一次就抓 2MB ，在加上 object serialization 中間所花的記憶體空間，一個 request 就要佔 6MB 以上，一下就把那個年代的 server 打垮了。</p>
-
-<p>就這樣，這個 social web 就下線整修，但不知為什麼，就此沒有再上線過了&#8230;.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/12/mongodb-mysql/">Mongodb vs MySQL/RDBMS</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-12T16:24:00-08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>許多人從 RDBMS 跳到 NoSQL 的第一站都是 MongoDB ，所以這一篇，就是特別寫來解釋，為什麼很多人選用 MongoDB ，以及解釋你為什麼不該用 MongoDB 來換掉 RDBMS 。</p>
-
-<h2>MongoDB 熱門的理由</h2>
-
-<p>MongoDB 熱門的原因是因為他提供了一個可以跟 SQL 相比的 <a href="http://docs.mongodb.org/manual/tutorial/query-documents/">Query Language</a> ，在 NoSQL 不同面向的眾多方案中， MongoDB 所能支援的 AdHoc Query 是沒人能比的， Riak 跟 CouchDB 的 AdHoc Query
-也不差，但是 Riak 在跑 <a href="http://docs.basho.com/riak/latest/dev/using/mapreduce/">MapReduce Query</a> 時是不能透過 index 加速的， CouchDB 則是跟本不支援 index ，所以在這邊 MongoDB <strong>看似</strong> 是個很好的 MySQL drop-in replacement</p>
-
-<p>使用 MongoDB 來取代 MySQL ，在初期，看來是學習成本最低，轉換風險最低的解決方案，所以多數商業公司，為了降低風險，在追循潮流一窩風的採用 NoSQL 時，選擇了 MongoDB 這個看似合理且安全的選項。</p>
-
-<p>然而糖衣底下掩蓋的，卻是數不盡的陷井在那。</p>
-
-<h2>Trade-Off</h2>
-
-<p>技術的選用，往往是一連串的取捨，拿某樣功能去換回了另一項功能，所以，接下來我們就來看看，我們從 MySQL/RDBMS 跳到 MongoDB 去，我們到底是跟魔鬼做了什麼樣的交易，拿了什麼樣的東西，去換回了什麼。</p>
-
-<p>首先，我們先看看我們換出去的是什麼？我們換出去的是 ACID (Atomicity, Consistency, Isolation, Durability) 及 Relational Model</p>
-
-<h3>ACID</h3>
-
-<p>對絕大多數的應用來說，交易的正確性跟不可否任性，是系統必要的基石， ACID 便是協助達成這一目標的工具之一。</p>
-
-<p>ACID 雖然是一大重要工具，但也不是不能夠取代，像是 <a href="http://martinfowler.com/bliki/CQRS.html">CQRS Pattern</a> ， <a href="http://www.youtube.com/watch?v=BGxnjKd4MFQ">Cassandra Summit</a> 有一個很好的講題就是介紹怎麼用 Cassandra 透過 CQRS 來寫一個給銀行用的轉帳系統。</p>
-
-<p><a href="http://msdn.microsoft.com/en-us/library/jj591569.aspx">SAGA Pattern</a> 則是另一個在沒有 Transaction 下，來解決多事件互動的 Pattern 。</p>
-
-<p>然而 CQRS 或 SAGA Pattern 都沒有 Transaction 好用，以及廣被眾人所了解，連我自己都只是讀過沒有親身實作過，要做的話，連底層的工具都要自己從頭開始作，或者是要去學一些非常新的工具如 <a href="http://www.datomic.com/">Datomic</a> 。</p>
-
-<p>因為換出的是 ACID 這樣強大的工具，替代的方案又是高未知的空間，所以許多人最後選擇的替代方案就是 &#8211; <strong>頭埋起來假裝沒有問題</strong></p>
-
-<p>而且 MongoDB 本身號稱的 BASE 跟本是 Eventual Inconsistency ，在
-<a href="http://aphyr.com/posts/284-call-me-maybe-mongodb">Call me maybe: MongoDB</a> 這篇文章中就驗證到，當 Network Partition 發生時，既使 MongoDB
-回復寫入成功，但是實際上還是會失敗的，所以就在這種底層實作不可靠下，你上層加什麼工具也是枉然，所以多數人就是假裝沒這回事，想說自己沒這麼倒楣。</p>
-
-<h3>Relational Model</h3>
-
-<p>Relational Model 是三十年前那次 DB 戰爭中，打敗 Network Model, Hierarchical Model 剩出的王者，在三十年後，再次受到 Document Model 的挑戰，這次的結果如何呢？</p>
-
-<p>Relational Model 的好處是可以透過正規化，減少資料的重複、提高資料的一致性，以及透過
-SQL ，除了 AdHoc Query 外，還可以對多個 Table 進行 Joined Query，這個是 MongoDB / Document Model 所做不到的。</p>
-
-<p>那這個特性重要嗎？我想透過一個例子就可以很簡單的介紹 Relational Model 的強大，跟 Document Model 在應用上會碰到的問題。</p>
-
-<h4>Relational Model Example</h4>
-
-<p>我們公司是做人肉搜索的，對於同一個人 / email 來說，我們會有很多來自不同來源的 metadata ，今天假設是兩個來源好了。</p>
-
-<p>在 RDBMS 中，就是開兩個 Table ，各自記錄不同來源來的資料</p>
-
-<pre><code>| TableA        | Email         | likes      |
-| ------------- |---------------| -----------|
-|               | billg@ms.com  |  1600      |
-
-
-| TableB        | Email         | tweets     |
-| ------------- |---------------| -----------|
-|               | billg@ms.com  |  9999      |
-</code></pre>
-
-<p>在 Document Model 可能就是用一個 Document 如</p>
-
-<pre><code>{
-    email: "billg@ms.com",
-    likes: 1600,
-    tweets: 9999
-}
-</code></pre>
-
-<p>在 Query 時，前者要一個 join 才可以取回關於這個 email 的所有資料，後者則是一個 lookup ，自然後者的效率較好，而且同樣可以對不同的欄位下 Query 條件。</p>
-
-<p>然而，既然要用 NoSQL 就要玩 <strong>BIG DATA</strong> ，所以我們把問題修改一下，我們從兩個來源，分別拿到十億筆
-email 的 likes 數，跟十億筆 email 的 tweets 數，我們想把這些資料寫到 DB 去再拿回來用。</p>
-
-<p>用 RDBMS 自然是輕鬆愉快，兩個檔案輪流打開，一筆筆的加到 DB 中，DBMS對這種簡單的寫入可以做到 10,000 insert / sec 沒問題，大概 55 分鐘就可以做完了。</p>
-
-<p>但是 MongoDB 呢？因為兩個屬性都是在同一個 Document 上，所以要馬是先把十億筆 (email, likes) ，先寫到 MongoDB 中，再下十億筆 Read + Update 把 Document
-讀回來再加上 tweets ，如果很不幸你的 Document Id 不是 email ，那就是要下十億筆 Search + Update ，不管怎麼算，都不是太漂亮。</p>
-
-<p>另一個作法是，你先把兩個十億筆的資料在本機的記億體中做 join ，然後再寫到 MongoDB 去，ㄜ&#8230; 這樣搞你不覺得累嗎？這麼小的應用問題就要自己動手刻程式碼，而且
-前面我們不是說 big data 嗎？如果資料不是十億筆而是一百億筆，你放不進記億體中，那你要先用 radix sort 寫到 file system 再讀回來嗎？</p>
-
-<p>然後你忙了這麼多後， MongoDB 給你的，因為 global write lock ，還是一樣是 10,000 insert /sec ，然後因為 MongoDB 實作的問題，如果你的 Document 有 indexed field
-，那麼寫到兩百萬筆後會越寫越慢，這問題在成熟的 DB 上是沒有的。</p>
-
-<p>我想，這個小例子就說明了 Relational Model 的強大之處及 Document Model 弱的地方，當你要既有的資料新增欄位時， Relational Model 是可以很簡單的增加一個
- column 或 table 就做到，在 MongoDB 上，則是要跳過重重關卡才可以達成。</p>
-
-<p>在軟體需求不穩定時，或常有變更時 Relational Model 對變革的適應能力，較 Document Model 高出許多。</p>
-
-<h2>MongoDB 的長處</h2>
-
-<p>在交換出 <code>ACID</code> 與 <code>對Model 對變革的適應能力</code> 後，我們從 MongoDB 到底換回來了什麼呢？</p>
-
-<ul>
-<li>cluster 帶來的更多的儲存空間</li>
-<li>cluster 帶來的更 scalable read operation.</li>
-<li>在某個資料大小下，一個非常快速的 index</li>
-</ul>
-
-
-<p>前兩個長處就不用多談了，Opensource RDBMS的長處並不在這塊，跟從一開始就要做 cluster 的 MongoDB 是沒得比的，MongoDB 目前已有超過 100 node 的單一 cluster。</p>
-
-<p>第三個先略過不說，等說完結論再回來說</p>
-
-<h2>結論</h2>
-
-<p>我們看完了 Trade-off 後，我們要來思考一下，我們這個交易到底划不划算？</p>
-
-<p>對我來說，我們換出了 ACID 跟 <code>對Model 對變革的適應能力</code> 後，我們換回來的僅僅只有 Scalable storage &amp; scalable read ，
-就我看來，這是一筆極差的交易，因為這個換回來的東西大多只能應用在一塊很小的地方，一個需要大量儲空間、一個需要大量讀取能力的應用，而且後者還可以被 cache 所取代。</p>
-
-<p>前面講的 <code>在某個資料大小下，一個非常快速的 index</code> 就是指這個應用範圍， <a href="https://twitter.com/dickwall">Navigenics 的 Dick Wall</a> 就講過，他曾用 MongoDB 用來儲存要配對的 DNA Sequence
-，他的資料大小，剛好是大到無法用 Redis 放在記億體中，但是 index 的大小剛好是可以透過 MongoDB 全部放在記億體中，剩餘的資料則是存在硬碟上，就這麼剛好透過
-MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案的一百倍。</p>
-
-<p>然而，真正 big data 的應用，如 log storage &amp; analysis ，MongoDB 是無法達到對 write operation 的需求的。 MongoDB 能適用的問題空間實在太小，而且既使你目前的需求是在 MongoDB
-能達到的範圍內，但需求一變化，就長到 MongoDB 無法承擔的空間去了。</p>
-
-<p>這也是我未來不會採用 MongoDB 的原因，在小量資料時，我會用 PostgreSQL / MySQL ，在資料量大時，會用 Postgres + Cassandra + ElasticSearch</p>
-
-<h2>附注</h2>
-
-<p>既然我說 MongoDB 的這筆交易不是個好交易，那什麼是好交易呢？</p>
-
-<p>我覺得 Cassandra 這個就是個好交易，我們拿 ACID, AdHoc Query 出去換。是的我們把 AdHoc Query 都拿出去換掉了，換回來的是一次只能問兩個問題的 Query ，而且這兩個問題還是在 Table Design 時就要決定的。</p>
-
-<p>但我們換回來的是幾乎無上限的 Read &amp; Write operation 能力 ，在<a href="http://techblog.netflix.com/2011/11/benchmarking-cassandra-scalability-on.html">Netflix 的測試中</a>，Cassandra 單一節點可以有 10,000 rw/sec ，然後一路隨著增加到 288 個節點，每加一個點可以增加 10,000 rw/sec 。</p>
-
-<p>這個才是我說的好交易，因為這個特殊能力，是其它解決方案都辦不到的；雖然說我們交易掉了 ACID &amp; AdHoc Query ，但是透過適當的 Table Design ， Cassandra 的特性剛好可以用來解決 Big Data 中 log storage &amp; analysis
-這個大部份人需要解決的問題。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/12/mongodb-schemaless/">Mongodb - Schemaless</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-12T15:08:00-08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。</p>
-
-<h2>Schemaless 的優點</h2>
-
-<p>Schemaless 不是沒有優點的，在搭配上動態語言時， Schemaless 是個很好用的功能，不用設定 mapping configuration ，直接就可以打 <code>item?.some_collections[0]?.city</code> 就這樣一路對一個物件逛下去，不用為了新增一個欄位就要去改 mapping configuration 然後跑 db migration。</p>
-
-<p>然而，這個特點，只有用在有 safe navigation 的動態語言上，才能享受到這些好處，要不然還是處處都要寫 null check ，要不然就會因為讀到前一版的 item 缺少某個欄位，而噴出了 NullPointerException。</p>
-
-<h2>Schemaless 與靜態語言</h2>
-
-<p>在靜態語言中使用 Schemaless DB 時，schemaless 的好處就消失怠盡了，像是我們公司是用 <a href="https://github.com/mongodb/morphia">Morphia</a> 來寫 Model &amp; DAO 的，若是要新增一個欄位，免不了是要去更新 Model class 然後重新 compile &amp; deploy 才能加上一個欄位的。</p>
-
-<p>相較於使用 Schemaful DB ，我們省下的，只有跑 DB Migration 的時間，當然，若是你有個超大的 DB ，那這省下的 off-line maintenance downtime 也可是很驚人的，但是，並不是所有的 db migration 都是要把整個系統下線才能跑的，大多數的 db migration 都是會把系統設計成(對DB)向後相容的，所以不用把整個系統啦下線就可以跑。</p>
-
-<blockquote><p>對DB向後相容的 Application / 向前相容的 Schema ：這邊指的是，先不要更新 Application ，先把 DB Migration 跑完，把資料庫的資料跟Schema更新完後，才把新版的 Application 上線。所以在某段時間內，是舊版的 Application 對著新版的 Schema 在跑的。</p></blockquote>
-
-<h2>Schemaless 的問題</h2>
-
-<p>許多大系統用 Schemaless DB 的原因是因為不想因為跑 DB Migration 把整個系統下線，所以就用 Schemaless 的系統來避開這問題。</p>
-
-<p>但是我想說的是，這誤會可大了，就像前面講的在 Schemaful DB 中，向前相容的 Schema 變動，是不用把系統下線就可以跑的，只有向前不相容的，才要跑 Offline DB Migration 或 Online Data Conversion.</p>
-
-<blockquote><p>Online Data Conversion 指的是，因為前後 Schema 不相容，所以開一個新的 Table 給新版本的物件用，每次讀取一個物件時，先去檢查是否已存在新的 Table 中，若沒有，則是從舊的 Table 讀出來，把格式更新，再存到新的 Table 中。</p>
-
-<p>如此一來，就不用下線也可以把前後格式不相容的的 DB 更新。</p></blockquote>
-
-<p>前文所說的 db migration &amp; online data conversion 就是 schemaless DB 的大問題，除非你是 <strong>神</strong> ，Model 一次就設計好，可以用一輩子，要不然不跑 db migration ，在你的 DB 中，必然會存在著 V1, V2,V3&#8230;Vn 版本的物件。</p>
-
-<p>不跑 db migration ，那就表示你要維護可以對 V1, V2, V3&#8230;.Vn 存取的 Model class ，你可能有一個 db item 一整年沒被讀取到，但是一年後突然用到，你要怎樣保證還讀的回來呢？？</p>
-
-<p>最常見的做法就是，不去 <strong>大幅度</strong> 更新 Model ，削足適屨，既使你知道更新 Model 會讓你未來程式更好寫，但是因為不能去更新 Model ，那就只好去調整程式邏輯，癟腳的用不合適的 Model 來做新工作。</p>
-
-<p>而既使你想跑 db migration ，但是因為 schemaless db 跟本不打算支援 db migration ，所以不會內建任何工具來幫助你，你只能很苦命的自己刻 online data conversion 的工具了。</p>
-
-<h2>後記</h2>
-
-<p>如果你對 DB Migration 的幾種方式有興趣的話，我建議你花一小時，把 Martin Fowler 與 Pramod Sadalage 的 <a href="http://www.se-radio.net/2012/06/episode-186-martin-fowler-and-pramod-sadalage-on-agile-database-development/">Agile Database Development</a> 聽完</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/12/mongodb-shard-key/">MongoDB - Sharding</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-12T14:27:00-08:00" pubdate data-updated="true">Feb 12<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a class="reference external" href="http://docs.mongodb.org/manual/tutorial/choose-a-shard-key/">Sharding</a> 是一個我非常討厭 MongoDB 的地方，在多台 DB 的解決方案中，免不了要用一個方式來決定那個 object 該放在那台機器上，一個解決方式就是用某個欄位來當 shard key 。</p>
-<p>在 MongoDB 中，這個 Shard Key 一決定後就不能改了，然後 MongoDB 會幫你把 object 按 shard key 的值域，平均分配在 n 台機器上。</p>
-<p>問題是，平均分派值域並不代表值會是平均非配的，例如 email ，因為姓名是集中在幾個字母上的，所以按值域分派會有 hot spot 產生，a-d 的特別多人，然後 x y z 的沒有人。</p>
-<p>在其它的 DB 中，每個 shard 機器所負責的值域是可以讓 dba 去調整的，但 MongoDB 是不行的，所以必然會產生 hot spot 而且你無法去躲開。</p>
-<p>有些人會自己去產生 UUID 來當 shard key ，在 MongoDB 2.4 中，則是加入了 hashed shard key 自動幫你把 shard key field 拿去算 hash key 出來當 shard key 用。但是，這還是免不了某些值域是 hot spot 的問題。</p>
-<p>既使 MongoDB 能夠平均分派儲存的值域，但是最終我們要看的是，怎麼樣平均分派 read/write operation 。</p>
-<p>因為在讀取時，也會發生因為某些原因，讓使用者對某些 object 的存取較其它物件多出 n 倍，所以每個 shard 所負責的值域一定要是 tunable ，要不然遲早一定會出問題。</p>
-<p>所以，扔了 MongoDB 吧</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/3/">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-    <a class="next" href="/">Newer &rarr;</a>
-    
   </div>
+
+  <h1><a href="/blog/2013/02/04/why-kimdotcom-can-offer-free-broadband/">為什麼 Kim DotCom/Mega 能夠提供免費的網路</a></h1>
+  <p class="author">
+    <span class="date">2013-02-04 19:21:00 -0800</span>
+  </p>
+  <div class="content">
+    <p><a class="reference external" href="http://www.nownews.com/2012/11/20/11814-2874727.htm">NOWNews 為紐西蘭提供免費光纖！盜版之王Kim Dotcom發豪語</a></p>
+<pre class="literal-block">
+現在，這位『網路頑童』再次放出讓人驚歎的承諾：為紐西蘭的每個人提供免費光纖服務。
+
+引用 Dotcom 在 Twitter 上 的話就是：『The new Mega company will be based in
+NZ &amp; become it's most valuable IT biz. I will relaunch Pacific Fibre. Free
+broadband for all Kiwi's
+</pre>
+<p>為什麼 Kim DotCom/Mega 能夠提供免費的網路呢？這要先從國際專線的拆帳機制講起；所謂拆帳就是，從甲地到乙地的線路
+，如果是甲地往乙地的流量佔四成，乙地往甲地的佔六成，那麼，這條專線的流量費用，就是六四分，甲付六成乙付四成。</p>
+<p>所以說，如果 Kim Dotcom 可以在紐西蘭建立起一個超大的 ICP ，這條專線，百分之九十九的流量都是流出紐西蘭的，那麼
+他就有機會只要付出 1% 的費用就可，當然要怎樣說服對連的電信商，接受這個條件，那就是 KD 的功力了。</p>
+<p>反觀中XX電信，由於台灣的對外頻寬，由於多數是外往內，國內沒有好的 ICP ，造成這些專線的費用，都是台灣買單的。</p>
+<p>小時候學的那些，台灣是東南亞重要戰略樞紐都是狗屁，過境的專線一堆，但是都沒留下實質的好處</p>
+<p>之前同事有問我，為什麼國外的 Hosting 公司可以免錢的，我說，就是因為養 ICP 對 ISP 有好處，所以國外的公司養一堆當談判條件用。</p>
+<p>台灣這邊，除了 <a class="reference external" href="http://wp.xdite.net/?p=122">「無名」被Giga當成談判條件</a> 過之外，就沒有聽過有人拿 ICP 當談判條件了，話說回來，大部份的 ICP 都被中華給拉過去後，也 <a class="reference external" href="http://blog.urdada.net/2009/03/24/197/">沒人有條件跟中華談了</a> 。</p>
+<p>但是，在國際專線這塊，台灣應該也來養幾個這種免費空間，這樣子才不會在國際專線費用這塊，被人家吃透透</p>
+
+
+  </div>
+
+  <h1><a href="/blog/2013/02/03/move-erp-to-cloud/">中小企業ERP系統上雲端？</a></h1>
+  <p class="author">
+    <span class="date">2013-02-03 17:11:00 -0800</span>
+  </p>
+  <div class="content">
+    <pre class="literal-block">
+※ 引述《NightWind (gin and tonic)》之銘言：
+: 我們是一家中小企業
+: 大約三年前才把古早的DOS系統
+: 換裝成鼎新的ERP
+: 現在當初買的伺服器主機保固也要到了
+: 老闆突發奇想把ERP系統裝在中華HiCloud那樣的雲端虛擬主機上
+: 節省定期維護主機與擔心主機突然掛掉的費用
+: 請問真的有人會這樣做的嗎？
+: 又如果有的話，台北地區有沒有規劃的廠商？
+</pre>
+<p>HiCloud 沒用過，所以用 <a class="reference external" href="http://aws.amazon.com">AWS</a> 的例子來解釋要這麼做會碰上那些例子。</p>
+<p>第一個問題是 VM 的可靠度是比你自己買伺服器等級的機器還來的低的， AWS EC2 的
+合約是說 99.95% Available ，但是這不包括你 VM 被 AWS會有隨機關掉的機會。當
+被關掉後，你是要自己手動或自動重啟才有 99.95%</p>
+<p>第二個問題是，台灣多數的 ERP是2-tier的架構而非 3 tier 的，若是用 2-tier 的
+軟體，使用者端要從本機連到 AWS去，一個來回的時間從 &lt;10ms跳到 100ms 以上，如
+果程式寫的不好，本來一個流程的轉換要跑兩個 SQL command，原來是 (10ms*2 + SQL execution time) * 2，
+還有機會是小於 100ms看起來很即時就可以反應，一搬到雲端，時間就跳昇到 100ms * 4，變的超級鈍。</p>
+<p>再來，放到 AWS 去，還要考慮台美專線速度的問題，過去幾年來，台灣對外的海纜，幾乎
+每兩年都會斷線超過一天。所以放在雲端你的架構能提供的，就只剩不到 99.5%</p>
+<p>在 EC2 上，如果要用 EBS讓 VM 當機後資料還在的話， EBS的效能是有口皆呸的
+，但是如果不用 EBS，那 VM 一死，上面的資料又全消失了，變成你自己要做 Data Replication</p>
+<p>最後，如果要用台灣的雲端，不用要 HiCloud，比較建議的環境會是開發資源及支援較多
+的 <a class="reference external" href="http://www.microsoft.com/taiwan/windowsazure/">MS Azure</a> 或是使用 <a class="reference external" href="http://joyent.com/">joynet</a> 技術的 <a class="reference external" href="http://micloud.tw/">MiCloud</a> 會比較妥當。</p>
+<p>縱觀來講，搬到雲端有其它新的挑戰要處理，第一個看軟體要先 3tier 化，再來是要
+做DB online replication 保護資料，最後，是公司對外的專線要能跟的上資料量。</p>
+<p>如果前述問題都能解決的話，貴公司得到的會是</p>
+<ol class="arabic simple">
+<li>更短的錯誤迴復時間：伺服器一死，跟廠商搬機器來迴復也要一個工作天以上，用雲端可以降到一兩小時</li>
+<li>更敏捷的硬體效能：如果硬體效能不夠，使用雲端系統，是直接選更高等級的VM重開，當下就可以昇級。
+不用等採買硬體所需的數星期到數個月的時間，也不必擔心折舊週期還沒到就又要昇級。</li>
+</ol>
+<p>在是否該選用雲端方案的話，就看你們目前的 ERP是否是 3-tier 的，另外就是找顧問來來編
+寫相關的工具及作業流程。</p>
+
+
+  </div>
+
+  <h1><a href="/blog/2012/08/23/cloud-computing-and-rocket-science/">為什麼雲端產業在台灣行不通</a></h1>
+  <p class="author">
+    <span class="date">2012-08-23 11:26:00 -0700</span>
+  </p>
+  <div class="content">
+    <p>很想寫這個主題很久了，雖然可能永遠也無法把道理完整的解釋清楚，不過，有個開頭總是好的。</p>
+<p>首先，先寫個嘴炮給非軟體業的人看，台灣名嘴大喊：「台灣現在要找到能殺出血路的產業，雲端計算是很
+好的機會」、「打造雲端大國，再造兆元產業」，政客名嘴喊喊口號就好，問題是，我們在這產業有什麼利
+機，能夠在 <a class="reference external" href="http://www.books.com.tw/exep/prod/booksfile.php?item=0010090268">落後歐美社會四百年</a> 的狀況下，在不懂數字管理下，一次追趕過這些差距，超英趕美？</p>
+<p>如果沒有確實的利基及施行方案， <strong>「打造雲端大國，再造兆元產業」</strong> 同樣也可以改寫成 「打造月球
+基地，開採外星綠能」、「打造火星計劃，一統太陽系」，後兩者講起來不是更威嗎？</p>
+<p>台灣有許多硬體公司在喊，雲端是未來的機會，問題是，雲端的目標是共享資源、是消減 IT 的支出，對硬
+體廠來說，是個產業危機，也是個大洗牌的機會，但是，對台灣整體來說，絕對是個不利的未來。至於某些
+公司開始喊，雲端業務已經佔公司營業而多少，我的看法是，把伺服器部門改個招牌，雲端營業額就大增了
+啊，問題是， <a class="reference external" href="http://www.wretch.cc/blog/JaguarCSIA/16236603">公司的總營收有成長嗎？</a></p>
+<p>講完了這些後，再講個小故事， 2010 年我回台灣前，公司同事問我，回台灣要做雲端嗎？我回，我不會
+在一個有 <strong>颱風、地震、洪水、土石流、及戰爭危機</strong> 的地方建資料中心。另外，台灣雖然是美國
+對亞洲網路的樞紐，但是台灣的網路流量費過高，就是另一個要面對的問題。已上幾點，就是台灣要做雲端
+資料中心地理環境上的外部問題。</p>
+<p>再來講到台灣軟體業自己內部的問題，做網路服務，同時能服務 <strong>十萬個用戶</strong> 是一個門坎， <strong>一百萬個用戶</strong>
+、 <strong>一千萬個用戶</strong> 、 <strong>一億個用戶</strong> 、 <strong>十億個用戶</strong> 都是不同的門坎，每跨過一階，整個
+系統架構跟考量的點都完全不同，十萬個用戶用 <a class="reference external" href="http://en.wikipedia.org/wiki/LAMP_(software_bundle)">LAMP</a> 一台就夠了，一百萬用戶，那就要開始做 server farm, cache 等，到了
+一千萬用戶，連 DB 都受不了用量，要找其它的解決方案( ex: <a class="reference external" href="http://en.wikipedia.org/wiki/Shard_(database_architecture)">shard</a> )，到上億用戶，你的客戶已
+經不會都是居住在同一地了，光解決 data locality 都是個大問題了，更不用講怎麼 deploy service</p>
+<p>台灣目前有超過百萬用戶的服務，大概就是 Yahoo、無名、痞客幫、PCHome，這四間了，除了這四間外，
+很少公司會有經營百萬人服務的經驗，問題是，台灣喊著要做雲端運算的，都不是這四間，而是剩下來沒有
+經營網路服務經驗的公司。</p>
+<p>為什麼這經驗很重要呢？因為，一個新架構的好壞，只有經過實際的流量摧殘才能知道，在這之前，一切只
+是工程師們用腦補的假設而已，腦補的假設越多，系統上線後要修改的地方越多，至於沒做過百萬人服務的
+工程師要怎麼用腦補來假設上億人服務的狀況，那就不是我能想像的了。</p>
+<p>美國最大的 Hosting Company <a class="reference external" href="http://dreamhost.com">DreamHost</a> 的創辦人 Sage Weil，在幾年前回去念博士，發展了
+<a class="reference external" href="http://www.ssrc.ucsc.edu/Papers/weil-osdi06.pdf">Ceph</a> 這套 distributed file system ，人家想要研究資料時，只要回 DreamHost 回去挖一挖 log 就
+有用不完的資料了，至於要驗證就更簡單了，只要把 5% 的用戶放到新架構上，就有用不完的資料可以用來
+發掘新架構的缺陷。</p>
+<p>這一點，是美國現有網路公司在跨足雲端服務的極大優勢；台灣的雲端廠商，如XX電信、XX研院、XX勢，跟本無
+法彌補這中間的差距，記得在某場 CloudTW 的會議中，某家台廠在展視他們的雲端 OS 時， <a class="reference external" href="http://pingyeh.blogspot.com/">葉博士</a> 問了一
+個問題就把這個雲端OS擊沉了，該雲端平台只能該台廠所提供的客制化OS，所有的系統 library 都是經過修改
+，不能自行更換的，於是 <a class="reference external" href="http://pingyeh.blogspot.com/">葉博士</a> 就問，「要是今天 PHP X.Y.Z 有個 security hole 那麼，他能不能
+自行補洞，還是要等台廠把整個環境更新才可把洞補上？」</p>
+<p>現實( physical) 的環境沒有優勢，在經營網路服務上，更是落後國外數十年，沒有人材、經驗上的優勢，
+這也就是為什麼 <strong>雲端產業在台灣行不通</strong> 的原因。</p>
+
+
+  </div>
+
+  <h1><a href="/blog/2012/08/23/corrupted-software-company/">關於遊戲公司裁員的感想</a></h1>
+  <p class="author">
+    <span class="date">2012-08-23 00:44:00 -0700</span>
+  </p>
+  <div class="content">
+    <p>看到 <a class="reference external" href="https://www.facebook.com/MonkeyPotion?ref=stream">半路</a> <a class="reference external" href="https://www.facebook.com/MonkeyPotion/posts/445760425469302">分享</a> 最近 <a class="reference external" href="http://news.17173.com/content/2012-08-22/20120822114550361.shtml">幾間遊戲公司裁員</a> 的新聞，不經讓我想到過去在矽谷流浪歲月所認知到
+的黑暗面，底下就是一個我親身看過的一個例子。</p>
+<p>許多年前，AE用三億美金買了一家flash game公司，當時我上 linkedin 看一下 CEO 的背景，一看，
+不得了了，我竟然在 linkedin 上跟他是有直接聯結，原來我認識大人物自己都不知道。</p>
+<p>後來一查才知道，他們是我工作公司，在三年前買的一間英國公司，我們把他們買下來後，兩年閉鎖期一到
+，他們一群六七個人就離職開新公司去了，這間公司後來就又被AE買過去。</p>
+<p>當時，我不懂的是，為什麼AE要買這間公司呢？因為一個遊戲的生命週期就是六個月而已，一間遊戲公司的
+價值是在於有一個團隊可以持續生產出賣座的遊戲，然而這間flash game的團隊，已經證明了他們兩年一到
+就會走人，那為什麼AE公司要買這個公司呢？</p>
+<p>後來問一問做金融的朋友，答案跟我猜想的不遠，AE就是買一天的新聞就好 <strong>「AE買下flash game公司，跨足FB市場，未來營收將有爆發性成長」</strong></p>
+<p>上市公司們，他們想的，跟你我想的不一樣；靠股票換鈔票的公司，新聞效果過了，股價漲了，執行長選擇權
+生效後，就是可以把買進的公司全裁了，反正當初就是買新聞效應而已。</p>
+
+
+  </div>
+
+  <h1><a href="/blog/2012/07/19/introduction-to-actor-model/">[未完] Introduction to Actor Model</a></h1>
+  <p class="author">
+    <span class="date">2012-07-19 14:42:00 -0700</span>
+  </p>
+  <div class="content">
+    <div class="section" id="the-challenge">
+<h2>The Challenge</h2>
+<p>在今天的講題開始前，我要先花一點時間講一下，我們這一代程式設計師面對的挑戰是什麼，為什麼我們需要一個新的程式架構？</p>
+<p>大家應該都很熟悉摩爾定律，摩爾定律是指：一個尺寸相同的晶片上，所容納的電晶體數量，約每隔18個月便會增加一倍，性能也將提升一倍。
+在Dr. Moore於1965年提出摩爾而後的40年間，摩爾定律準確的預測電晶體的發展，每18月就有更快一倍的處理器出來，每18個月記憶體的就倍
+增。對於軟體工程師來說，摩爾定律讓我們的程式，不用更新軟體，每隔一段時間，效能就自動增加。</p>
+<p>然而這一切，在 2005 年左右開始崩壞，那年，我在 ACM Queue 九月號讀到 &quot;The Future of Microprocessors&quot;,
+&quot;The Free Lunch Is Over: A Fundamental Turn Toward Concurrency in Software.&quot;等文章，提到，軟體工程師的免費午餐
+已經結束了，未來，處理器的時脈將不會隨著電晶體數而增長，只有處理器的核心數依然跟隨著摩爾定律，每18個月增加一倍，而後，類似的
+文章開始大量的出現在各樣的軟體雜誌之中。 Intel於 2006 年一月發表了個人電腦用的雙核處理器 - Core Duo， 2007 年四核的Core 2 Quad
+發表，我想現在在場的聽眾中，有不少的是用 Intel i7 八核的處理器。</p>
+<p>對軟體工程師來說，新的現實是 Amdahl's Law ，一個程式能被多核心處理器加速的程度，不會高於程式中不可平行處理的部份的倒數。
+也就是說，如果程式中只有50%的部份是可平行處理的，那麼，多核心的處理器最多只能幫你加速兩倍，不管你有雙核，四核，還是六十四
+核等。如果程式中有 95% 的部份是可平行處理的，縱使你有兩千核的處理器，還是只能幫你加速 20 倍。</p>
+<p>不管你是寫單機版程式，或者是多人用的網路系統，如何善用多核心的處理器，是現在不得不開始面對的問題。</p>
 </div>
-<aside class="sidebar">
+<div class="section" id="concurrency-and-parallelism">
+<h2>Concurrency and Parallelism</h2>
+<p>接下來我們要先定義一下名詞，我們中文中講的平行處理，代表了兩個不同的涵意，一個是 Concurrency ， 另一個是 Parallelism</p>
+<p>Parallelism 講的是，程式中有兩個以上的部份，可以同時間被處理，而不會互相干擾。</p>
+<p>Concurrency 指的是，程式中的兩個以上的部份，可以同時間被處理，或者透過分時分享資源，同時間被處理器處理。</p>
+<p>然而，對軟體工程師來說，這兩者都是很困難的，因為我們的程式不免會用到共享的資源，在 Parallelism 中，如何找出共享的資源
+將這些模組分離出來最小化，是一種挑戰，在 Concurrency 中，如何確保共享的資源不變成程式中的瓶頸，又是另一個挑戰。</p>
+<p>在 Java 6 Concurrency API 就提供了不少工具來協助處理 Concurrency 的問題，如 Executor, CountDownLatch, Semaphore
+, DelayQueue 等工具。</p>
+</div>
+<div class="section" id="issue-shared-memory-concurrency">
+<h2>Issue: Shared Memory Concurrency</h2>
+<p>那 Shared Memory Concurrency 的問題在那呢？我記得我在學寫網頁時，第一次寫 Web Counter 時就學到了，原來小
+到一個 counter++ ，都會因為 thread 存取的順序，而發生 race condition 造成結果與預測的不同。Shared Memory
+Concurrency的難點就在於，如何正確的使用 Lock 及 Lock 的不可預測性。</p>
+<p>由於作業系統設計時，為了效能，不會將 Lock 設計成完全的公平，當有三個 Thread 依序去要一個 Lock 時，你執行三次，
+可能三次都是不同的 Thread 第一個拿到這個 Lock ，這個特性，造成了測試時及執行時的不可決定性，無法在測試時，模擬可
+能發生的所有狀況。</p>
+<p>此外 Lock 並不是容易去使用的，如果你在程式中使用了大量的 Lock ，將會造成程式中可被併行處理的部份減少，在 Java6
+之前，若是你在沒有需要用 lock 的地方使用了 lock ， jvm 仍然會去要這個 lock ，在 Java6 Mustang Release中， HotSpot JVM
+的實作引入了 lock elision 的觀念， HotSpot VM 將會透過執行階段的分析，去忽略掉這些多餘的 lock。</p>
+<p>然而， Lock 仍帶入了許多問題，如 lock starvation ，當許多 thread 大量、重覆的取用同一個 lock 時，由於取得 lock
+的機制並不是公平的，所以有可能會有 thread 一直取不到 lock 的狀況發生。</p>
+<p>另外，若是多個 Thread 都要存取相同的數個 lock ，則會造成互相卡位的狀況，形成 live lock。</p>
+<p>當然，你也可以說，用 Lock 太麻煩，而減少 Lock 的使用，那麼你的程式就會變得不 Thread-Safe ，在處理量大時，會發生
+Race Condition造成不可預期的結果產生。</p>
+<p>而用 Lock 最讓人絕望的是，若是 Lock 的順序弄錯了，會造成 Dead Lock ，變成，程式在設計的初期就要把各物件呼叫的順序
+先定出來，才可以避免 Dead Lock 的產生，但是你能保證你的程式 1.0版、1.1版、2.0版的呼叫順序都不變嗎？</p>
+<div class="section" id="false-sharing-cache-line-issue">
+<h3>False sharing: Cache Line Issue</h3>
+<p>如果說 Lock 的問題就夠讓人頭大了，那麼底下這個我最近讀到的問題，則會讓你更吃驚。在電腦的架構中，我們有主記憶體、處理器
+上有L1 L2 L3快取，處理器存取資料時，會把資料放在快取中，在適當的時機 在把修改寫回主記憶體；這點，大家應該不難去想像。</p>
+<p>然而，處理器在從主記憶體存取資料至快取時，是一個區塊一個區塊的去存取，所以在取用資料時，不只會拿回所需的資料，同時也會
+取用到相鄰的資料，這在多核心的機器上造成，若是core A 及 core B會去存取相鄰的資料，那麼他鍆將互相 invalidate 對方的
+L1快取，造成要從下層的快取或主計憶體上重新讀取資料。</p>
+<p>在一篇測試報告中，在一台八核的機器上的測式結果，有False Sharing問題的程式將比沒有False Sharing問題的程式慢12倍，這
+數字差不多就是L1及L2讀取速度的差異。依此推測，若是要從主記億體重讀的話，則會慢上200倍！</p>
+</div>
+</div>
+<div class="section" id="the-solution">
+<h2>The Solution</h2>
+<div class="section" id="a-new-high-level-programming-model">
+<h3>A new high level programming model</h3>
+<p>講完了問題，當然之後，當然要開始講解決方案了；許多大神、大師們覺得我們須要一個不同的 Programming Model
+來解決這問題，他們覺的，這個新的解決方案要有底下幾個特性</p>
+<ul class="simple">
+<li>要容易被理解，跟容易被測試。</li>
+<li>換言之，也就是要deterministic，如果程式流程是輸入 A 產出 B ，那麼不管執行多少次，這個結果仍是要
+一樣的。</li>
+<li>既然 shared mutable state 是問題的根源，我們就把這問題給移除。</li>
+<li>能夠善用多核心所帶來的優點。</li>
+</ul>
+</div>
+<div class="section" id="possible-solutions">
+<h3>Possible Solutions</h3>
+<p>有個不同的解決方案被提出來，首先是 Functional Programming ，完全的把 Mutable State 移除，程式變
+成如同數學函式一般可以被堆疊，程式函式的本身不帶有狀態，所有的狀態都是由外部傳入的，如此一來，程式本身
+的運算處理就變的 deterministic</p>
+<p>而既然函式本身不帶有狀態，那麼他們便可以平行的被處理，例如在 scala 中，就引如了 parallel collection
+，讓軟體工程師可以很簡單的就會一群資料做平行的運算</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">).</span><span class="n">par</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">2</span><span class="o">)</span>
+</span><span class="line"><span class="n">res</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure><p>Functional Programming所需的 Lambda expression 將會在 Java8 時被實作出來，而 Parallel Collection
+也有機會在 Java8 時出現。</p>
+<p>在此順便打個廣告，台灣目前有個 functional programming user group 在運作中，若是各位有性去，可以上網
+找 fpug.tw</p>
+<p>而另一個可能的解決方案是 Actor Model ， Actor Model 將狀態封裝在Actor內部，Actor及Actor間，則是透過
+非同步的機制去傳遞訊息。</p>
+</div>
+</div>
+<div class="section" id="a-brief-history-of-the-actor-model">
+<h2>A Brief History of the Actor Model</h2>
+<p>在開始介紹 Actor Model 前，先簡單介紹一下 Actor Model 的歷史。 Actor Model 是於 1973 年 Carl Hewitt
+命名的，而由 Gul Agha 這位先生於 1985 年左右更精確的描述 Actor Model 。</p>
+<p>第一個大型的商業應用，則是由 Ericsson 於 1980 年代中期所完成的一個電信系統，這個系統非常的容錯，當大家在介
+紹 Actor Model 時，多會提到這個例子，因為這個系統達到了 99.9999999% 九個九的 uptime ，也就是說
+一整年下來，他停機的時間只有 31 ms ，非常的匪疑所思，因為，一般我們在寫的系統，能有兩個九，就已經是很了不
+起的成就了。</p>
+<p>這個專案另一個有名的產品是 erlang 這程式語言， erlang 在 1990 年代被 opensource ，後來被大量運用在
+message queue 跟 Concurrency 的程式之中。例如大家常用的 RabbitMQ 就是利用 erlang 寫成的，據說他的核
+心只有 5000 行 erlang 的程式碼。</p>
+</div>
+<div class="section" id="actor">
+<h2>Actor</h2>
+<p>那什麼是 Actor 呢， Actor 是一個非常輕量化的元件，在 Akka 的實作中，每一個 Actor 只占了約400 bytes
+的記憶體空間，每一個 Actor 擁有自己的狀態以及行為，將些狀態及行為都被封裝在 Actor 裡面。</p>
+<p>其他的 Actor 只能夠透過送訊息的方式，來與這個 Actor 來溝通，存取 Actor 的狀態及觸發行為；當 Actor 收
+到外部的訊息時，這些訊息會被放在信箱裡，依照順序來被這個 Actor 來處理。</p>
+<p>這個送訊息的及處理訊息的機制，是非同步的，你不能假設這個訊息一定會立刻被同一個 thread 處理，甚至，你不能
+假設說，你一定會收到一個回應。</p>
+<p>當 Actor 處理訊息時，他會被放在系統中預先配制好的 Thread 上執行、處理訊息。</p>
+<p>很有趣的是，當你這樣設計一個系統時，你的系統便會變得非常的 scalable 及非常的輕量化。因為使用 Actor Model
+你的 call stack 會變的很小，在我們用 imperative programming ，我們的 call stack 是從系統最外部，透過
+一層層的 method call 累加上來起來，當 CPU 在 Context Switching ，在從一個 Thread 跳到另一個 Thread 去
+執行時，需要讀入該 Thread 的 Call Stack ，當 Call Stack 越大時，Context Switch的成本就愈高。</p>
+<p>在Actor Model 中，兩個 Actor 在傳遞訊息時，其實只有把這個訊息的 reference 丟到另一個 Actor 的信箱中，訊
+息傳遞的成本非常的小，而 Actor 在被喚起處理訊息時，他的 call stack 是從他的信箱開始，而非整串的呼叫流程，因
+此， context switch 的成本變的很小。</p>
+<p>在 Actor Model 中，一個工作的處理，會變得很像我們在辦公室內做業的方法，當我們從系統外部收到一個訊息時，我們
+會把這個工作連同這個工作的寄送者先記錄下來，放到信箱中延後處理，當前一手完成工作後，運行中的 Actor 會把處理
+好的資料轉發給下一手，就這樣一層層轉發，最後在將完成的工作結果，送還給原始的寄送者。</p>
+</div>
+<div class="section" id="introduce-akka">
+<h2>Introduce Akka</h2>
+<p>接下來的部份，我們要介紹 Akka 這個 JVM 上 Actor Model 的實作。</p>
+<p>Akka 是由 Jonas Boner 於 2009 年所發起的，在開發 Akka 之前， Jonas 是在 Terracotta 做 JVM Clustering 以及在 BEA
+做 JRockit VM 的，具有多年食作 distributed system 的經驗。目前 Akka 背後的商業公司是 typesafe ， typesafe
+同時也是開發 Scala 這個 JVM 上最盛行 JAVA.NEXT 語言的公司。</p>
+<p>這個實作是跑在 JVM 上，提供了 Java 及 Scala 的 API ，在接下來的簡報中，我會用 Java API 為主 Scala API 為輔
+來介紹怎麼使用 Akka。</p>
+<p>Akka另外也引入了 remote actor 這個觀念，既然，我們所有的訊息傳遞都是非同步的，透過訊息的傳遞來呼叫，而這訊息本
+身，又是不帶狀態，可以被 serialize 的，狀態的本身是存在 Actor 中的，那麼，為什麼我們自然有可能的將工作放到別台
+機器上來處理。</p>
+<p>除了 Actor Model 外，Akka還提供了許多 module 來跟外部的系統整合，如 akka-camel ，能讓 akka 串接上 camel 這
+個 enterprise service bus ，便程它的一個 endpoint ，讓 Actor 能處理 camel 送來的訊息然後再將訊息轉發回 camel 中。</p>
+</div>
+<div class="section" id="define-actor">
+<h2>Define Actor</h2>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kn">import</span> <span class="nn">akka.actor.UntypedActor</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Counter</span> <span class="kd">extends</span> <span class="n">UntypedActor</span> <span class="o">{</span>
+</span><span class="line">
+</span><span class="line">   <span class="kd">private</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Object</span> <span class="n">message</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
+</span><span class="line">     <span class="k">if</span> <span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;increase&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">       <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">;</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">message</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;get&quot;</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">getSender</span><span class="o">().</span><span class="na">tell</span><span class="o">(</span><span class="k">new</span> <span class="n">Result</span><span class="o">(</span><span class="n">count</span><span class="o">));</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class="line">      <span class="n">unhandled</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="fault-tolerance-in-akka">
+<h2>Fault Tolerance in Akka</h2>
+<p>接下來我們要談的就是為什麼 ericsson 的系統能夠達到那麼高可靠度的原因以及 Akka 容錯的機制。</p>
+<p>當一個系統在運作時，不免因為一些設計外的因素、或不可預期的輸入，造成系統產生錯誤的狀態，有時，這個錯
+誤的狀態只是丟出一個 exception 就結束，但是在某些情況下，系統會處於一個混亂的狀態之中，無法再繼續處
+理任何的訊息。</p>
+<p>這個狀況，我相信大多數的 Windows 用戶都有碰上過，也非常清楚這個問題的解決方案，也就是 -- 重開機</p>
+<p>在 Akka 中，Actor們如同現實生活中公司的組織，可以有低層的員工以及高層的 Supervisor ，當一個員工
+在處理訊息時，若是有發生無法自己無法排解的錯誤狀況的話，他將會把這錯誤狀況，回報給他的上級，由上級來
+決定如何處理。</p>
+<p>如果說，一個 supervisor 管理的 workers 都是獨立的個體，沒有交互影響的問題，那麼， supervisor 可以
+選擇將有問題的 worker 單獨重開機，當一個 actor 被重啟時，他的 actor reference 將保持不變，外面的 actor
+仍可以透過原有舊的 actor reference 跟這個重啟後的 actor 溝通。而被重啟的 actor 的信箱，仍會保存的
+尚未被處理的訊息在信箱內，而造成錯誤的訊息，則是在重啟時可以決定是否要保留重新處理。</p>
+<p>若是一個 supervisor 下的 workers 有相互依賴的情況的話，那麼， supervisor 可以在某一個 worker 發
+生錯誤時，重新啟動所有的 workers。</p>
+<p>這個錯誤排解的機制不止是可以串上一層而以，而是可以一層層的堆疊起來，位在最上端的，則是前面所看過的 ActorSystem
+；當一個錯誤是直屬主管無法排除的錯誤，那麼，這個錯誤訊息可以再轉發給更高層的主管，由他來解決。同樣的，重啟的觀
+念也可以套用在這邊。當一個系統的子系統發生錯誤時，我們可以重新啟動整個環境</p>
+</div>
+<div class="section" id="remote-actor">
+<h2>Remote Actor</h2>
+<p>在 Akka 的實作中 Actor 預設就是可以被 Remote 化的， Actor 在設計時，就已經是設計成 location transparent 及
+可被配置在本機或是遠端的，一個原本設計成本機用的 Actor ，可以不經任何的程式變化，直接修改設定檔，變成在啟動一個
+Actor時，自動就是啟動在遠端的。</p>
+<p>而傳遞訊息給 Remote Actor 跟傳給本機的 Actor 是沒有差別的，同樣是透過 tell 及 ask 這兩個 API ，在底層實作上
+Actor Reference 會帶有 Remote Actor 實際所在機器的位址，若是一個 Actor 是 Remote Actor 的話，被傳送的訊息
+就會透過 Java Serialization, Protocol Buffer Serializer 或者是自定的 Serializer 來將訊息寫入到遠方。</p>
+<p>而要使用那一種 Serializer ，是可以透過設定檔做切換的。</p>
+<p>Remote Actor 的配置，也是可以透過程式來控製，下圖便是一個例子。</p>
+</div>
+<div class="section" id="routing-clustering">
+<h2>Routing &amp; Clustering</h2>
+<p>對於 Cluster 的設計，目前 Akka 的團隊還在重新設計中，目標將會是在下一個 release 時，將 cluster 的功能
+加入到 Akka 中。</p>
+<p>目前，Akka 則是只支援 Routing 而已。 Routing 的機制是說，你有一群一樣的 actor，他們可以處理同樣類型的訊息
+，但是由誰來處理訊息，則是由 Router 來決定。</p>
+<p>你可能會問，什麼時候需要這樣做呢？會有 Routing 的需求時，多是因為有處理量限制的問題，例如，我想要最多不超過五個
+這類型的工作可以同時間被處理，或者是從使用者A來的需求，最多只讓它同時跑五個，但是從使用者B來的需求，最多可以跑十
+個，而且兩個人的程序不能混用。</p>
+<p>Akka 目前支援的 Routing 機制有</p>
+<ul class="simple">
+<li>RoundRobinRouter： 在一群 actor 中，依序將工作配發給他們。</li>
+<li>RandomRouter: 在一群 actor 中，隨意的將工作配發給他們。</li>
+<li>SmallestMailboxRouter: 在一群 actor 中，將工作配發給目前沒有在工作的，或者是待辦工作最少的 actor</li>
+<li>BroadcastRouter: 將工作配發給所有的 Actor</li>
+<li>ScatterGatherFirstCompletedRouter:  將工作配發給所有的 Actor，然後等待第一個回應，其餘的回應則是會被忽略捨棄掉。</li>
+</ul>
+<p>Routing 的機制也可以跟 Remote Actor 混用，將 Remote Actor 配發在多台機器上，然後透過 Router 將訊息配
+發給他們。</p>
+</div>
+<div class="section" id="performance">
+<h2>Performance</h2>
+<p>下圖的是 Akka 官方，於一台48核的 AMD 機器上，做簡單訊息傳送的 Performance Test 的測試結果。</p>
+<p>在一開始的實作中，Akka是使用 java.util.concurrent.ThreadPoolExecutor 控制最多有多少個 Actor 能同
+時被執行，然而在這 48核 的機器上，Akka Team發現，Akka無法 scale 超過 12 個併行的 actor ，不管你增加
+多少個 actor ，同時間內被處理的最大量卡在每秒一百四十萬個訊息這個數字。然而，同時間 CPU 的 Load 並沒
+有超過 10%</p>
+<p>Akka Team猜想是因為 ThreadPoolExecutor 底層的 task queue, LinkedBlockingQueue 有一個共用的 lock，
+最後造成擁塞，才會造成效率的不佳。</p>
+<p>後來在經過了 Doug Lea 的協助，使用 Fork-Join 重新實作 task executor ，於是效能就拉高到每秒兩千萬個訊息
+這數字。</p>
+</div>
+<div class="section" id="use-case">
+<h2>Use Case</h2>
+<p>那 Akka 可以被用在那些地方呢？目前 Akka 被應用在下面幾個地方。</p>
+<ul class="simple">
+<li>messaging system: 例如國內的 Cubie 就有用到 Akka 來處理訊息。</li>
+<li>Data Analysis: klout.com 例用 akka 來分析社群網站上如 facebook twitter 上訊息轉發的熱門程度
+以及誰是意見領袖等資料。</li>
+<li>股票交易系統： Akka 的一大客戶群是倫敦的金融公司，Akka的幾個特性很適合用來做股市交易用。像是用 Actor
+來追蹤一個股票的現貨股價變化以及產生各種線型圖；又或者是說，結合 Rule Based Engine 可以做風險控管的
+模組。例如說交易員要下單買一支股票時，Akka可以幫你同時檢查，這個交易員他目前手上可用資金的是多少，
+交易員目前股票組合的風險是多少，公司目前整體股票組合的風險是多少。
+數十至數百個不同規則的檢查是可以透過 remote actor 分散在許多機器上併行處理的，一個交易的風險評估，並不
+會隨著檢查的數量而線性增長。</li>
+<li>另外一個 Akka 被大量使用的環境是線上遊戲，過去有許多遊戲公司選擇用 MySQL 當後台，然後透過 cache 及 db
+sharding的方式，來增加 throughput ，後來他們發現，與其把 server 寫成 stateless 然後把狀態放在後台
+的 db 讓 db 變成效能的頻頸，不如把 state 放在 Actor 中，讓每個 Actor 代表一個遊戲中的角色，獨立維護
+它的狀態，這樣才能更 scalable.</li>
+</ul>
+</div>
+<div class="section" id="case-study">
+<h2>Case Study</h2>
+</div>
+
+
+  </div>
+
+  <h1><a href="/blog/2012/07/11/spatial-search-with-lucene/">Spatial Search with Lucene</a></h1>
+  <p class="author">
+    <span class="date">2012-07-11 16:06:00 -0700</span>
+  </p>
+  <div class="content">
+    <div class="section" id="before-we-start">
+<h2>Before We Start</h2>
+<p>As some of my blog readers may know, my previous startup project was an online location based search service. Thing
+does not go well and I am going to open source some of the related work.</p>
+<p>In this post, I will show you how to use Lucene to do spatial search as well as how it works internally.</p>
+</div>
+<div class="section" id="spatial-search">
+<h2>Spatial Search</h2>
+<div class="section" id="spatial-search-and-geo-tagging">
+<h3>Spatial Search and Geo Tagging</h3>
+<p>Geo-tagging is a popular way to do spatial search. Instead of using the actual location to tag a POI, the geo-tagging
+uses geotag to group items within a predefined range as a whole. When performing a search, it is simply pull out all
+items with the same tag.</p>
+<dl class="docutils">
+<dt>There are few popular ways to do geo-tagging, including</dt>
+<dd><ul class="first last simple">
+<li>GeoHash</li>
+<li>QuadTree</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="geohash">
+<h3>GeoHash</h3>
+<p><a class="reference external" href="http://en.wikipedia.org/wiki/Geohash">GeoHash</a> is way to encode latitude and longitude using base32 code. There is a fundamental flaw that makes it hard to
+do spatial search. The problem is the geo hash generated is not continuous. The neighbor of a particular block may not
+share the same prefix with its nearest eight neighbors. When using geohash to do spatial search, we need to calculate
+the hash value of nearby neighbors by ourselves.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="text"><span class="line">+-------+-------+-------+
+</span><span class="line">| ezefr | ezs48 | ezs49 |
+</span><span class="line">+-------+-------+-------+
+</span><span class="line">| ezefr | ezs42 | ezs43 |
+</span><span class="line">+-------+-------+-------+
+</span><span class="line">| ezefp | ezs40 | ezs41 |
+</span><span class="line">+-------+-------+-------+
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="quad-tree">
+<h3>Quad-Tree</h3>
+<p>Quad-Tree addresses the issue in geohash and adapt a better way to do geo-tagging. This example gives us a
+great example on how Quad-Tree does geo-tagging.</p>
+<img alt="http://i.msdn.microsoft.com/dynimg/IC96238.jpg" src="http://i.msdn.microsoft.com/dynimg/IC96238.jpg" />
+<dl class="docutils">
+<dt>The Quad-Tree has the following advantage when doing spatial search</dt>
+<dd><ul class="first last simple">
+<li>it can be really fast if you stores data as a tri. Such as, Lucene, internally, it uses indexed tri to store
+NumericField.</li>
+<li>the neighbors of a block share the longest common prefix.</li>
+</ul>
+</dd>
+</dl>
+<p>For more extensive information regarding geo-tagging, you should check
+<a class="reference external" href="http://msdn.microsoft.com/en-us/library/bb259689.aspx">here</a>,
+<a class="reference external" href="http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/]">here</a> and
+<a class="reference external" href="http://gist.github.com/1193577">here</a>.</p>
+</div>
+</div>
+<div class="section" id="our-custom-approach">
+<h2>Our Custom Approach</h2>
+<p>Lucene's <a class="reference external" href="http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/api/contrib-spatial/index.html">contrib-spatial</a> uses geo-tagging to implements spatial search and only support searching for
+features near a point.</p>
+<p>A pair of latitude and longitude gives us a quickstart for your location based application. However, not every
+single feature in a LBS application can be described as a point. Let us take school district as an example.
+The School A may be closer to your house than School B is, but your house is belong to school district for school B.
+Another example is bike trails, bike trail is a line not a single point.</p>
+<p>A full feature spatial search must support complicated geometric operations. This is why we create our own Lucene
+spatial search implementation.</p>
+<p>In the GIS area, Geometry are used to describe shape of features. The common geometries are:</p>
+<div class="section" id="geometry-primitives-2d">
+<h3>Geometry primitives(2D)</h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="14%" />
+<col width="56%" />
+<col width="30%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Type</th>
+<th class="head">Text Format</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Point</td>
+<td>POINT (30 10)</td>
+<td><img alt="PointExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/SFA_Point.svg/51px-SFA_Point.svg.png" /></td>
+</tr>
+<tr><td>LineString</td>
+<td>LINESTRING (30 10, 10 30, 40 40)</td>
+<td><img alt="LineStringExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/SFA_LineString.svg/51px-SFA_LineString.svg.png" /></td>
+</tr>
+<tr><td rowspan="2">Polygon</td>
+<td>POLYGON ((30 10, 10 20, 20 40, 40 40, 30 10))</td>
+<td><img alt="PolygonExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/SFA_Polygon.svg/51px-SFA_Polygon.svg.png" /></td>
+</tr>
+<tr><td>POLYGON ((35 10, 10 20, 15 40, 45 45, 35 10),
+(20 30, 35 35, 30 20, 20 30))|</td>
+<td><img alt="PolygonExample2" src="http://upload.wikimedia.org/wikipedia/commons/thumb/5/55/SFA_Polygon_with_hole.svg/51px-SFA_Polygon_with_hole.svg.png" /></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="multipart-geometries-2d">
+<h3>Multipart geometries (2D)</h3>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="53%" />
+<col width="28%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Type</th>
+<th class="head">Text Format</th>
+<th class="head">Example</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>MultiPoint</td>
+<td>MULTIPOINT ((10 40), (40 30), (20 20), (30 10))</td>
+<td><img alt="MultiPointExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/SFA_MultiPoint.svg/51px-SFA_MultiPoint.svg.png" /></td>
+</tr>
+<tr><td>MultiLineString</td>
+<td>MULTILINESTRING ((10 10, 20 20, 10 40)
+(40 40, 30 30, 40 20, 30 10))</td>
+<td><img alt="MultiLineStringExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/86/SFA_MultiLineString.svg/51px-SFA_MultiLineString.svg.png" /></td>
+</tr>
+<tr><td>MultiPolygon</td>
+<td>MULTIPOLYGON (((30 20, 10 40, 45 40, 30 20)),
+((15 5, 40 10, 10 20, 5 10, 15 5)))</td>
+<td><img alt="MultiPolygonExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/SFA_MultiPolygon.svg/51px-SFA_MultiPolygon.svg.png" /></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="how-to-calculate-quadtree-value-for-geometries">
+<h3>How to Calculate QuadTree value for Geometries</h3>
+<p>When hashing a <tt class="docutils literal">Geometry primitive</tt>, we will calculate the minimum bounding rectangle(MBR) of this geometry. For
+example, the minumum bouding box for <img alt="PolygonExample" src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/SFA_Polygon.svg/51px-SFA_Polygon.svg.png" /> is the grid made up of (1, 1), (1, 4), (4, 4), (4, 1).</p>
+<p>We will calculate the quadtree hashcode for the MBR, the quadtree hashcode for the MBR is the longest common prefix of
+quadtree values for the four corners.</p>
+<dl class="docutils">
+<dt>When indexing this geometry with Lucene, we will store these fields in lucene</dt>
+<dd><ul class="first last simple">
+<li>geometry: POLYGON ((3 1, 1 2, 2 4, 4 4, 3 1))</li>
+<li>geometry__quadtree: QuadTree value of the polygon.</li>
+</ul>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="implementation-detail">
+<h2>Implementation Detail</h2>
+<p>The number of digits we used in the quad-tree implementation is 17 digits. This allows us to lay items on an 600 x 600
+meter block. This number comes from 40075000 / 2 ^16 (Earth Circumference / level of details). The 17 digits number
+will be stored as a long value. The digits we used are 1(upper left), 2(upper right), 3(lower left), 4(lower right),
+and 0 (whole block in the given detail).</p>
+<p>When encoding a coordinate, we will stores the quadtree value as a NumericField in Lucene. Internally, Lucene will use
+indexed trie to store NumericField. The &quot;Indexed Trie&quot; uses buckets to group terms. We will use the default
+precisionStep(4) for now.</p>
+<div class="section" id="index-phase">
+<h3>Index Phase</h3>
+<p>During the index phase, we will store the geometry in its text form and in quadtree value. Each of them has their own
+use during search phase.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">point</span> <span class="k">=</span> <span class="nc">Point</span><span class="o">(</span><span class="mf">24.123</span><span class="o">,</span> <span class="mf">18.921</span><span class="o">)</span>
+</span><span class="line"><span class="k">val</span> <span class="n">code</span> <span class="k">=</span> <span class="n">point</span><span class="o">.</span><span class="n">quadtree</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">raw</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Field</span><span class="o">(</span><span class="s">&quot;location&quot;</span><span class="o">,</span> <span class="n">point</span><span class="o">.</span><span class="n">wkt</span><span class="o">,</span> <span class="nc">Field</span><span class="o">.</span><span class="nc">Store</span><span class="o">.</span><span class="nc">YES</span><span class="o">,</span> <span class="nc">Field</span><span class="o">.</span><span class="nc">Index</span><span class="o">.</span><span class="nc">NOT_ANALYZED</span><span class="o">)</span>
+</span><span class="line"><span class="k">val</span> <span class="n">field</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">NumericField</span><span class="o">(</span><span class="s">&quot;location&quot;</span> <span class="o">+</span> <span class="s">&quot;__quadtree&quot;</span><span class="o">)</span>
+</span><span class="line"><span class="n">field</span><span class="o">.</span><span class="n">setLongValue</span><span class="o">(</span><span class="n">code</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="n">doc</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="n">raw</span><span class="o">)</span>
+</span><span class="line"><span class="n">doc</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="n">field</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="search-phase">
+<h3>Search Phase</h3>
+<dl class="docutils">
+<dt>The search phase has two parts</dt>
+<dd><ul class="first last simple">
+<li>filter: fetches all possible features that may contains the geometry X by using Lucene's range query against the
+quadtree field.</li>
+<li>select: for each possible results, run geometric operation to see if result Y contains geometry X.</li>
+</ul>
+</dd>
+</dl>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">field</span> <span class="k">=</span> <span class="s">&quot;location&quot;</span>
+</span><span class="line"><span class="c1">// create a point.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">point</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">makeShape</span><span class="o">(</span><span class="nc">Point</span><span class="o">(</span><span class="mi">24</span><span class="o">,</span> <span class="mi">18</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// turn point into search range.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">circle</span> <span class="k">=</span> <span class="n">point</span><span class="o">.</span><span class="n">buffer</span><span class="o">(</span><span class="nc">Distance</span><span class="o">(</span><span class="s">&quot;500m&quot;</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a query container for complex queries.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">query</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">BooleanQuery</span><span class="o">()</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// filtering: search for items in this range</span>
+</span><span class="line"><span class="n">query</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="nc">QuadTreeRangeQueryFactory</span><span class="o">.</span><span class="n">buildLocalQuery</span><span class="o">(</span><span class="n">field</span><span class="o">,</span> <span class="n">circle</span><span class="o">.</span><span class="n">quadtree</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// selecting and scoring: the value source will return the distance between</span>
+</span><span class="line"><span class="c1">// the point and each feature.</span>
+</span><span class="line"><span class="n">query</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="k">new</span> <span class="nc">ValueSourceQuery</span><span class="o">(</span><span class="n">context</span><span class="o">.</span><span class="n">makeValueSource</span><span class="o">(</span><span class="s">&quot;location&quot;</span><span class="o">,</span> <span class="n">point</span><span class="o">));</span>
+</span><span class="line">
+</span><span class="line"><span class="k">val</span> <span class="n">founds</span> <span class="k">=</span> <span class="n">indexSearcher</span><span class="o">.</span><span class="n">search</span><span class="o">(</span><span class="n">query</span><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></div>
+</div>
+<div class="section" id="open-source-projects">
+<h2>Open Source Projects</h2>
+<div class="section" id="scala-shapely">
+<h3>Scala Shapely</h3>
+<p><a class="reference external" href="https://bitbucket.org/bluetang/common-shapely/">Shapely</a> is Scala binding for JTS Topology Suite. The goal of Shapely is to provide an easy to use factory to
+create JTS geometry class instances. It allows us to create various geometry shape with easy to use factory methods.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="c1">// create a point</span>
+</span><span class="line"><span class="nc">Point</span><span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a line string</span>
+</span><span class="line"><span class="nc">LineString</span><span class="o">((</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">30</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">40</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a polygon</span>
+</span><span class="line"><span class="nc">Polygon</span><span class="o">((</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a polygon with a hole in it.</span>
+</span><span class="line"><span class="nc">Polygon</span><span class="o">(</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">((</span><span class="mi">35</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">15</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">45</span><span class="o">,</span> <span class="mi">45</span><span class="o">),</span> <span class="o">(</span><span class="mi">35</span><span class="o">,</span> <span class="mi">10</span><span class="o">)),</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">((</span><span class="mi">20</span><span class="o">,</span> <span class="mi">30</span><span class="o">),</span> <span class="o">(</span><span class="mi">35</span><span class="o">,</span> <span class="mi">35</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="mi">30</span><span class="o">)))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a multi-point</span>
+</span><span class="line"><span class="nc">MultiPoint</span><span class="o">((</span><span class="mi">10</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">30</span><span class="o">),</span> <span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">))</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a multi line-string.</span>
+</span><span class="line"><span class="nc">MultiLineString</span><span class="o">(</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">((</span><span class="mi">10</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">20</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">40</span><span class="o">)),</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">((</span><span class="mi">40</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">30</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">10</span><span class="o">))</span>
+</span><span class="line"><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a multi-polygon.</span>
+</span><span class="line"><span class="nc">MultiPolygon</span><span class="o">(</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">(</span>
+</span><span class="line">        <span class="nc">Seq</span><span class="o">((</span><span class="mi">30</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">45</span><span class="o">,</span> <span class="mi">40</span><span class="o">),</span> <span class="o">(</span><span class="mi">30</span><span class="o">,</span> <span class="mi">20</span><span class="o">))</span>
+</span><span class="line">        <span class="o">),</span>
+</span><span class="line">    <span class="nc">Seq</span><span class="o">(</span>
+</span><span class="line">        <span class="nc">Seq</span><span class="o">((</span><span class="mi">15</span><span class="o">,</span> <span class="mi">5</span><span class="o">),</span> <span class="o">(</span><span class="mi">40</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">10</span><span class="o">,</span> <span class="mi">20</span><span class="o">),</span> <span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">15</span><span class="o">,</span> <span class="mi">5</span><span class="o">))</span>
+</span><span class="line">        <span class="o">)</span>
+</span><span class="line">    <span class="o">)</span>
+</span><span class="line"><span class="o">)</span>
+</span></code></pre></td></tr></table></div></figure></div>
+<div class="section" id="lucene-spatial">
+<h3>Lucene Spatial</h3>
+<p><a class="reference external" href="https://bitbucket.org/bluetang/lucene-spatial/">Lucene Spatial</a> is the geo-spatial module for lucene built on the top of shapely. The
+lucene-spatial modules uses a SpatialContext instance to encode location fields and to
+create location queries.</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="c1">// create a context.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">context</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SpatialContext</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a shape from the representation of a geometry.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">shape</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">makeShape</span><span class="o">(</span><span class="s">&quot;Point(0 10)&quot;</span><span class="o">)</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create lucene fieldables for a location field.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">fields</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">makeFieldables</span><span class="o">(</span><span class="s">&quot;field&quot;</span><span class="o">,</span> <span class="n">shape</span><span class="o">).</span><span class="n">toList</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">// create a location query to look for features within 5KM radius.</span>
+</span><span class="line"><span class="k">val</span> <span class="n">query</span> <span class="k">=</span> <span class="n">context</span><span class="o">.</span><span class="n">makeQuery</span><span class="o">(</span><span class="s">&quot;field&quot;</span><span class="o">,</span> <span class="n">shape</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Distance</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="nc">Distance</span><span class="o">.</span><span class="nc">Unit</span><span class="o">.</span><span class="nc">KM</span><span class="o">))</span>
+</span></code></pre></td></tr></table></div></figure></div>
+</div>
+
+
+  </div>
+
+  <h1><a href="/blog/2012/06/27/pricing-error/">那些系統整合教我的事 -- 資料錯誤</a></h1>
+  <p class="author">
+    <span class="date">2012-06-27 18:52:00 -0700</span>
+  </p>
+  <div class="content">
+    <p>首先，今天要恭喜 iTunes Stores 台灣版總算上線了，恭喜蘋果搞定眾多台灣商家搞不定的
+數位資料授權的問題；既然 iTunes Store 幫忙打通了關節，接下來許多的台灣的小 start-up 可以
+透過串接 iTunes Store 的方式來賺取介紹費，又多了許多新的 business idea 可以在台
+灣實作的可能。</p>
+<p>iTunes Store 上線， <a class="reference external" href="http://briian.com/?p=8426">許多人發現</a> 許多專輯的費用只有 20 元，這讓我想到，當年我在
+某音樂公司的經驗，當時是美國幾大音樂公司開放開始賣 non-DRM 音樂的年代，我們公司在線
+上串流服務上做到全美最大，有三百萬的訂戶，音樂資料庫中，有超過一百萬首歌曲的資料，隨
+著 non-DRM 的熱潮，我們也非得開賣 non-DRM 的音樂。</p>
+<p>當時我是主管 QA 工程師的，問了再上頭的主管，問說除了網站的功能外，需要再做資料測試嗎
+，因為跟據我當時的經驗，許多的音樂專籍的資料是有缺或有錯的；但是主管的說法是有其它的
+單位會保證資料無誤，所以我這邊只要擔心功能性的問題就好。</p>
+<p>當時產品的訂價方式是，一首歌的成本是 0.6 美金，我們賣 0.99 美金，每一張專輯我們則是
+賣 9.99 ，等於是專輯如果超過 10 首歌，我們就開始吸收中間的價差。</p>
+<p>然而一上線的隔天我們就知道錯了，上線的當晚就有人發現，有許多張精選輯，一張精選輯有數
+張CD我們仍是只賣 9.99 每元，當晚，這些專輯就賣掉四千套，一晚就幫公司賠掉了五十萬美金
+以上。由於這些音樂都是 DRM Free 的，所以賣出去就是賣出去了，沒有辦法收回，我們仍是要
+依照賣掉的數量付錢原始授權的擁有者。</p>
+<p>其實，這些歌曲的資料庫我們是跟外部另一家公司買的，並不是自建的；我(們)在這邊學到的一課
+是，不管資料是內部還是外部建的，要用時，還是要自己全部檢查一遍才可用。</p>
+<p>至於給台灣 iTunes Store 消費者的建議是 <strong>快買</strong> 等美國那邊睡起來後，產品就會下架再
+改回原價了</p>
+
+
+  </div>
+
+  <h1><a href="/blog/2012/05/23/runtime-quality-metrics-series-3/">軟體品質指標系列(三)：軟體品質如何測量</a></h1>
+  <p class="author">
+    <span class="date">2012-05-23 14:45:00 -0700</span>
+  </p>
+  <div class="content">
+    <p>在這一系列的第一回我們談到，我們是軟體工程師，不談虛幻的概念，只講能夠量化追蹤的數值指標，那麼，
+我們要怎麼把品質轉換程數值指標呢？</p>
+<div class="section" id="id1">
+<h2>軟體品質如何測量</h2>
+<div class="section" id="id2">
+<h3>幾個故事</h3>
+<p>在開始講怎麼做前，我想先講兩個我親身的經驗，在我第一份工作時，前雇主是做手機遊戲的，整間公
+司有兩百個員工，但是只有三個是做Server端的，在 2005 年時，多數遊戲都是單機板的，那時公司
+簽下 World Series Of Poker 要做多人的線上遊戲，需要開發一個簡易的配對及遊戲訊息交換的伺
+服器，當然，大家當年都沒有經驗，所以說，要怎麼樣確保在上線時，不會被用戶衝垮就變成我的工作。</p>
+<p>而在我第二份工作時，也有相似的經驗，我們本來已有一個運作中的音樂平台，讓公司內外超過40個Partner使用；
+當時，公司又簽下一個合約，說是在三個月後的 6/1 ，會新增 200萬用戶！如何不讓大水衝垮我們的
+應用程式，又變成我那幾個月的工作重點。</p>
+<img alt="/images/2012-05-23/troops.jpg" src="/images/2012-05-23/troops.jpg" style="width: 800px;" />
+</div>
+</div>
+<div class="section" id="load-test">
+<h2>Load Test</h2>
+<p>寫到這邊，大部份的讀者應該都知道接下來要講的是 Load Test 了，Load Test是個很大的議題，通
+常我們在講 Load Test 時，常講的其實是三件不同的事</p>
+<ul class="simple">
+<li>Performance Test</li>
+<li>Stress Test</li>
+<li>Longevity Test</li>
+</ul>
+<p>這三個測試，用的工具雖然一樣，但是要找個指標跟目的卻是大不相同。</p>
+<div class="section" id="performance-test">
+<h3>Performance Test</h3>
+<p>Performance Test 的目地是在找出應用程式的 baseline performance ，做為未來績效評估及設計變
+革時的依據。</p>
+<p>被 Performance Test 的標的物，通常是已經 feature complete 的模組，然後我們將對模組的每
+一個功能，一個一個進行黑箱及白箱測試；然後再用腳本的型態，模擬實際上線的流量，再來測試看看
+各功能間對效能的互相影響程度；最後，是找到測試標的物的 Turning Point 及 Scale Factor。</p>
+<div class="section" id="best-case-performance">
+<h4>尋找 Best Case Performance</h4>
+<p>尋找應用程式的 best case performance  大概是最常被忽略的事了， best case performance 指的是你
+一個功能的最佳效率，不管怎樣測試，對單一功能來說，怎麼樣你的效率都不可能會再比這個數字
+好了；這個數字的第一個用處就在這，如果你的最佳效率比目標效率還糟，剩下來的就不用測了，
+因為怎樣都會比這個數字還糟，只能先停下來，回去修改程式碼增進效能。</p>
+<p>Best Case Performance 的測法是：</p>
+<ol class="arabic simple">
+<li>將應用程式啟動</li>
+<li>先用幾個 request 替應用程式暖身(warm up)，以 Java VM 來說，這樣可以讓 Hotspot VM 幫 bytecode 最
+佳化，有些需要被啟動的內部原件也會被啟動。</li>
+<li>接著是一個一個的慢慢送一百個 requests ，然後取平均值及標準差。</li>
+</ol>
+<p>若是標準差的值過高，或者是反應時間有增長的現像，那麼這個狀況應該記錄下來，然後使用白箱
+測試的工具(如 <a class="reference external" href="http://www.yourkit.com/">yourkit profiler</a> 去找問題的根源。</p>
+<p>除了平均數及標準差外，常用的數字還有</p>
+<ul class="simple">
+<li>mean</li>
+<li>standard deviation</li>
+<li>minimum</li>
+<li>maximum</li>
+<li>96   percentile</li>
+<li>99   percentile</li>
+<li>99.9 percentile</li>
+<li>5 minutes moving average</li>
+<li>throughput</li>
+<li>error rate</li>
+</ul>
+<p>另外，圖表也是常用的工具，因為相較於數字，圖表更容易看出來趨勢的走向；以下圖為例，藍線的
+平均反應時間是1.354秒，但跑load test二十分鐘後，每一個 request 都已經超過了平均數，因
+此將數字用圖像來呈現是有助於判別數字的。</p>
+<img alt="/images/2012-05-23/chart-1.png" src="/images/2012-05-23/chart-1.png" style="width: 480px;" />
+</div>
+<div class="section" id="performance-baseline">
+<h4>建立 Performance Baseline</h4>
+<p>接下來的工作，是定出比較的基礎，建立一個你覺得合理的流量，然後就這個比較基礎去找出來不同
+狀況下的平均反應時間及處理量的變化。</p>
+<p>基礎效能的建立，我們要先控制兩個變數 <strong>requests per minutes</strong> 及 <strong>number of concurrent requests</strong> ；
+透過調整這兩個變數，先找出反應時間較 best case 的流量，然後就此數字開始調整到一個你覺
+得合理的值，開始進行 Load Test。</p>
+<p>劉接下來我們開始把 <strong>requests per minutes(RPM) 倍增</strong> 但 <strong>number of concurrent requests(CR) 不變</strong> 來看，當流量
+增加時應用程式的反應時間會如何增長，接著是 RPM 及 CR 同時都倍增，看反應時間如何增長，
+依此規則，就二的次方(2^N)開始往上增加，直到 response 開始嚴重衰退，或者 throughput 開
+始衰退。</p>
+<p>接著，如果你的應用程式支援 Scale-Out ，那麼，我們依此規則，就 RPM, CR, Machines 三
+個變數再次就二的次方(2^N)開始調整流量來做測試。</p>
+<p>前面這個過程，可以幫我們了解以下幾件事</p>
+<ul class="simple">
+<li>應用程式對壓力的反應是如何，當流量被增時，反應時間成長的幅度是線性還是成等比級數成長。</li>
+<li>處理量 throughput 是否會隨著 request 數增加而增加，是否在超過某個轉折點時，會開始
+反轉下降</li>
+<li>上述的轉折點，便可當做未來評估是否需要增加機器或者是昇級機器的基準值。當實既須求接近這
+個點，或有事件會造成流量超過這個點，那麼，我們就可以在事前進行反應。或者，在監控應用程
+式中加入警告，當線上程式逼近這個值的時候，主動告知我們該加機器了</li>
+<li>當我們增加機器時，如果應用程式不是寫成完全 stateless 的，而是有共享資料資源時，那麼
+，scale factor便會小於 2，那麼，我們需要關查 scale factor 到底是隨著機器的增加而
+不變、還是緩慢成長、或者是快速成長。即使因為某些因素讓我們不能夠準備有實際上線時的機器
+數，但是透過分析 scale factor ，我們可以預估上線該使用多少機器。</li>
+</ul>
+</div>
+</div>
+<div class="section" id="stress-test">
+<h3>Stress Test</h3>
+<p>與 Performance Test 不同的是， Stress Test 是看，應用程式在極度的狀況下，是怎麼樣反
+應的，是全面性的停止服務，還是仍能正常處理部份的 request ，其餘未能處理的部份是被堆到排
+程中等待處理、還是直接收到錯誤訊息告知服務暫時不可用。而當這極端的狀況停下來後，應用程式
+是否會自行回復正常，還是需要
+重新啟動才能回復正常。</p>
+<p>Stress Test 的方式是直接把 performance test 中 <strong>處理量</strong> 開始反轉的那個點的流量再
+次倍增，看處理量及反應時間會如何的變化。</p>
+</div>
+<div class="section" id="longevity-test">
+<h3>Longevity Test</h3>
+<p>Longevity Test 跟前述兩者不同的是， Longevity Test 是在看，應用程式對長時間、持續性、
+平緩的流量是如何反應的，是否在某個時間點會有不良的反應，或者是說會有處理量越來越少或反應時
+間越來越長的跡象。</p>
+<p>透過 Longevity Test 我們可以發覺
+- 應用服務是否有 memory leak
+- 是否有背景的排程工作，造成某個時間點系統資源會被大量耗用</p>
+</div>
+</div>
+<div class="section" id="monitoring">
+<h2>Monitoring</h2>
+<p>除了從應用程式的外部去觀查應用程式的執行效能，我們還可以更進一步的</p>
+<ul class="simple">
+<li>從作業系統了解CPU, Memory, Disc I/O, and Network Usage</li>
+<li>從JVM 了解 Memory Usage, Object counts, GC Cycles.</li>
+<li>從應用程式自訂的 metrics 來觀察 request count, method call time, size of queue,
+cache hit/miss ratio, etc...</li>
+</ul>
+<p>透過截取、記錄、追縱這些數據，搭配上 Performance Test 產生的圖表，我們可以再進一步的了解
+應用程式耗用了多少的資源，應用程式的 bottleneck 在那，是 cpu bound, memory bound,
+disc io bound or network bound.</p>
+<div class="note">
+<p class="first admonition-title">Note</p>
+<p class="last">不要小看了這些監控的細節，我的某個程式，有少量用到 ActiveMQ, ZooKeeper 做溝通，照理說
+應該是 cpu or memory bound的應用，但是經過幾次 load test ，發覺不管加多少機器，總處
+理量還是不變。後來翻了翻OS來的數據才發現，整個環境的網路頻寬被限制在 250M bps ，再進一
+步了解到原來 Amazon EC2 的 Load Balancer 把流量限制在這個數字。</p>
+</div>
+<p>監控的工具有很多種，不過脫不了兩大類
+- <strong>監控系統用量</strong> 如: Munin, Graphite, RRDTools
+- <strong>監控系統異常</strong> 如: Nagios</p>
+<p>這些監控工具，我們不只是可以套用在 Load Test 時使用，更該被大量的佈建在監控線上的應用程
+式及外部的服務上，透過長期的追縱，我們可以了解到應用程式及外部的服務的可用度及可靠度。</p>
+</div>
+<div class="section" id="id3">
+<h2>(全文完)</h2>
+</div>
+
+
+  </div>
+
+  <h1><a href="/blog/2012/05/22/runtime-quality-metrics-series-2/">軟體品質指標系列(二)：軟體品質指標有那些</a></h1>
+  <p class="author">
+    <span class="date">2012-05-22 17:49:00 -0700</span>
+  </p>
+  <div class="content">
+    <p>接下來，我們就來探討，軟體品質指標有那些種類</p>
+<div class="section" id="availability">
+<h2>可用度 Availability</h2>
+<p>一個服務的可用度，是由很多環節組合起來的，某些環節是掌控在開發者手中，某些環節則是
+在使用者手中的；對使用者來說，一個服務的可用度，是由底下幾個環節的總合：</p>
+<ul class="simple">
+<li>軟體本身的可用度</li>
+<li>IT/Cloud 架構本身的可用度</li>
+<li>服務提供者端的網路環境</li>
+<li>外部服務的可用度</li>
+<li>使用者端的網路環境</li>
+</ul>
+<p>在計算 Availability 時，是把上面幾個因素相乘起來，便是你服務的可用度，假設你的IT架構
+本身只能提供 99.99% 的可用度，那你的服務本身的可用度將會小於 99.99% 。當然，你可以透
+過 Multi-Host 的方式，將服務布建在多個不同 Data Center，此時你的服務可用度，將可超
+過單一平台可以提供的可用度。</p>
+<blockquote>
+假設 Cloud A 可以提供的可用度是 99% ， Cloud B 可以提供的可用度是 98% ，而你將服
+務同部布建在兩者之上，那麼兩者一起停機的機會是 (1-99%)*(1-98%) = 0.02% ，因此可靠
+度提昇為 99.98% 。</blockquote>
+<p>然而，為了提高可靠到而佈建到 Multi-Host 時，不只要把 Presentation Layer / Frontend 放
+到多個平台上面去，同時，使用者的資料也要同步到多個平台去，這樣，才能夠必免單一IT平台停機的
+問題。但是這麼一來，當停機的平台再次上線時，如何處理資料的不一致問題，便成了另一難題。因此
+，多數的服務提供者只會把服務佈建在單一平台上。</p>
+<div class="section" id="id1">
+<h3>服務提供者端的網路環境</h3>
+<p>目前，多數的雲端服務商仍是把主機設立在海外，在台灣沒有 Data Center ，因此，當台灣對外的海
+纜出了問題時，雖然服務本身在海外仍是可用的，但是在台灣就連不上線，這一點，也是台灣的開發者
+在選用雲端平台時需要考慮進去的。</p>
+<p>過去幾年來，台灣對外的海纜，幾乎每兩年都會斷線超過一天。</p>
+<blockquote>
+<ul class="simple">
+<li>2001/02/09 中美海纜遭魚船勾破，數據傳輸容量遽減至原來的四成。HiNet, SeedNet, TaNet 均受影響</li>
+<li>2003/10/02 中美海纜遭魚船勾破</li>
+<li>2006/12/26 恆春地震造成四條國際海纜中美海纜、法新歐亞三號、亞太光纜一號二號網絡斷線，
+影響到台灣對中國、香港、新加坡等東南亞國家和地區，以及上述地區對外的國際通信。耗時三週修複。</li>
+<li>2009/08/13 莫拉克颱風造成對外海纜斷線，影響台灣往中國大陸汕頭及東南亞地區，包括新加坡、菲律
+賓及香港等地之通信。影響時間超過一週</li>
+<li>2010/03/04 高雄甲仙地震造成中美海纜斷線，影響時間超過一個月</li>
+<li>2011/11/14 ~ 2012/21/26 海纜進行維修，將造成HiNet連線中國之部份連網服務傳輸延遲時間變長。</li>
+</ul>
+</blockquote>
+<p>若是你服務的對像是以亞洲為主，還是建議放在台灣或日本，若是服務對像以全球為目標，建議還是就放在美國吧。</p>
+</div>
+<div class="section" id="soa-in-reality">
+<h3>外部服務的可用度 / SOA in Reality</h3>
+<img alt="/images/2012-05-22/cloud-farm.jpg" src="/images/2012-05-22/cloud-farm.jpg" style="width: 400px;" />
+<p>在幾年前，流行的系統架構是 SOA ，讓每一個團隊專注在單一面向功能的服務，將服務透
+過SOAP/Restful API供內部及外部的使用者來使用。這樣的好處是，可以增快服務更新的速度減少
+測試的範圍，在組織上，也可讓組織將重點放在核心服務上，而將其它的需求委由外部服務處理。</p>
+<p>如此一來，對使用者來說，多重 SOA 子服務組合而成的服務，看起來就像是在雲端運行的一台大電
+腦，跟舊式的服務並沒有差異。</p>
+<img alt="/images/2012-05-22/cloud-server.png" src="/images/2012-05-22/cloud-server.png" style="width: 400px;" />
+<p>然而經過幾年的經驗後，大家發現實際上的經驗並不是那麼的美好；如同開頭所說的，服務的可用度，
+是所有子服務的總合，單一服務的問題，將會把整體的可用度都拉低。</p>
+<p>在我的實務經驗上， SOA 架構，反而變成無止境的 finger pointing ，最後變成，需要對所有外
+部服務的可用度做長期的追縱，評估他實際上的可用度。另外，在委外給外部服務時，只會把可以離線
+處理的服務委外給外部服務，需要線上即時處理的，還是自行開發較好。</p>
+<img alt="/images/2012-05-22/finger-pointing.png" src="/images/2012-05-22/finger-pointing.png" style="width: 400px;" />
+</div>
+<div class="section" id="service-level-agreement-term-of-service">
+<h3>Service Level Agreement / Term of Service</h3>
+<p>TBD</p>
+</div>
+</div>
+<div class="section" id="manageability">
+<h2>可維護性 Manageability</h2>
+<p>可維護性指的是，一個服務在運行時，留下了多少的資料，供 admin 做為判斷服務狀況的依據。一
+個線上的服務，除了基本的 log 檔外，還需提供底下的特性</p>
+<ul class="simple">
+<li>Configurability: 提供設定檔，讓 admin / tester 能夠在不修改程式碼本身，而對軟體的
+功能做調整。</li>
+<li>Monitorability : 提供開放性的介面，讓 admin 可以很容易的去追縱服務本身的建康狀態及用
+量，供 admin 來判斷，是否需要增加硬體的來分散線上伺服器的負擔。</li>
+</ul>
+<div class="section" id="monitoring-is-must">
+<h3>Monitoring is Must</h3>
+<p>在提供一個服務時，我們一定要監控服務本身的狀況，並且要把這份資料與外部分享，減少本身溝通的
+成本及增加客戶對服務的信任。</p>
+<p>不管是設計多麼精良的服務，各個軟體平台商仍免不了會發生大型的災難，如：</p>
+<ul class="simple">
+<li>Amazon AWS 於 2008, 2010, 2011 各發生過數小時的問題，造成 EBS 使用上的問題，導
+制 reddit, zynga 等下遊廠商的服務問題</li>
+<li>Google Gamil 於 2009 年發生過大形的停機，耖造成拳體用戶無法使用 Gmail 兩個半小時。</li>
+<li>Azure 於 2012/02/29 ，由於時間同步的問題，造成用戶無法開啟新的 VM instance.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="performance">
+<h2>Performance</h2>
+<p>效能，算是個最常用的品質指標了，在講效能時我們通常會分成兩塊來講，一塊是反應時間(Response Time)，
+另一塊是處理量(throughput)，前者只的是服務單一需求所要花的時間，後者則是單位時間內，可同
+時服務的總需求數量。</p>
+<p>影響效能的因素有很多，在多數的系統中，往往處理量增加的結果就是反應時間也一起增加，因此在系
+統設計的初期，這些就要納入規格中，變成設計的一環；那麼，什麼是好的效能呢？在反應時間這邊有
+個很好的指標，就是跟人互動的UI程式，如果反應時間能壓在 100ms 以下，那麼人們的認知就會覺的
+這個程式是即時使用的，如果反應時間拉到 200ms 以上，就會開始覺得頓頓的。</p>
+<p>對於網頁程式來說，反應時間不只是從 Web Server 這一端出去的時間，還要算上網路傳輸的時間以
+及流覽器繪製畫面的時間，因此能留給網站主機的反應時間只剩下 50ms 上下；如果你的程式還有呼叫
+其於的外部程式，那麼每多一層，反應時間至少增加 20ms ，或者是說少 20ms 給你的程式使用。</p>
+</div>
+<div class="section" id="reliability">
+<h2>Reliability</h2>
+<p>可靠度(Reliability)跟可用度(Availability)是兩個常被弄混的名詞，Availability講的是，
+在一段長的時間內，系統可被使用的時間(Up Time)，Reliability則講的是在單位時間內，系統出
+錯的次數。一個線上服務，可能是可用的(Available)但是他的輸出結果是有問題的(Unreliable)</p>
+<p>Reliability 的評量指標有</p>
+<ul class="simple">
+<li>單位時間內，回傳錯誤訊息或者是無回應的次數。</li>
+<li>單位時間內，輸出結果是錯誤的次數。</li>
+</ul>
+<p>Reliability的問題，往往是系統內的 Bug ，只是在使用量大時，才會凸顯他的存在，因此軟體開發
+者不可忽略這微小的訊號。</p>
+</div>
+<div class="section" id="scalability">
+<h2>Scalability</h2>
+<p>Scalability 講的是你的服務能不能夠隨著用戶數的增長，而跟著成長，服務的可延展性可以分為
+， <strong>直向擴充 Scale Up</strong> 及 <strong>橫向擴充 Scale Out</strong> ，兩者都可以幫你增加可同時服務的
+線上用戶數，但是後者的可擴充的程度，仍是遠高過前者的。</p>
+<p>Scalability 讓我們動態的依事件配置不同數量的伺服器數量，以防止 Slashdot Effect 的發生
+，如總統大選或報稅截止日等事件，往往會在一日內擁入超過平日百倍的用戶數，如何讓服務正常運做
+，是軟體品質極重要的一環。</p>
+<p>而 Scalability 對 Application Service Provider 更是重要，因為 Cloud Based ERP or CRM 系
+統，較一般的網頁更有黏著性，一個有數萬個用戶的中型網站，同時間上線的用戶可能只有數百個，而
+於他們的 Session 中存的資料也只有數 kilo bytes。然而對企業用戶來說 Cloud Based ERP, CRM ，
+在上班時間，可是一直在使用的，一間 200 人公司用的 ERP 系統，可能就會有 200 active sessions ，每
+個 Session 又存了許多正在處理中的表格資料。</p>
+<p>如何 scale up/out database intensive application 變成 ASP 提供者不得不面對的難題。</p>
+</div>
+<div class="section" id="security">
+<h2>Security</h2>
+<p>網路服務的安全性問題，常常是個被誤會且忽略的問題，台灣許多主流的 Hosting Company 及 Billing Provider 的網站都出
+過問題；他們的問題是，某本常用的軟體手冊的程式碼，在教導如何實作使用者認證時，只有在首頁
+有檢查帳號，等帳號檢查過了，就會被導到內部的網頁去，然而，在內部網頁這邊，卻沒有檢查使用
+者有沒有登入。</p>
+<p>變成，只要得知內部網業的網址(form target)就可以直接存取內部的資料，因此，許多網站就
+被 Search Engine Crawler 長驅直入，把所有的使用者資料都放在搜尋結果中公開了。至於實際
+的例子我就不多舉了。</p>
+<p>另外我有寫過一篇 <a class="reference external" href="/blog/2012/01/03/how-to-protect-a-webservice/">專文</a> 討論，該如合保護一個 WebService ，台灣的政府及民間網站，常常
+用一些沒有被認可的電子簽證來做 https 的安全通訊，然而 https 的金鑰交換，在第一次是不安
+全的，因此，若是你的金鑰是沒有經過第三方簽核的，那麼再交換金鑰時可能會受到 <a class="reference external" href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in
+the middle attack</a> 直接把金鑰換掉。</p>
+<p>使用 https 時，必需遵守幾個使用規範，這樣子通訊才會是安全的。</p>
+<p>回到正題，服務的安全性可以分為幾塊</p>
+<ul class="simple">
+<li>通訊的安全性。</li>
+<li>身份的認可查核</li>
+<li>資料的安全性及使用權限</li>
+<li>資料的使用及變更的計錄追蹤</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h2>待續</h2>
+<p>在下一篇，我將講述，如何把這些概念，轉換成實際的數值指標。</p>
+</div>
+
+
+  </div>
+
+
+<!-- Pagination links -->
+<div class="pagination">
   
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2016/02/03/a-normal-day-in-san-francisco-ii/">[舊金山正常的一日]細數過去三個月的瘋狂案例</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/02/03/a-normal-day-in-san-francisco/">舊金山正常的一日</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/23/raising-a-bilingual-child/">如何教出一個雙語的小孩</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/01/16/affirmative-action/">矽谷科技業的面試規則</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/12/21/worse-is-better-mysql/">MySQL 劣即是夯</a>
-      </li>
-    
-  </ul>
-</section>
-
-<section>
-  <h1>Facebook</h1>
-  <div class="fb-follow" data-href="https://www.facebook.com/yunglin.ho" data-width="260" data-show-faces="true"></div>
-</section>
-<section>
-  <h1>Twitter</h1>
-  <a class="twitter-timeline" href="https://twitter.com/yunglinho" data-widget-id="379628400123445248">Tweets by @yunglinho</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-</section>
-
-
-<section class="googleplus">
-  <h1>
-    <a href="https://plus.google.com/101164690243066571931?rel=author">
-      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
-      Google+
-    </a>
-  </h1>
-</section>
-
-
-
-<section>
-<a title="tumblr stats"
-href="http://statcounter.com/tumblr/" target="_blank"><img
-src="http://c.statcounter.com/8085210/0/5c96ca74/0/"
-alt="tumblr stats" style="border:none;"></a></section>
-
-
+    <a href="/" class="previous">Previous</a>
   
-</aside>
+  <span class="page_number ">Page: 2 of 6</span>
+  
+    <a href="/blog/page/3" class="next">Next</a>
+  
+</div>  
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">碎碎念</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>碎碎念</li>
+          <li><a href="mailto:yunglin at gmail.com">yunglin at gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/yunglin"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">yunglin</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/yunglinho"><span class="icon icon--twitter"><svg viewBox="0 0 16 16"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">yunglinho</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p class="rss-subscribe">subscribe <a href="https://feeds.feedburner.com/yunglinho">via RSS</a></p>
+      </div>
+
 
     </div>
+
   </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2016 -  -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
 </footer>
-  
-
-<script type="text/javascript">
-      var disqus_shortname = 'yunglin';
-      
-        
-        var disqus_script = 'count.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
-</script>
 
 
+  </body>
 
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
-
-
-</body>
 </html>
