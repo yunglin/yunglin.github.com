@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>parallel external merge sort</title>
+  <meta name="description" content="Last week, I was working on importing a large input file into the system. Part of the process involved withreading a large file (~10GB) from remote server an...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://yourdomain.com/2013/03/19/parallel-external-merge-sort.rst">
+  <link rel="alternate" type="application/rss+xml" title="Your awesome title" href="http://yourdomain.com/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Your awesome title</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">parallel external merge sort</h1>
+    <p class="post-meta"><time datetime="2013-03-19T21:43:00-07:00" itemprop="datePublished">Mar 19, 2013</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    Last week, I was working on importing a large input file into the system. Part of the process involved with
+reading a large file (~10GB) from remote server and them sort the inputs locally.
+
+At that moment, I decided to give Scala's new `Future API`_ a try. Within one day, I wrote a parallel external
+merge sort that can
+
+    1. Read the file from remote server and split it into smaller chunks.
+    2. Use in-memory quicksort to sort each chunk and then save chunks into files.
+    3. Perform merge sort on the files generated in the previous step.
+
+The most amazing thing is that multiple threads could work on these tasks simultanously. While one thread is busy
+reading bytes from remote server, other threads would perform quicksort on the part that has already been read. Once,
+all of the data has been written to file system. Another thread will start to merge sort these files.
+
+Here is how I do it.
+
+Read Lines From InputStream
+----------------------------
+
+.. code-block:: scala
+
+    val soure: Stream[Int] = Source.fromInputStream(inputStream).getLines().toStream.map(_.toInt)
+
+The above code will turn a **InputStream** into a **Stream[Int]** , and then allow us to perform operation on it
+without having to fully read it into memory first. But still, this is a huge Stream. Because we are going to use
+in-memory sort, I need to split it into smaller pieces first.
+
+
+The following code will **lift** a Stream into a Stream of Stream. Again, this operation does not require read the whole
+original stream into memory. All the operation only happens logically.
+
+
+.. code-block:: scala
+
+  /**
+   * Lift a Stream into a Stream of Stream. The size of each sub-stream is specified by the chunkSize
+   * @param stream        the origin stream.
+   * @param chunkSize     the size of each substream
+   * @tparam A
+   * @return              chunked stream of the original stream.
+   */
+  private def lift[A](stream: Stream[A], chunkSize: Int): Stream[Stream[A]] = {
+
+    def tailFn(remaining: Stream[A]): Stream[Stream[A]] = {
+      if (remaining.isEmpty) {
+        Stream.empty
+      } else {
+        val (head, tail) = remaining.splitAt(chunkSize)
+        Stream.cons(head, tailFn(tail))
+      }
+    }
+    val (head, tail) = stream.splitAt(chunkSize)
+    return Stream.cons(head, tailFn(tail))
+  }
+
+
+Perform Quick Sort
+--------------------------------
+
+After we have split **InputStream** into **Streams**, we can start to read each sub-stream into memory and perform
+quicksort on them.
+
+
+.. code-block:: scala
+
+    val linesStream: Stream[Stream[Int]] = lift(soure, chunkSize)
+    val chunkCounter = new AtomicInteger(0)
+
+    val sortedFileDir = Files.createTempDir()
+    sortedFileDir.deleteOnExit()
+
+    // read source stream, read n entries into memory and save it to file in parallel.
+    val fileFutures: List[Future[File]] = linesStream.map(
+      s => {
+        val chunk = chunkCounter.getAndIncrement
+        Future {
+          val sorted = s.sorted
+          val ret = new File(sortedFileDir, "%d".format(chunk * chunkSize))
+          val out = new PrintWriter(ret)
+
+          try {
+            sorted.foreach(out.println(_))
+          } finally {
+            out.close()
+          }
+          ret
+        }
+      }).toList
+
+
+Perform Merge Sort
+---------------------------------------
+
+Because I want to perform mergesort on all of results, I have to turn **List[Future[File]]** into **Future[List[File]]**
+first. So that I can instruct the **Future** to do merge sort once it has all the pieces.
+
+
+.. code-block:: scala
+
+  val saveTmpFiles: Future[List[File]] = Future.sequence(fileFutures)
+
+  val ret: Future[File] = saveTmpFiles.map {
+      files => {
+    var merged = files
+
+    while (merged.length > 1) {
+      val splited = merged.splitAt(merged.length / 2)
+      val tuple = splited._1.zip(splited._2)
+
+      val m2 = tuple.map {
+        case (f1, f2) => {
+          val ret = new File(sortedFileDir, f1.getName + "-" + f2.getName)
+
+          val source1 = Source.fromFile(f1)
+          val source2 = Source.fromFile(f2)
+          val out = new PrintWriter(ret)
+
+          try {
+            val stream1 = source1.getLines().toStream.map(_.toInt)
+            val stream2 = source2.getLines().toStream.map(_.toInt)
+            merge(stream1, stream2).foreach(out.println(_))
+            ret
+          } finally {
+            out.close()
+            source1.close()
+            source2.close()
+
+            FileUtils.deleteQuietly(f1)
+            FileUtils.deleteQuietly(f2)
+          }
+
+        }
+      }
+      merged = if (merged.length % 2 > 0) {
+        m2 :+ merged.last
+      } else {
+        m2
+      }
+    }
+    merged.head
+  }
+
+
+  /**
+   * Merge two streams into one stream.
+   * @param streamA
+   * @param streamB
+   * @return
+   */
+  private def merge[A](streamA: Stream[A], streamB: Stream[A])(implicit ord: Ordering[A]) : Stream[A] = {
+
+    (streamA, streamB) match {
+      case (Stream.Empty, Stream.Empty) => Stream.Empty
+      case (a, Stream.Empty) => a
+      case (Stream.Empty, b) => b
+      case _ => {
+        val a = streamA.head
+        val b = streamB.head
+
+        if (ord.compare(a, b) > 0) {
+          Stream.cons(a, merge(streamA.tail, streamB))
+        } else {
+          Stream.cons(b, merge(streamA, streamB.tail))
+        }
+      }
+    }
+  }
+
+
+Give this Method a Pretty Face.
+-------------------------------------------------------
+
+So how does the method signature of this parallel external merge sort look like?
+
+In fact, it is quite simple. It takes an **InputStream** and returns a **Future[File]**. So that, everything
+happens asynchronously, nothing blocks the main thread. You can send an inputStream to this method, go to do other
+things first and then come back to wait for the result.
+
+.. code-block:: scala
+
+  def sort(inputStream: InputStream, chunkSize: Int = 2000000): Future[File] = ???
+
+
+Limits Number of Threads Running at the Same Time.
+--------------------------------------------------------
+
+Because this parallel external mergesort is an IO and memory intense operations, we can not run too many of it
+simultaneously. We must put a constraint on the number of threads it can use at a time. Otherwise, we may receive
+OutOfMemoryError or having many threads writing to disk simultaneously.
+
+Also, this constraint must be a global constraint. No matter how many requests has been sent to this method at the
+same time, it should only use up-to *N* threads.
+
+Luckly, this is quite easy to do with Scala's Future API. All we need to do is to provide a fixed size thread pool
+for this method. So that it won't spawn new thread by itself, instead, it uses threads provided by this global thread
+pool.
+
+.. code-block:: scala
+
+  /**
+   * limits number of reading and sorting can be executed simultaneously. Because this is an IO
+   * bound operation, unless the inputstream is coming from a slow http connection, otherwise, 5
+   * is more than enough.
+   */
+  private val GLOBAL_THREAD_LIMIT = {
+    val ret = Runtime.getRuntime.availableProcessors() / 2
+    if (ret > 5) {
+      5
+    } else {
+      ret
+    }
+  }
+
+  private lazy implicit val executionContext =
+    ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(GLOBAL_THREAD_LIMIT))
+
+
+Put Everything Alltogether
+-------------------------------------------------------------
+
+.. code-block:: scala
+
+  import com.google.common.io.Files
+  import java.io.{PrintWriter, File, InputStream}
+  import java.util.concurrent.Executors
+  import java.util.concurrent.atomic.AtomicInteger
+
+  import org.apache.commons.io.FileUtils
+
+  import scala.concurrent.{ExecutionContext, Future}
+  import scala.io.Source
+
+  object InputStreams {
+
+  /**
+   * limits number of reading and sorting can be executed simultaneously. Because
+   * this is an IO bound operation, unless the inputstream is coming from a slow
+   * http connection, otherwise, 5 is more than enough.
+   */
+  private val GLOBAL_THREAD_LIMIT = {
+    val ret = Runtime.getRuntime.availableProcessors() / 2
+    if (ret > 5) {
+      5
+    } else {
+      ret
+    }
+  }
+
+  private lazy implicit val executionContext =
+    ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(GLOBAL_THREAD_LIMIT))
+
+  def sort(inputStream: InputStream, chunkSize: Int = 2000000): Future[File] = {
+
+    // open source stream
+    val soure = Source.fromInputStream(inputStream).getLines().toStream.map(_.toInt)
+    val linesStream = lift(soure, chunkSize)
+    val chunkCounter = new AtomicInteger(0)
+
+    val sortedFileDir = Files.createTempDir()
+    sortedFileDir.deleteOnExit()
+
+    // read source stream, read n entries into memory and save it to file in parallel.
+    val saveTmpFiles: Future[List[File]] = Future.sequence(
+      linesStream.map(s => {
+        val chunk = chunkCounter.getAndIncrement
+        Future {
+          val sorted = s.sorted
+          val ret = new File(sortedFileDir, "%d".format(chunk * chunkSize))
+          val out = new PrintWriter(ret)
+
+          try {
+            sorted.foreach(out.println(_))
+          } finally {
+            out.close()
+          }
+          ret
+        }
+      }).toList
+    )
+
+    // perform merge sort.
+    saveTmpFiles.map {
+      files => {
+        var merged = files
+        while (merged.length > 1) {
+          val splited = merged.splitAt(merged.length / 2)
+          val tuple = splited._1.zip(splited._2)
+
+          val m2 = tuple.map {
+            case (f1, f2) => {
+              val ret = new File(sortedFileDir, f1.getName + "-" + f2.getName)
+
+              val source1 = Source.fromFile(f1)
+              val source2 = Source.fromFile(f2)
+              val out = new PrintWriter(ret)
+
+              try {
+                val stream1 = source1.getLines().toStream.map(_.toInt)
+                val stream2 = source2.getLines().toStream.map(_.toInt)
+                merge(stream1, stream2).foreach(out.println(_))
+                ret
+              } finally {
+                out.close()
+                source1.close()
+                source2.close()
+
+                FileUtils.deleteQuietly(f1)
+                FileUtils.deleteQuietly(f2)
+              }
+
+            }
+          }
+          merged = if (merged.length % 2 > 0) {
+            m2 :+ merged.last
+          } else {
+            m2
+          }
+        }
+        merged.head
+      }
+    }
+  }
+
+  /**
+   * Lift a Stream into a Stream of Stream. The size of each sub-stream is specified
+   * by the chunkSize.
+   *
+   * @param stream        the origin stream.
+   * @param chunkSize     the size of each substream
+   * @tparam A
+   * @return              chunked stream of the original stream.
+   */
+  private def lift[A](stream: Stream[A], chunkSize: Int): Stream[Stream[A]] = {
+
+    def tailFn(remaining: Stream[A]): Stream[Stream[A]] = {
+      if (remaining.isEmpty) {
+        Stream.empty
+      } else {
+        val (head, tail) = remaining.splitAt(chunkSize)
+        Stream.cons(head, tailFn(tail))
+      }
+    }
+    val (head, tail) = stream.splitAt(chunkSize)
+    return Stream.cons(head, tailFn(tail))
+  }
+
+
+  /**
+   * Merge two streams into one stream.
+   * @param streamA
+   * @param streamB
+   * @return
+   */
+  private def merge[A](streamA: Stream[A], streamB: Stream[A])(implicit ord: Ordering[A]) : Stream[A] = {
+
+    (streamA, streamB) match {
+      case (Stream.Empty, Stream.Empty) => Stream.Empty
+      case (a, Stream.Empty) => a
+      case (Stream.Empty, b) => b
+      case _ => {
+        val a = streamA.head
+        val b = streamB.head
+
+        if (ord.compare(a, b) > 0) {
+          Stream.cons(a, merge(streamA.tail, streamB))
+        } else {
+          Stream.cons(b, merge(streamA, streamB.tail))
+        }
+      }
+    }
+  }
+
+
+.. _Future API: http://docs.scala-lang.org/sips/pending/futures-promises.html
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Your awesome title</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Your awesome title</li>
+          <li><a href="mailto:your-email@domain.com">your-email@domain.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/jekyll"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">jekyll</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/jekyllrb"><span class="icon icon--twitter"><svg viewBox="0 0 16 16"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">jekyllrb</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>軟體品質指標系列(三)：軟體品質如何測量</title>
+  <meta name="description" content="在這一系列的第一回我們談到，我們是軟體工程師，不談虛幻的概念，只講能夠量化追蹤的數值指標，那麼，我們要怎麼把品質轉換程數值指標呢？">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://yourdomain.com/2012/05/23/runtime-quality-metrics-series-3.rst">
+  <link rel="alternate" type="application/rss+xml" title="Your awesome title" href="http://yourdomain.com/feed.xml">
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">Your awesome title</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">軟體品質指標系列(三)：軟體品質如何測量</h1>
+    <p class="post-meta"><time datetime="2012-05-23T14:45:00-07:00" itemprop="datePublished">May 23, 2012</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    在這一系列的第一回我們談到，我們是軟體工程師，不談虛幻的概念，只講能夠量化追蹤的數值指標，那麼，
+我們要怎麼把品質轉換程數值指標呢？
+
+
+軟體品質如何測量
+===============================================================================
+
+
+幾個故事
+-------------------------------------------------------------------------------
+
+在開始講怎麼做前，我想先講兩個我親身的經驗，在我第一份工作時，前雇主是做手機遊戲的，整間公
+司有兩百個員工，但是只有三個是做Server端的，在 2005 年時，多數遊戲都是單機板的，那時公司
+簽下 World Series Of Poker 要做多人的線上遊戲，需要開發一個簡易的配對及遊戲訊息交換的伺
+服器，當然，大家當年都沒有經驗，所以說，要怎麼樣確保在上線時，不會被用戶衝垮就變成我的工作。
+
+而在我第二份工作時，也有相似的經驗，我們本來已有一個運作中的音樂平台，讓公司內外超過40個Partner使用；
+當時，公司又簽下一個合約，說是在三個月後的 6/1 ，會新增 200萬用戶！如何不讓大水衝垮我們的
+應用程式，又變成我那幾個月的工作重點。
+
+.. image:: /images/2012-05-23/troops.jpg
+   :width: 800 px
+
+
+Load Test
+===============================================================================
+
+寫到這邊，大部份的讀者應該都知道接下來要講的是 Load Test 了，Load Test是個很大的議題，通
+常我們在講 Load Test 時，常講的其實是三件不同的事
+
+- Performance Test
+- Stress Test
+- Longevity Test
+
+這三個測試，用的工具雖然一樣，但是要找個指標跟目的卻是大不相同。
+
+
+Performance Test
+-------------------------------------------------------------------------------
+
+Performance Test 的目地是在找出應用程式的 baseline performance ，做為未來績效評估及設計變
+革時的依據。
+
+被 Performance Test 的標的物，通常是已經 feature complete 的模組，然後我們將對模組的每
+一個功能，一個一個進行黑箱及白箱測試；然後再用腳本的型態，模擬實際上線的流量，再來測試看看
+各功能間對效能的互相影響程度；最後，是找到測試標的物的 Turning Point 及 Scale Factor。
+
+
+尋找 Best Case Performance
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+尋找應用程式的 best case performance  大概是最常被忽略的事了， best case performance 指的是你
+一個功能的最佳效率，不管怎樣測試，對單一功能來說，怎麼樣你的效率都不可能會再比這個數字
+好了；這個數字的第一個用處就在這，如果你的最佳效率比目標效率還糟，剩下來的就不用測了，
+因為怎樣都會比這個數字還糟，只能先停下來，回去修改程式碼增進效能。
+
+Best Case Performance 的測法是：
+
+1. 將應用程式啟動
+2. 先用幾個 request 替應用程式暖身(warm up)，以 Java VM 來說，這樣可以讓 Hotspot VM 幫 bytecode 最
+   佳化，有些需要被啟動的內部原件也會被啟動。
+3. 接著是一個一個的慢慢送一百個 requests ，然後取平均值及標準差。
+
+若是標準差的值過高，或者是反應時間有增長的現像，那麼這個狀況應該記錄下來，然後使用白箱
+測試的工具(如 `yourkit profiler`_ 去找問題的根源。
+
+除了平均數及標準差外，常用的數字還有
+
+- mean
+- standard deviation
+- minimum
+- maximum
+- 96   percentile
+- 99   percentile
+- 99.9 percentile
+- 5 minutes moving average
+- throughput
+- error rate
+
+另外，圖表也是常用的工具，因為相較於數字，圖表更容易看出來趨勢的走向；以下圖為例，藍線的
+平均反應時間是1.354秒，但跑load test二十分鐘後，每一個 request 都已經超過了平均數，因
+此將數字用圖像來呈現是有助於判別數字的。
+
+.. image:: /images/2012-05-23/chart-1.png
+   :width: 480 px
+
+.. _yourkit profiler: http://www.yourkit.com/
+
+建立 Performance Baseline
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+接下來的工作，是定出比較的基礎，建立一個你覺得合理的流量，然後就這個比較基礎去找出來不同
+狀況下的平均反應時間及處理量的變化。
+
+基礎效能的建立，我們要先控制兩個變數 **requests per minutes** 及 **number of concurrent requests** ；
+透過調整這兩個變數，先找出反應時間較 best case 的流量，然後就此數字開始調整到一個你覺
+得合理的值，開始進行 Load Test。
+
+劉接下來我們開始把 **requests per minutes(RPM) 倍增** 但 **number of concurrent requests(CR) 不變** 來看，當流量
+增加時應用程式的反應時間會如何增長，接著是 RPM 及 CR 同時都倍增，看反應時間如何增長，
+依此規則，就二的次方(2^N)開始往上增加，直到 response 開始嚴重衰退，或者 throughput 開
+始衰退。
+
+接著，如果你的應用程式支援 Scale-Out ，那麼，我們依此規則，就 RPM, CR, Machines 三
+個變數再次就二的次方(2^N)開始調整流量來做測試。
+
+前面這個過程，可以幫我們了解以下幾件事
+
+- 應用程式對壓力的反應是如何，當流量被增時，反應時間成長的幅度是線性還是成等比級數成長。
+- 處理量 throughput 是否會隨著 request 數增加而增加，是否在超過某個轉折點時，會開始
+  反轉下降
+- 上述的轉折點，便可當做未來評估是否需要增加機器或者是昇級機器的基準值。當實既須求接近這
+  個點，或有事件會造成流量超過這個點，那麼，我們就可以在事前進行反應。或者，在監控應用程
+  式中加入警告，當線上程式逼近這個值的時候，主動告知我們該加機器了
+- 當我們增加機器時，如果應用程式不是寫成完全 stateless 的，而是有共享資料資源時，那麼
+  ，scale factor便會小於 2，那麼，我們需要關查 scale factor 到底是隨著機器的增加而
+  不變、還是緩慢成長、或者是快速成長。即使因為某些因素讓我們不能夠準備有實際上線時的機器
+  數，但是透過分析 scale factor ，我們可以預估上線該使用多少機器。
+
+
+Stress Test
+-------------------------------------------------------------------------------
+
+與 Performance Test 不同的是， Stress Test 是看，應用程式在極度的狀況下，是怎麼樣反
+應的，是全面性的停止服務，還是仍能正常處理部份的 request ，其餘未能處理的部份是被堆到排
+程中等待處理、還是直接收到錯誤訊息告知服務暫時不可用。而當這極端的狀況停下來後，應用程式
+是否會自行回復正常，還是需要
+重新啟動才能回復正常。
+
+Stress Test 的方式是直接把 performance test 中 **處理量** 開始反轉的那個點的流量再
+次倍增，看處理量及反應時間會如何的變化。
+
+
+
+Longevity Test
+-------------------------------------------------------------------------------
+
+Longevity Test 跟前述兩者不同的是， Longevity Test 是在看，應用程式對長時間、持續性、
+平緩的流量是如何反應的，是否在某個時間點會有不良的反應，或者是說會有處理量越來越少或反應時
+間越來越長的跡象。
+
+透過 Longevity Test 我們可以發覺
+- 應用服務是否有 memory leak
+- 是否有背景的排程工作，造成某個時間點系統資源會被大量耗用
+
+
+Monitoring
+===============================================================================
+
+除了從應用程式的外部去觀查應用程式的執行效能，我們還可以更進一步的
+
+- 從作業系統了解CPU, Memory, Disc I/O, and Network Usage
+- 從JVM 了解 Memory Usage, Object counts, GC Cycles.
+- 從應用程式自訂的 metrics 來觀察 request count, method call time, size of queue,
+  cache hit/miss ratio, etc...
+
+透過截取、記錄、追縱這些數據，搭配上 Performance Test 產生的圖表，我們可以再進一步的了解
+應用程式耗用了多少的資源，應用程式的 bottleneck 在那，是 cpu bound, memory bound,
+disc io bound or network bound.
+
+.. note::
+
+  不要小看了這些監控的細節，我的某個程式，有少量用到 ActiveMQ, ZooKeeper 做溝通，照理說
+  應該是 cpu or memory bound的應用，但是經過幾次 load test ，發覺不管加多少機器，總處
+  理量還是不變。後來翻了翻OS來的數據才發現，整個環境的網路頻寬被限制在 250M bps ，再進一
+  步了解到原來 Amazon EC2 的 Load Balancer 把流量限制在這個數字。
+
+
+監控的工具有很多種，不過脫不了兩大類
+- **監控系統用量** 如: Munin, Graphite, RRDTools
+- **監控系統異常** 如: Nagios
+
+
+這些監控工具，我們不只是可以套用在 Load Test 時使用，更該被大量的佈建在監控線上的應用程
+式及外部的服務上，透過長期的追縱，我們可以了解到應用程式及外部的服務的可用度及可靠度。
+
+
+(全文完)
+===============================================================================
+
+  </div>
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Your awesome title</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>Your awesome title</li>
+          <li><a href="mailto:your-email@domain.com">your-email@domain.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/jekyll"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">jekyll</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/jekyllrb"><span class="icon icon--twitter"><svg viewBox="0 0 16 16"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">jekyllrb</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
