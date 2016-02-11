@@ -6,9 +6,27 @@
 </description>
     <link>https://blog.yunglinho.com/</link>
     <atom:link href="https://blog.yunglinho.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 06 Feb 2016 03:39:39 -0800</pubDate>
-    <lastBuildDate>Sat, 06 Feb 2016 03:39:39 -0800</lastBuildDate>
+    <pubDate>Wed, 10 Feb 2016 23:41:15 -0800</pubDate>
+    <lastBuildDate>Wed, 10 Feb 2016 23:41:15 -0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
+    
+      <item>
+        <title>Google Finance 的翻譯問題</title>
+        <description>&lt;p&gt;Google 中文化看來做的很遭，今天同事跟我說 TSLA 收盤大漲，我想說不對明明是跌的，結果原來是 Google Finance 的中文化做的太糟，是個不懂股市的人翻的。&lt;/p&gt;
+
+&lt;p&gt;把 After Market, After Hours 盤後交易，給翻成了「收盤價」&lt;/p&gt;
+
+&lt;p&gt;不知道這一錯錯了多少年了，我順手把 Bug Report 送給 Google 就不知道要多久才會改了
+i&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2016-02-10/google_finance.png&quot;  &gt;&lt;/p&gt;
+</description>
+        <pubDate>Wed, 10 Feb 2016 23:34:18 -0800</pubDate>
+        <link>https://blog.yunglinho.com/blog/2016/02/10/google_i18n_issue/</link>
+        <guid isPermaLink="true">https://blog.yunglinho.com/blog/2016/02/10/google_i18n_issue/</guid>
+        
+        
+      </item>
     
       <item>
         <title>舊金山正常的一日  細數過去三個月的瘋狂案例</title>
@@ -289,70 +307,6 @@
         <pubDate>Mon, 01 Jun 2015 00:40:00 -0700</pubDate>
         <link>https://blog.yunglinho.com/blog/2015/06/01/parking-token-exception-handling/</link>
         <guid isPermaLink="true">https://blog.yunglinho.com/blog/2015/06/01/parking-token-exception-handling/</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>Type Inference 在實務上碰上的問題</title>
-        <description>&lt;p&gt;最近在讀 &lt;strong&gt;Implementing Domain-Driven Design&lt;/strong&gt; 這本書，學習一下別人
-是怎麼整理好整個大型軟的架構，並且重新檢視一下我們公司的程式碼的問題。&lt;/p&gt;
-
-&lt;p&gt;在 DDD 的概念中，一個模組 &lt;strong&gt;Domain&lt;/strong&gt; / &lt;strong&gt;Bounded Context&lt;/strong&gt;  應該是一個獨立的觀念，一個大型程式，應該是由許多 &lt;strong&gt;Bounded Context&lt;/strong&gt; 組合而成，整個程式的架構應該僅量保持這些的純淨性，&lt;strong&gt;Bounded Context&lt;/strong&gt; 的互用，要把上下行的關係定義清楚，程式碼間不應該在一個區塊中引入多個 &lt;strong&gt;Bounded Context&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;p&gt;在整實作上，如何合檢視一個 class 是否有妥善的處理引用入的 &lt;strong&gt;Domain&lt;/strong&gt; ，最簡單也最好用的方式就是看檔頭 &lt;strong&gt;import&lt;/strong&gt; 的地方&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;import com.codahale.metrics.Meter
-
-import org.apache.commons.lang.StringUtils
-import org.jboss.netty.handler.timeout.TimeoutException
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.yunglinho.common.JsonSerializer
-
-import com.yunglinho.app.core.model.Location
-import com.yunglinho.app.feature.SocialProfile
-import com.yunglinho.app.service.LocationService
-
-import scala.concurrent.Await
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
-import scala.concurrent.duration._
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;過去我排 import 的慣用法是按 &lt;strong&gt;有授權疑慮&lt;/strong&gt; 的順序去排&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;com.* 的在最上面&lt;/li&gt;
-&lt;li&gt;org, net 排第二&lt;/li&gt;
-&lt;li&gt; 接著是排自己公司的東西，按 common, base, app 的順序去排，common 跟 based 是放 utilities &amp;amp; framework ， app 就是放一個專案的東西了&lt;/li&gt;
-&lt;li&gt;最後scala &amp;amp; java 的東西&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;這樣排的好處是， code review 一眼看過去，就可以知道用了那些版權有疑慮的東西，而且 import 時，不會把 java &amp;amp; scala 內建的東西蓋過去，同時也知道這支程式碼用了多少其它的東西&lt;/p&gt;
-
-&lt;p&gt;然而，這個機制，在 &lt;strong&gt;Scala&amp;#39;s Type Inference&lt;/strong&gt; 的影響下，變的很不可靠。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Type Inference&lt;/strong&gt; 是初學 Scala 時，覺得很方便的一個功能，能夠在寫程式時，少打很多的字，例如：&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;   // 在沒有 Type Inference 下， statement 的左右兩邊都要宣告型態
-   val location: Location = new Location(&quot;Taipei&quot;)
-
-   // 左邊的這邊其實是可以省下的
-   val location = new Location(&quot;Taipei&quot;)
-
-   // 左右兩邊都沒有 *Location* 的存在，但是卻是被引入在這邊了 
-   val location = locationService.lookup(&quot;Taipei&quot;)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;這看似方便的功能，卻有著非常深遠且負面的影響，在上面的例子中 &lt;em&gt;Location&lt;/em&gt;  這類別，雖然在 import 時沒有出現過，但是卻是在 Reviewer 意料之外中，被帶入到了這程式碼中。&lt;/p&gt;
-
-&lt;p&gt;當然，在上面的例子中，&lt;em&gt;Location&lt;/em&gt; &amp;amp; &lt;em&gt;LocationService&lt;/em&gt; 是一套的觀念，所以沒有真的引入意料之外的 &lt;em&gt;Domain&lt;/em&gt; 進來，但是如果今天程式碼寫的不好，是有個 &lt;em&gt;ApplicationContextHolder.getCalendarService&lt;/em&gt; 的話，那就不一樣了。&lt;/p&gt;
-
-&lt;p&gt;在一行行 code review 時，有可能會抓到這問題，但是如果你沒有空一行行的看呢？或者是你是在 &lt;em&gt;refactor&lt;/em&gt; 數千行程式碼時，那要怎樣一行行的去看呢？&lt;/p&gt;
-
-&lt;p&gt;所以，設計程式語言真的是很困難，一個看似方便的功能，卻在意料之外的地方造成困擾，讓我最近有點想回去改用 Java 。當然 Scala 還是個很好的語言，能夠幫我增加兩三倍的生產力，不過，卻會讓團隊工作時造成困擾。&lt;/p&gt;
-</description>
-        <pubDate>Thu, 23 Apr 2015 23:36:00 -0700</pubDate>
-        <link>https://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review/</link>
-        <guid isPermaLink="true">https://blog.yunglinho.com/blog/2015/04/23/type-inference-and-code-review/</guid>
         
         
       </item>
