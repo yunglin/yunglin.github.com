@@ -6,9 +6,93 @@
 </description>
     <link>https://blog.yunglinho.com/</link>
     <atom:link href="https://blog.yunglinho.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 10 Feb 2016 23:41:15 -0800</pubDate>
-    <lastBuildDate>Wed, 10 Feb 2016 23:41:15 -0800</lastBuildDate>
+    <pubDate>Tue, 16 Feb 2016 00:48:20 -0800</pubDate>
+    <lastBuildDate>Tue, 16 Feb 2016 00:48:20 -0800</lastBuildDate>
     <generator>Jekyll v3.1.1</generator>
+    
+      <item>
+        <title>AWS 意料之外的好處</title>
+        <description>&lt;p&gt;&lt;a href=&quot;http://technews.tw/2016/02/02/apple-may-leave-aws-use-apple-data-center/&quot;&gt;蘋果可能為減少營運成本棄 Amazon 改用自家資料中心&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Huberty 估計，蘋果將建造佔地約 250 萬平方呎的資料中心，這個資料中心將專為 iCloud、iTunes 和支援服務所用。遷離 Amazon 的 AWS 伺服器，將能為蘋果省下近數十億的營運成本，Huberty 估計，蘋果 2015 年在伺服器的成本上就花費了將近十億美金，摩根史坦利也預估，2016 和 2017 年，蘋果將支付 10 億 500 萬和 10 億 1800 萬美金給 Amazon 做為伺服器費用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;我認為遲早會搬回去的，AWS 雲端的好處太多了，不可能不搬回去的。&lt;/p&gt;
+
+&lt;p&gt;不講別的，我覺得 AWS 在節省成本上面，最大的優點是 AWS 隨時有可能通知你，下個月因為主機維修，要把你的虛擬機器重開遷移到另一台主機上。&lt;/p&gt;
+
+&lt;p&gt;我不開玩笑，這真的是 AWS 最偉大的 IT 管理實務的發明，可以幫公司省下超多費用，還可以逼迫程式設計師寫正確的程式。&lt;/p&gt;
+
+&lt;p&gt;講一個老故事，我在某公司上班時，剛報到時，我的專案要用 Maven ，就問了另一個團隊的技術主管，公司的 Maven Repository IP 是多少，然候就加到了我的專案裡面，自此這個 maven repo 就被許多專案延用下去。&lt;/p&gt;
+
+&lt;p&gt;時間快轉兩年，兩年後，另一個單位來信問我 maven repo 掛了，大家找不到主機在那？！他是從我這抄來 IP 的，問我知不知道主機在那？&lt;/p&gt;
+
+&lt;p&gt;我說是 Dave 跟我說的，但是他離職兩年了，我幫你問問在同一個團隊的成員有沒有人知道這一台主機在那裡。&lt;/p&gt;
+
+&lt;p&gt;Dave 的隊友說不知道。最後只能從 IP 位址去 switch 上面查線了，聽說最後是在某間辦公室的辦公桌底下，找到了這台全公司的共用的非正式 Maven Repository&lt;/p&gt;
+
+&lt;p&gt;這故事扯不扯大家自己看吧，不過許多大公司裡充斥著這樣的專案主機，電源就插著，沒有人知道他在那裡做什麼，他的主人早已離職多年，就靜靜的放在那，沒有人敢去把電源關掉。&lt;/p&gt;
+
+&lt;p&gt;這個，就是大公司的 IT 實務。&lt;/p&gt;
+
+&lt;p&gt;所以我說 AWS 大約每六個月就會把你的虛擬機器關掉，是 IT 實務上的偉大發明，用了 AWS 再也不會有孤兒系統默默的存在，幾個月之內一定會被重開機一次，會逼迫你去搞清處這台機器的主人是誰，在運行什麼東西，要怎麼備份跟重開；你不想去處理這些都不行。&lt;/p&gt;
+
+&lt;p&gt;像是 Netflix CTO 寫的 Chaos Monkey 更是把這個理念推到了極致，在 Production 環境內，還會任意的把你的機器關掉，逼迫你一定要把程式寫成容錯、分散式的，不管你在設計階段時怎麼唬爛， CTO 的猴子會在生產力的環境內無時無刻的幫你製造危機，測試你的系統是否是真的容錯。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;劣即是夯&lt;/strong&gt; 蘋果如果是把主機從雲端，搬回到傳統的 IT 實務上的話，最後，成本一定是會比使用雲端共享的方式還要高的。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 16 Feb 2016 00:38:04 -0800</pubDate>
+        <link>https://blog.yunglinho.com/blog/2016/02/16/aws_worse_is_better/</link>
+        <guid isPermaLink="true">https://blog.yunglinho.com/blog/2016/02/16/aws_worse_is_better/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Manufactured_spending</title>
+        <description>&lt;p&gt;美國真的處處是機會，還記得台灣的「卡神」嗎？靠刷卡 Manufactured Spending 賺了一百萬，但是跟美國比起來算是小咖的了。&lt;/p&gt;
+
+&lt;p&gt;美國有許多專職的 blogger 靠「教人怎麼利用信用卡紅利免費旅遊」為生，不過今天這個才真正是大咖，竟然能辦全美的巡迴的收費演講。&lt;/p&gt;
+
+&lt;p&gt;https://ftuniversity.com/&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2016-02-11/ftu.png&quot;  &gt;&lt;/p&gt;
+
+&lt;p&gt;真的是行行出狀元啊&lt;/p&gt;
+
+&lt;p&gt;台灣真的很原始跟落後，美國信用卡公司早就不請專員了，也不用去找寫手，開個網頁然你產生 referral code ，然後隨便你怎麼去拉人，反正開一張新卡就給你五十塊美金。&lt;/p&gt;
+
+&lt;p&gt;人家 The Points Guy 都寫到自己不用寫躺著賺了，台灣還找一堆社會新鮮人在路上拉人，真的是人家已經上太空我們還在賽豬公。&lt;/p&gt;
+
+&lt;p&gt;昨天什麼 Uber 司機不開車也可以半年賺兩百萬台幣，這種事情美國太多了啦，就是靠 referral 當沒底薪的業務啊&lt;/p&gt;
+
+&lt;p&gt;http://wtwang.idv.tw/index2/263/story.htm&lt;/p&gt;
+
+&lt;pre&gt;
+卡神楊惠如的故事：(資料取自yahoo收尋引擎)
+
+廿七歲的楊蕙如，去年八、九月從澳洲昆士蘭大學攻讀企管碩士學位返國，未就業前賦閒在家，上網時意外發現在家刷卡也能賺錢的機會。
+
+楊蕙如說，東森購物台開放白金會員利用信用卡購買「東森禮券」，預付一萬九千元可購買兩萬元東森禮券，禮券一年到期未使用，可選擇兌換兩萬元等值支票，或換兩萬元等值提貨券，再加四千元購物折價券。她算一算，光是一年後換回支票的獲利率，即高達百分之五點六，比銀行定存還高。
+
+另外，中國信託客戶只要每月預付八百元會費，即可享有刷卡消費紅利點數八倍送優惠，外加千分之二的電信回饋金。楊蕙如說，中信銀可能設定一般消費者再怎麼刷卡都是小額，甚至繳了月費卻忘了刷卡，但卻給了她賺取利率差的空間。
+
+楊蕙如去年十月即預付一年九千六百元的月費，並與中信簽了一年合約，隨後開戶，向親友集資六百萬元存入戶頭，做為提高個人信用額度及擔保，之後就透過網路刷卡，一口氣購買東森禮券六百萬元。
+
+她表示，刷卡六百萬元，她的紅利點數就有一百六十萬點，她透過來回操作方式，在國內拍賣網站上把東森禮券轉賣給親友，親友再公開拍賣，她再設法買回，但因為是公開拍賣，部分禮券被其他買家買走了；如此紅利點數迅速累計，一度高達八百餘萬點。
+
+她以每卅二萬點紅利兌換一張免費的長榮美國航線頭等艙機票，再把換來的廿張免費機票，在網站上以每張四萬五千元轉賣。此外，中國信託也開放客戶彼此轉讓紅利點數，她也在網路上以一千點折讓三百元現金。
+
+楊蕙如說，東森禮券一年後兌換現金支票的獲利、加上廿張免費機票網拍獲利九十萬元，及紅利點數轉讓，以及千分之二電信回饋金，她估算過，光刷卡獲利就高達百分之廿一以上，已獲利也高達一百多萬元。
+&lt;/pre&gt;
+</description>
+        <pubDate>Thu, 11 Feb 2016 00:14:23 -0800</pubDate>
+        <link>https://blog.yunglinho.com/blog/2016/02/11/manufactured_spending/</link>
+        <guid isPermaLink="true">https://blog.yunglinho.com/blog/2016/02/11/manufactured_spending/</guid>
+        
+        
+      </item>
     
       <item>
         <title>Google Finance 的翻譯問題</title>
@@ -241,72 +325,6 @@ i&lt;/p&gt;
         <pubDate>Thu, 26 Nov 2015 21:56:00 -0800</pubDate>
         <link>https://blog.yunglinho.com/blog/2015/11/26/energy-meter/</link>
         <guid isPermaLink="true">https://blog.yunglinho.com/blog/2015/11/26/energy-meter/</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>關帳戶</title>
-        <description>&lt;p&gt;啊，我的修養還是不夠，沒想到在台灣關個銀行戶頭，都要叫經理出來，還不能解決 Orz....&lt;/p&gt;
-
-&lt;p&gt;我有一間自己的公司，因為要長期出國，要把公司跟公司戶關掉，打去銀行問要帶什麼文件。&lt;/p&gt;
-
-&lt;p&gt;結果今天去，才跟我說缺公司登記文件。&lt;/p&gt;
-
-&lt;p&gt;回家，下午再來，又跟我說，要關甲存要連未用完的支票都帶來。&lt;/p&gt;
-
-&lt;p&gt;然後我就爆氣了，要行員幫我寫一樣樣下，到底關帳號要那些文件才可以關....&lt;/p&gt;
-
-&lt;p&gt;然後又被台灣的金融制度上了一堂課，原來關甲存帳戶，過去未用完的支票全部都要帶來，要不然一張要罰 240元跟簽切結書。&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;話說我三年前，人在台灣，還透過 email &amp;amp; skype out 開了 Wells Fargo 的戶頭，後來要關時，也是兩封 email 就關掉了，不用負責人親自到、不用把 debit card 寄回去、不用把支票簿寄回去&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;我可以理解，為什麼中華民國會要求支票要還回去，因為過去台灣芭樂票盛行，而中華民國又是個 nanny state ，什麼事都要政府負責，所以連個支付工具都要上層層的鎖。&lt;/p&gt;
-
-&lt;p&gt;在美國，個人支票就是沒什麼保障，要保障，請去買銀行本票 cashier check 。我當年要賣車時，就是跟買主約在銀行裡面，請他當場買 cashier check 給我，我再存進戶頭，而他把車子跟車籍資料帶走，當下就結清交易。&lt;/p&gt;
-
-&lt;p&gt;至於為什麼要用 cashier check 還有一個原因，因為在美國支票存進戶頭，帳戶上暫時會顯示這一筆進帳，但是還是要三到五天才能結清，所以既使存進去還是可能會跳票。&lt;/p&gt;
-
-&lt;p&gt;而當下結清，是商業運作上很重要的，因為當下就可以把風險減到零。反而在台灣，沒有這種安全、有紀錄、一手交錢一手交貨的運作的機制。&lt;/p&gt;
-
-&lt;p&gt;在台灣買車、買結婚戒指，還是要先到銀行轉帳給賣主的個人戶頭，才能領貨。非常沒保障。&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;最後，講到影響最大的，其實是台灣商業跟生活的雙軌制太嚴重。&lt;/p&gt;
-
-&lt;p&gt;我在美國只有生活七年，個人的金融交易方式，就是公司的金融交易方式，並沒有什麼太大的差易，都可以用經驗、常理判斷。&lt;/p&gt;
-
-&lt;p&gt;而在台灣，我是一個商學院畢業的學生，我自認對台灣社會運行的方式在同儕間算是不錯的了，念過會計，幫忙 &amp;quot;手工&amp;quot; 過帳過，上週才把我的公司法、商事法課本給丟掉，但是在過去幾年間，被台灣的會計及金融制度還是撞上許多的問題。&lt;/p&gt;
-
-&lt;p&gt;無法把生活經驗推演到商業上的運作，我想是台灣在培養商業人材上，很大的問題。&lt;/p&gt;
-</description>
-        <pubDate>Thu, 24 Sep 2015 15:40:00 -0700</pubDate>
-        <link>https://blog.yunglinho.com/blog/2015/09/24/struggling-in-taiwan/</link>
-        <guid isPermaLink="true">https://blog.yunglinho.com/blog/2015/09/24/struggling-in-taiwan/</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>遺失停車代幣的解決方案</title>
-        <description>&lt;p&gt;停車把代幣給搞丟，結果意外的上了兩課。&lt;/p&gt;
-
-&lt;p&gt;原來停車場收費機，往四個角點兩下，可以叫出隱藏的控制面板，輸入密碼後，繳當日最高停車費及罰金後，會掉一個不一樣顏色的代幣出來，可以讓你直接出場。&lt;/p&gt;
-
-&lt;p&gt;第二課是，我拿到的代幣壞了(運氣真好)，停車場管理員，雖然下班了，還是可以透過手機，直接看監視器跟操作停車桿，直接放我出場。&lt;/p&gt;
-
-&lt;p&gt;這次我運氣不錯，兩年前，代幣被嘟嘟房的機器吃掉，繳完錢不退我代幣，打過去是 0800 中心接的，一點忙都幫不上，還好機器過了五分鐘後，良心發現，退給我。&lt;/p&gt;
-
-&lt;p&gt;不知道這系統是誰做的，把例外處理做的這麼好，前前後後才擔誤我十分鐘，我還以為要等收費員從家裡趕來，還是說隔天早上才能取車。&lt;/p&gt;
-</description>
-        <pubDate>Mon, 01 Jun 2015 00:40:00 -0700</pubDate>
-        <link>https://blog.yunglinho.com/blog/2015/06/01/parking-token-exception-handling/</link>
-        <guid isPermaLink="true">https://blog.yunglinho.com/blog/2015/06/01/parking-token-exception-handling/</guid>
         
         
       </item>
