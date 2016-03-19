@@ -4,7 +4,7 @@ GEM
     RbST (0.5.1)
     colorator (0.1)
     ffi (1.9.10)
-    jekyll (3.1.1)
+    jekyll (3.1.2)
       colorator (~> 0.1)
       jekyll-sass-converter (~> 1.0)
       jekyll-watch (~> 1.1)
@@ -17,13 +17,13 @@ GEM
       sass (~> 3.4)
     jekyll-watch (1.3.1)
       listen (~> 3.0)
-    kramdown (1.9.0)
+    kramdown (1.10.0)
     liquid (3.0.6)
     listen (3.0.6)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9.7)
     mercenary (0.3.5)
-    octopress (3.0.11)
+    octopress (3.0.12.pre.1)
       jekyll (>= 2.0)
       mercenary (~> 0.3.2)
       octopress-deploy
@@ -43,6 +43,11 @@ GEM
       jekyll (>= 2.0)
     octopress-image-tag (1.1.0)
       jekyll
+    octopress-quote-tag (1.0.4)
+      jekyll
+      rubypants
+    octopress-render-code (1.0.4)
+      octopress-code-highlighter (~> 4.2)
     octopress-social (1.4.5)
       jekyll (>= 2.0)
     rb-fsevent (0.9.7)
@@ -50,6 +55,7 @@ GEM
       ffi (>= 0.5.0)
     redcarpet (3.3.4)
     rouge (1.10.1)
+    rubypants (0.2.0)
     safe_yaml (1.0.4)
     sass (3.4.21)
     titlecase (0.1.1)
@@ -59,10 +65,12 @@ PLATFORMS
 
 DEPENDENCIES
   RbST
-  jekyll (= 3.1.1)
-  octopress
+  jekyll (= 3.1.2)
+  octopress (>= 3.0.12.pre.1)
   octopress-codeblock
   octopress-image-tag
+  octopress-quote-tag
+  octopress-render-code
   octopress-social
 
 BUNDLED WITH
