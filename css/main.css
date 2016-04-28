@@ -151,7 +151,8 @@ pre {
   border-top: 5px solid #424242;
   border-bottom: 1px solid #e8e8e8;
   min-height: 56px;
-  position: relative; }
+  position: relative;
+  background: no-repeat center center; }
 
 .site-title {
   font-size: 26px;
