@@ -6,9 +6,34 @@
 </description>
     <link>https://blog.yunglinho.com/</link>
     <atom:link href="https://blog.yunglinho.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 21 Sep 2016 23:59:05 -0700</pubDate>
-    <lastBuildDate>Wed, 21 Sep 2016 23:59:05 -0700</lastBuildDate>
+    <pubDate>Sat, 15 Oct 2016 00:41:02 -0700</pubDate>
+    <lastBuildDate>Sat, 15 Oct 2016 00:41:02 -0700</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
+    
+      <item>
+        <title>為什麼 Volvo / Saab 沒有市場</title>
+        <description>&lt;p&gt;&lt;a href=&quot;http://www.mckinsey.com/business-functions/marketing-and-sales/our-insights/setting-value-not-price&quot;&gt;McKinsey setting value not price&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;過去我也有這疑問，直到看到上面這一篇才懂為什麼。一直以來台灣的消費者老講 CP 值，麥肯錫原來也講 CP 值，不過人家多講一個消費者價格帶。&lt;/p&gt;
+
+&lt;p&gt;以台灣車市來說，中型房車價格是國產是九十萬（很久沒在台灣買車數字有錯請見諒），德國雙 B是兩百萬起跳，九十萬跟兩百萬這麼大的價差，中間難到不能再擠進一個產品線嗎？&lt;/p&gt;
+
+&lt;p&gt;然而經過多年證明，高級車跟平民車，中間就是擠不下另外一個產品的區間，消費者不能接受，像是美國也是兩萬五跟五萬兩個價格代，中間有個卡三萬五的 Volvo 什麼都吃不到。&lt;/p&gt;
+
+&lt;p&gt;你如果真要打出一個新產品線來，除了更好的特色外，就是用更低的價錢，提供一個不低於雙 B的產品，二十年前 Lexus 靠 LS400 辦到了，現在是Hyundai 的 Genesis用低兩萬塊的價差推出高級家庭房車。&lt;/p&gt;
+
+&lt;p&gt;Volvo 如果要扭轉市場，至少要先有個後驅底盤，或者是像 Audi 配備先進，要不然操控幹掉 BMW 也行。&lt;/p&gt;
+
+&lt;p&gt;安全是一個特色，但是就碰撞測試的結果看來，高級車大家都一樣好阿，並不是個突出的特色。&lt;/p&gt;
+
+&lt;p&gt;當然還有另一個選項啦，把價錢調到一百萬，把平民車市場全部吃下來&lt;/p&gt;
+</description>
+        <pubDate>Sat, 15 Oct 2016 00:36:28 -0700</pubDate>
+        <link>https://blog.yunglinho.com/blog/2016/10/15/product-market-fit/</link>
+        <guid isPermaLink="true">https://blog.yunglinho.com/blog/2016/10/15/product-market-fit/</guid>
+        
+        
+      </item>
     
       <item>
         <title>食材浪費問題怎麼處理</title>
@@ -381,23 +406,6 @@ i&lt;/p&gt;
         <pubDate>Sat, 16 Jan 2016 23:38:00 -0800</pubDate>
         <link>https://blog.yunglinho.com/blog/2016/01/16/affirmative-action/</link>
         <guid isPermaLink="true">https://blog.yunglinho.com/blog/2016/01/16/affirmative-action/</guid>
-        
-        
-      </item>
-    
-      <item>
-        <title>MySQL 劣即是夯</title>
-        <description>&lt;p&gt;MySQL transactional lock 在 throughout 上 遠遠不及實作 mvcc 的 PostgrSQL，但在使用上，卻是大大的勝過 pg&lt;/p&gt;
-
-&lt;p&gt;原因是因為，在 pg 在寫程式裡，要處理很多因為碰撞產生的 rollback ，即使 db 會幫你處理，但是如果有外部系統呢？是要去招回還是要用 2 phase commit 呢？還有在 UI 上是要讓使用者馬上再試一次，還是請他五分鐘後再試一次了？&lt;/p&gt;
-
-&lt;p&gt;所以最簡單的實作就是乾脆把整個 table 鎖住，一次一個人寫入，這樣就不用做例外處理了。&lt;/p&gt;
-
-&lt;p&gt;科科科 &lt;a href=&quot;https://gist.github.com/audreyt/3985324#%E5%8A%A3%E5%8D%B3%E6%98%AF%E5%A4%AF&quot;&gt;劣即是夯&lt;/a&gt; 啊&lt;/p&gt;
-</description>
-        <pubDate>Mon, 21 Dec 2015 00:42:00 -0800</pubDate>
-        <link>https://blog.yunglinho.com/blog/2015/12/21/worse-is-better-mysql/</link>
-        <guid isPermaLink="true">https://blog.yunglinho.com/blog/2015/12/21/worse-is-better-mysql/</guid>
         
         
       </item>
