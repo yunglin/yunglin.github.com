@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>轉換台北市政府公開資料的格式</title>
+  <meta name="description" content="在台北市政府公開的資料中，有一大部份是用shapefile的格式開放的，如何把這些資料轉換出來，變成是一個問題，在這邊把我怎麼把TWD67座標的shapefile，轉換成WSG84的 GeoJSON格式。首先，請參考前文把里介圖在QGIS中打開。再來按這邊講的，把TWD67的定義加入到 QGIS 中接著，選Lay...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="https://blog.yunglinho.com/blog/2011/10/06/">
+  <link rel="alternate" type="application/rss+xml" title="碎碎念" href="https://blog.yunglinho.com/feed.xml">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+</head>
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">碎碎念</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/archives/">Archives</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">轉換台北市政府公開資料的格式</h1>
+    <p class="post-meta"><time datetime="2011-10-06T02:01:00-07:00" itemprop="datePublished">Oct 6, 2011</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <div class='post'>
+在台北市政府公開的資料中，有一大部份是用shapefile的格式開放的，如何把這些資料轉換出來，變成是一個問題，在這邊把我怎麼把TWD67座標的shapefile，轉換成WSG84的 GeoJSON格式。<br /><br />首先，請參考前文把里介圖在QGIS中打開。<br /><br />再來按<a href="http://gis-tech.blogspot.com/2008/11/quantum-gis_24.html">這邊</a>講的，把TWD67的定義加入到 QGIS 中<br /><br />接著，選Layer Property -&gt; Set Layer CRS -&gt; TWD 67<br /><br />然後，指定專案用的CRS定意，FIle -&gt; Project Property -&gt; CRS -&gt; WSG 84<br /><br />最後，是把Layer另存新檔，Layer -&gt; Save As -&gt; File Format: GeoJSON, Encoding: UTF-8<br /><br />這樣，就可以把shapefile的內容匯出來，變成像下述的格式<br /><br />{ "type": "Feature", "id": 0, "properties": { "AREA": 16326625.055040, "NEW": 6301200042.000000, "FULL": "臺北市北投區湖田里", "PERF_ID": 63012.000000, "COUN_ID": "6301200", "CPID": "63012", "CPTID": "6301200", "CPTVID": "6301200042", "NPID": 63012.000000, "NPTID": 6301200.000000, "NPTVID": 6301200042.000000, "PNAME": "臺北市", "TNAME": "北投區", "VNAME": "湖田里", "PTVNAME": "臺北市北投區湖田里", "PTNAME": "臺北市北投區", "TVNAME": "北投區湖田里", "TM2_MAX_X": 306973.245000, "TM2_MAX_Y": 2789383.300000, "TM2_MIN_X": 301490.096000, "TM2_MIN_Y": 2783263.350000, "MAX_X": 0.000000, "MAX_Y": 0.000000, "MIN_X": 0.000000, "MIN_Y": 0.000000 }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 121.522589, 25.174993 ], [ 121.522587, 25.174995 ], [ 121.522557, 25.175033 ], [ 121.522408, 25.175170 ], [ 121.522317, 25.175324 ], [ 121.522314, 25.175367 ], [ 121.522323, 25.175569 ], [ 121.522315, 25.175789 ], [ 121.522322, 25.175950 ], [ 121.522270, 25.176082 ], [ 121.522158, 25.176302 ], [ 121.522043, 25.176548 ], [ 121.522002, 25.176598 ], [ 121.521997, 25.176648 ], [ 121.522278, 25.177273 ], [ 121.522359, 25.177825 ], [ 121.522384, 25.178200 ], [ 121.522338, 25.178332 ], [ 121.522127, 25.178615 ], [ 121.521821, 25.178986 ], [ 121.521780, 25.179026 ], [ 121.521691, 25.179134 ], [ 121.522349, 25.179671 ], [ 121.522623, 25.179892 ], [ 121.522810, 25.179997 ], [ 121.522949, 25.180089 ], [ 121.523101, 25.180244 ], [ 121.523337, 25.180539 ], [ 121.523425, 25.180655 ], [ 121.523550, 25.180683 ], [ 121.523641, 25.180779 ], [ 121.523652, 25.180779 ], [ 121.523816, 25.1809<br /><br /><br /><br /></div>
+
+  </div>
+  <!-- ... -->
+
+
+
+  <div class="fb-like" data-href="https://blog.yunglinho.com/blog/2011/10/06/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://blog.yunglinho.com/blog/2011/10/06/" data-text="轉換台北市政府公開資料的格式 by @yunglinho -" data-dnt="true">Twitter</a>
+
+  
+  <h1>Comments</h1>
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+          var disqus_shortname = 'yunglin';
+          (function() {
+                  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  <!-- ... -->
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">碎碎念</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>碎碎念</li>
+          <li><a href="mailto:yunglin at gmail.com">yunglin at gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/yunglin"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">yunglin</span></a>
+
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/yunglinho"><span class="icon icon--twitter"><svg viewBox="0 0 16 16"><path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/></svg>
+</span><span class="username">yunglinho</span></a>
+
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p class="rss-subscribe">subscribe <a href="https://feeds.feedburner.com/yunglinho">via RSS</a></p>
+      </div>
+
+
+    </div>
+
+  </div>
+
+</footer>
+
+    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </body>
+
+</html>
