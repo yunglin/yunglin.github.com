@@ -95,7 +95,7 @@ all of the data has been written to file system. Another thread will start to me
 <div class="section" id="read-lines-from-inputstream">
 <h2>Read Lines From InputStream</h2>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">soure</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">val</span> <span class="n">soure</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Source</span><span class="o">.</span><span class="n">fromInputStream</span><span class="o">(</span><span class="n">inputStream</span><span class="o">).</span><span class="n">getLines</span><span class="o">().</span><span class="n">toStream</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
 </span></code></pre></td></tr></table></div></figure><p>The above code will turn a <strong>InputStream</strong> into a <strong>Stream[Int]</strong> , and then allow us to perform operation on it
 without having to fully read it into memory first. But still, this is a huge Stream. Because we are going to use
 in-memory sort, I need to split it into smaller pieces first.</p>
@@ -121,7 +121,7 @@ original stream into memory. All the operation only happens logically.</p>
 <span class="line-number">18</span>
 <span class="line-number">19</span>
 <span class="line-number">20</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="cm">/**</span>
 </span><span class="line"><span class="cm"> * Lift a Stream into a Stream of Stream. The size of each sub-stream is specified by the chunkSize</span>
 </span><span class="line"><span class="cm"> * @param stream        the origin stream.</span>
 </span><span class="line"><span class="cm"> * @param chunkSize     the size of each substream</span>
@@ -169,7 +169,7 @@ quicksort on them.</p>
 <span class="line-number">21</span>
 <span class="line-number">22</span>
 <span class="line-number">23</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">linesStream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">chunkSize</span><span class="o">)</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">val</span> <span class="n">linesStream</span><span class="k">:</span> <span class="kt">Stream</span><span class="o">[</span><span class="kt">Stream</span><span class="o">[</span><span class="kt">Int</span><span class="o">]]</span> <span class="k">=</span> <span class="n">lift</span><span class="o">(</span><span class="n">soure</span><span class="o">,</span> <span class="n">chunkSize</span><span class="o">)</span>
 </span><span class="line"><span class="k">val</span> <span class="n">chunkCounter</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">AtomicInteger</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
 </span><span class="line">
 </span><span class="line"><span class="k">val</span> <span class="n">sortedFileDir</span> <span class="k">=</span> <span class="nc">Files</span><span class="o">.</span><span class="n">createTempDir</span><span class="o">()</span>
@@ -265,7 +265,7 @@ first. So that I can instruct the <strong>Future</strong> to do merge sort once 
 <span class="line-number">66</span>
 <span class="line-number">67</span>
 <span class="line-number">68</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">saveTmpFiles</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">fileFutures</span><span class="o">)</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">val</span> <span class="n">saveTmpFiles</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">List</span><span class="o">[</span><span class="kt">File</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">Future</span><span class="o">.</span><span class="n">sequence</span><span class="o">(</span><span class="n">fileFutures</span><span class="o">)</span>
 </span><span class="line">
 </span><span class="line"><span class="k">val</span> <span class="n">ret</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="n">saveTmpFiles</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span>
 </span><span class="line">    <span class="n">files</span> <span class="k">=&gt;</span> <span class="o">{</span>
@@ -341,7 +341,7 @@ first. So that I can instruct the <strong>Future</strong> to do merge sort once 
 happens asynchronously, nothing blocks the main thread. You can send an inputStream to this method, go to do other
 things first and then come back to wait for the result.</p>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">def</span> <span class="n">sort</span><span class="o">(</span><span class="n">inputStream</span><span class="k">:</span> <span class="kt">InputStream</span><span class="o">,</span> <span class="n">chunkSize</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">2000000</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">File</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
 </span></code></pre></td></tr></table></div></figure></div>
 <div class="section" id="limits-number-of-threads-running-at-the-same-time">
 <h2>Limits Number of Threads Running at the Same Time.</h2>
@@ -369,7 +369,7 @@ pool.</p>
 <span class="line-number">14</span>
 <span class="line-number">15</span>
 <span class="line-number">16</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="cm">/**</span>
 </span><span class="line"><span class="cm"> * limits number of reading and sorting can be executed simultaneously. Because this is an IO</span>
 </span><span class="line"><span class="cm"> * bound operation, unless the inputstream is coming from a slow http connection, otherwise, 5</span>
 </span><span class="line"><span class="cm"> * is more than enough.</span>
@@ -537,7 +537,7 @@ pool.</p>
 <span class="line-number">147</span>
 <span class="line-number">148</span>
 <span class="line-number">149</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">import</span> <span class="nn">com.google.common.io.Files</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">import</span> <span class="nn">com.google.common.io.Files</span>
 </span><span class="line"><span class="k">import</span> <span class="nn">java.io.</span><span class="o">{</span><span class="nc">PrintWriter</span><span class="o">,</span> <span class="nc">File</span><span class="o">,</span> <span class="nc">InputStream</span><span class="o">}</span>
 </span><span class="line"><span class="k">import</span> <span class="nn">java.util.concurrent.Executors</span>
 </span><span class="line"><span class="k">import</span> <span class="nn">java.util.concurrent.atomic.AtomicInteger</span>

@@ -156,7 +156,7 @@ WriteConcert 必需是 Strict 的。</p>
 <span class="line-number">70</span>
 <span class="line-number">71</span>
 <span class="line-number">72</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="cm">/**</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="cm">/**</span>
 </span><span class="line"><span class="cm"> *  Base class for all DAO classes.</span>
 </span><span class="line"><span class="cm"> */</span>
 </span><span class="line"><span class="k">abstract</span> <span class="k">class</span> <span class="nc">AbstractDAO</span><span class="o">[</span><span class="kt">T</span>, <span class="kt">ID</span> <span class="k">&lt;:</span> <span class="kt">Serializable</span><span class="o">](</span><span class="k">protected</span><span class="o">[</span><span class="kt">locadz</span><span class="o">]</span> <span class="k">val</span> <span class="n">mongoCol</span><span class="k">:</span> <span class="kt">MongoCollection</span><span class="o">)</span> <span class="o">{</span>
@@ -300,7 +300,7 @@ WriteConcert 必需是 Strict 的。</p>
 <span class="line-number">46</span>
 <span class="line-number">47</span>
 <span class="line-number">48</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">class</span> <span class="nc">UserDAO</span><span class="o">(</span><span class="n">mongoCol</span><span class="k">:</span> <span class="kt">MongoCollection</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">AbstractDAO</span><span class="o">[</span><span class="kt">User</span>, <span class="kt">String</span><span class="o">](</span><span class="n">mongoCol</span><span class="o">)</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">class</span> <span class="nc">UserDAO</span><span class="o">(</span><span class="n">mongoCol</span><span class="k">:</span> <span class="kt">MongoCollection</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">AbstractDAO</span><span class="o">[</span><span class="kt">User</span>, <span class="kt">String</span><span class="o">](</span><span class="n">mongoCol</span><span class="o">)</span> <span class="o">{</span>
 </span><span class="line">
 </span><span class="line">  <span class="k">import</span> <span class="nn">UserDAO._</span>
 </span><span class="line">
@@ -397,7 +397,7 @@ WriteConcert 必需是 Strict 的。</p>
 <span class="line-number">44</span>
 <span class="line-number">45</span>
 <span class="line-number">46</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">trait</span> <span class="nc">Attribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">]</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">trait</span> <span class="nc">Attribute</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span> <span class="k">&lt;:</span> <span class="kt">Any</span><span class="o">]</span> <span class="o">{</span>
 </span><span class="line">  <span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span>
 </span><span class="line">  <span class="k">val</span> <span class="n">conversion</span><span class="k">:</span> <span class="kt">Conversion</span><span class="o">[</span><span class="kt">A</span>, <span class="kt">B</span><span class="o">]</span>
 </span><span class="line">
@@ -452,7 +452,7 @@ WriteConcert 必需是 Strict 的。</p>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
 <span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">findByDateRange</span><span class="o">(</span><span class="n">start</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">,</span> <span class="n">end</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">User</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">def</span> <span class="n">findByDateRange</span><span class="o">(</span><span class="n">start</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">,</span> <span class="n">end</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span><span class="k">:</span> <span class="kt">Either</span><span class="o">[</span><span class="kt">DataAccessException</span>, <span class="kt">User</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
 </span><span class="line">  <span class="k">return</span> <span class="n">find</span><span class="o">(</span><span class="nc">CreateDate</span><span class="o">.</span><span class="n">name</span> <span class="nc">$gth</span> <span class="nc">CreateDate</span><span class="o">(</span><span class="n">start</span><span class="o">).</span><span class="n">_2</span>  <span class="nc">$lt</span> <span class="nc">CreateDate</span><span class="o">(</span><span class="n">range</span><span class="o">).</span><span class="n">_2</span><span class="o">)</span>
 </span><span class="line"><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure><p>這邊，我們可以看到用 Conversion 來描述資料型態的好處是，當你儲存的資料型態有變時，你不用去更
@@ -468,7 +468,7 @@ WriteConcert 必需是 Strict 的。</p>
 <span class="line-number">4</span>
 <span class="line-number">5</span>
 <span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">case</span> <span class="k">object</span> <span class="nc">Url</span> <span class="k">extends</span> <span class="nc">Conversion</span><span class="o">[</span><span class="kt">URL</span>, <span class="kt">String</span><span class="o">]</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">case</span> <span class="k">object</span> <span class="nc">Url</span> <span class="k">extends</span> <span class="nc">Conversion</span><span class="o">[</span><span class="kt">URL</span>, <span class="kt">String</span><span class="o">]</span> <span class="o">{</span>
 </span><span class="line">
 </span><span class="line">  <span class="k">override</span> <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">source</span><span class="k">:</span> <span class="kt">URL</span><span class="o">)</span> <span class="k">=</span> <span class="n">source</span><span class="o">.</span><span class="n">toExternalForm</span>
 </span><span class="line">
@@ -536,7 +536,7 @@ WriteConcert 必需是 Strict 的。</p>
 <span class="line-number">55</span>
 <span class="line-number">56</span>
 <span class="line-number">57</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">package</span> <span class="nn">com.locadz.model.mongodb</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">package</span> <span class="nn">com.locadz.model.mongodb</span>
 </span><span class="line">
 </span><span class="line"><span class="k">import</span> <span class="nn">com.mongodb.DBObject</span>
 </span><span class="line"><span class="k">import</span> <span class="nn">com.mongodb.casbah._</span>

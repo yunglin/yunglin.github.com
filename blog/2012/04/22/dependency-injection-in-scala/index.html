@@ -92,7 +92,7 @@ Source 及 Google 實做出來，變成 Java Enterprise 應用中，不可或缺
 <span class="line-number">4</span>
 <span class="line-number">5</span>
 <span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="kd">class</span> <span class="nc">MovieLister</span> <span class="o">{</span>
 </span><span class="line">  <span class="kd">private</span> <span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">;</span>
 </span><span class="line">  <span class="kd">public</span> <span class="nf">MovieLister</span><span class="o">()</span> <span class="o">{</span>
 </span><span class="line">    <span class="n">finder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ColonDelimitedMovieFinder</span><span class="o">(</span><span class="s">&quot;movies1.txt&quot;</span><span class="o">);</span>
@@ -105,7 +105,7 @@ Source 及 Google 實做出來，變成 Java Enterprise 應用中，不可或缺
 <span class="line-number">2</span>
 <span class="line-number">3</span>
 <span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span><span class="o">...</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="kd">class</span> <span class="nc">MovieLister</span><span class="o">...</span>
 </span><span class="line">  <span class="kd">public</span> <span class="nf">MovieLister</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">)</span> <span class="o">{</span>
 </span><span class="line">      <span class="k">this</span><span class="o">.</span><span class="na">finder</span> <span class="o">=</span> <span class="n">finder</span><span class="o">;</span>
 </span><span class="line">  <span class="o">}</span>
@@ -119,7 +119,7 @@ Source 及 Google 實做出來，變成 Java Enterprise 應用中，不可或缺
 <span class="line-number">5</span>
 <span class="line-number">6</span>
 <span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span><span class="o">...</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="kd">class</span> <span class="nc">MovieLister</span><span class="o">...</span>
 </span><span class="line">  <span class="kd">private</span> <span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">;</span>
 </span><span class="line">
 </span><span class="line">   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFinder</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">)</span> <span class="o">{</span>
@@ -149,7 +149,7 @@ Source 及 Google 實做出來，變成 Java Enterprise 應用中，不可或缺
 <span class="line-number">18</span>
 <span class="line-number">19</span>
 <span class="line-number">20</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">InjectFinder</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">InjectFinder</span> <span class="o">{</span>
 </span><span class="line">  <span class="kt">void</span> <span class="nf">injectFinder</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">);</span>
 </span><span class="line"><span class="o">}</span>
 </span><span class="line">
@@ -183,8 +183,8 @@ Source 及 Google 實做出來，變成 Java Enterprise 應用中，不可或缺
 <span class="line-number">6</span>
 <span class="line-number">7</span>
 <span class="line-number">8</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span><span class="o">...</span>
-</span><span class="line">  <span class="nd">@Inject</span> <span class="kd">public</span> <span class="n">MovieLister</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">)</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="kd">class</span> <span class="nc">MovieLister</span><span class="o">...</span>
+</span><span class="line">  <span class="nd">@Inject</span> <span class="kd">public</span> <span class="nf">MovieLister</span><span class="o">(</span><span class="n">MovieFinder</span> <span class="n">finder</span><span class="o">)</span> <span class="o">{</span>
 </span><span class="line">      <span class="k">this</span><span class="o">.</span><span class="na">finder</span> <span class="o">=</span> <span class="n">finder</span><span class="o">;</span>
 </span><span class="line">  <span class="o">}</span>
 </span><span class="line">
@@ -197,7 +197,7 @@ Source 及 Google 實做出來，變成 Java Enterprise 應用中，不可或缺
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
 <span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">class</span> <span class="nc">MovieLister</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="kd">class</span> <span class="nc">MovieLister</span> <span class="o">{</span>
 </span><span class="line">  <span class="nd">@Inject</span> <span class="kd">private</span> <span class="n">MoveFinder</span> <span class="n">finder</span><span class="o">;</span>
 </span><span class="line"><span class="o">}</span>
 </span></code></pre></td></tr></table></div></figure></div>
@@ -227,7 +227,7 @@ Source 及 Google 實做出來，變成 Java Enterprise 應用中，不可或缺
 <span class="line-number">5</span>
 <span class="line-number">6</span>
 <span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">case</span> <span class="k">class</span> <span class="nc">@Inject</span><span class="o">()</span> <span class="nc">MovieLister</span><span class="o">(</span><span class="n">finder</span><span class="k">:</span> <span class="kt">MovieFinder</span><span class="o">)</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">@Inject</span><span class="o">()</span> <span class="nc">MovieLister</span><span class="o">(</span><span class="n">finder</span><span class="k">:</span> <span class="kt">MovieFinder</span><span class="o">)</span>
 </span><span class="line">
 </span><span class="line"><span class="k">class</span> <span class="nc">MovieLister2</span> <span class="o">{</span>
 </span><span class="line">
@@ -269,7 +269,7 @@ Scala 之父 Martin Odersky 的一篇論文 <a class="reference external" href="
 <span class="line-number">25</span>
 <span class="line-number">26</span>
 <span class="line-number">27</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">trait</span> <span class="nc">MovieFinderComponent</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">trait</span> <span class="nc">MovieFinderComponent</span> <span class="o">{</span>
 </span><span class="line">
 </span><span class="line">  <span class="k">def</span> <span class="n">finder</span><span class="k">:</span> <span class="kt">MovieFinder</span>
 </span><span class="line">
@@ -304,7 +304,7 @@ method <cite>def finder: MovieFinder</cite>.</p>
 MovieLister instance 時，我們必需要提供 MovieFinderComponent 的實作，同時，在MovieLister
 內，我們可以透過 <cite>finder</cite> 這個 method 來呼叫 MovieFinder 的實作 ；這邊的寫法是</p>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">val</span> <span class="n">movieLister</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MovieLister</span> <span class="k">extends</span> <span class="nc">NilMovieFinderComponent</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">val</span> <span class="n">movieLister</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">MovieLister</span> <span class="k">extends</span> <span class="nc">NilMovieFinderComponent</span>
 </span></code></pre></td></tr></table></div></figure><div class="section" id="component-registry">
 <h4>Component Registry</h4>
 <p>在應用上，由於我們的系統可能包含不只一個元件，而一個物件，可能須要多個不同的元件，因此，
@@ -328,7 +328,7 @@ Jonas建議我們，如　Guice 用 Module 來定義所有元件的實作類別�
 <span class="line-number">16</span>
 <span class="line-number">17</span>
 <span class="line-number">18</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">object</span> <span class="nc">ComponentRegistry</span> <span class="k">extends</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">object</span> <span class="nc">ComponentRegistry</span> <span class="k">extends</span>
 </span><span class="line">  <span class="nc">MyMovieFinderComponent</span> <span class="k">with</span>
 </span><span class="line">  <span class="nc">MyAuthorFinderComponent</span> <span class="k">with</span>
 </span><span class="line">  <span class="nc">MyUserRepositoryComponent</span>
@@ -346,7 +346,7 @@ Jonas建議我們，如　Guice 用 Module 來定義所有元件的實作類別�
 </span><span class="line">    <span class="c1">// testing code.</span>
 </span><span class="line">  <span class="o">}</span>
 </span><span class="line"><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure><div class="note">
+</span></code></pre></td></tr></table></div></figure><div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">一個動動腦的時間，在使用 ComponentRegistry 時，我們要怎麼寫，才會讓某一個 Component 的實作變成 Singleton</p>
 </div>
@@ -393,7 +393,7 @@ Jonas建議我們，如　Guice 用 Module 來定義所有元件的實作類別�
 <span class="line-number">17</span>
 <span class="line-number">18</span>
 <span class="line-number">19</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">trait</span> <span class="nc">CategorizedMovieFinderFactoryComponent</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">trait</span> <span class="nc">CategorizedMovieFinderFactoryComponent</span> <span class="o">{</span>
 </span><span class="line">
 </span><span class="line">  <span class="k">trait</span>  <span class="nc">CategorizedMovieFinderFactory</span> <span class="o">{</span>
 </span><span class="line">    <span class="k">def</span> <span class="n">create</span><span class="o">(</span><span class="n">category</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">MovieFinder</span>
@@ -431,7 +431,7 @@ Jonas建議我們，如　Guice 用 Module 來定義所有元件的實作類別�
 <span class="line-number">10</span>
 <span class="line-number">11</span>
 <span class="line-number">12</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">object</span> <span class="nc">SomeModule</span> <span class="k">extends</span> <span class="nc">NewBindingModule</span><span class="o">({</span> <span class="k">implicit</span> <span class="n">module</span> <span class="k">=&gt;</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">object</span> <span class="nc">SomeModule</span> <span class="k">extends</span> <span class="nc">NewBindingModule</span><span class="o">({</span> <span class="k">implicit</span> <span class="n">module</span> <span class="k">=&gt;</span>
 </span><span class="line">  <span class="k">import</span> <span class="nn">module._</span>  <span class="c1">// optional but convenient</span>
 </span><span class="line">
 </span><span class="line">  <span class="n">bind</span> <span class="o">[</span><span class="kt">ServiceA</span><span class="o">]</span> <span class="n">toSingle</span> <span class="n">Y</span>
@@ -466,7 +466,7 @@ SomeService對整個 Module 做存取。</p>
 <span class="line-number">8</span>
 <span class="line-number">9</span>
 <span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">setUserPwd</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">def</span> <span class="n">setUserPwd</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
 </span><span class="line">               <span class="n">pwd</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
 </span><span class="line">               <span class="n">c</span><span class="k">:</span> <span class="kt">Connection</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
 </span><span class="line">  <span class="k">val</span> <span class="n">stmt</span> <span class="k">=</span> <span class="n">c</span><span class="o">.</span><span class="n">prepareStatement</span><span class="o">(</span>
@@ -489,7 +489,7 @@ SomeService對整個 Module 做存取。</p>
 <span class="line-number">8</span>
 <span class="line-number">9</span>
 <span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">setUserPwd</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">def</span> <span class="n">setUserPwd</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
 </span><span class="line">               <span class="n">pwd</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=&gt;</span> <span class="nc">Unit</span> <span class="k">=</span>
 </span><span class="line">  <span class="n">c</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=&gt;</span> <span class="o">{</span>
 </span><span class="line">    <span class="k">val</span> <span class="n">stmt</span> <span class="k">=</span> <span class="n">c</span><span class="o">.</span><span class="n">prepareStatement</span><span class="o">(</span>
@@ -514,7 +514,7 @@ SomeService對整個 Module 做存取。</p>
 <span class="line-number">11</span>
 <span class="line-number">12</span>
 <span class="line-number">13</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">case</span> <span class="k">class</span> <span class="nc">DB</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">g</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">DB</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">g</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
 </span><span class="line">  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">c</span><span class="k">:</span> <span class="kt">Connection</span><span class="o">)</span> <span class="k">=</span> <span class="n">g</span><span class="o">(</span><span class="n">c</span><span class="o">)</span>
 </span><span class="line">
 </span><span class="line">  <span class="k">def</span> <span class="n">map</span><span class="o">[</span><span class="kt">B</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=&gt;</span> <span class="n">B</span><span class="o">)</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">B</span><span class="o">]</span> <span class="k">=</span>
@@ -541,7 +541,7 @@ SomeService對整個 Module 做存取。</p>
 <span class="line-number">8</span>
 <span class="line-number">9</span>
 <span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">changePwd</span><span class="o">(</span><span class="n">userid</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">def</span> <span class="n">changePwd</span><span class="o">(</span><span class="n">userid</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
 </span><span class="line">              <span class="n">oldPwd</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
 </span><span class="line">              <span class="n">newPwd</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="k">=</span>
 </span><span class="line"><span class="k">for</span> <span class="o">{</span>
@@ -573,7 +573,7 @@ SomeService對整個 Module 做存取。</p>
 <span class="line-number">19</span>
 <span class="line-number">20</span>
 <span class="line-number">21</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">abstract</span> <span class="k">class</span> <span class="nc">ConnProvider</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">abstract</span> <span class="k">class</span> <span class="nc">ConnProvider</span> <span class="o">{</span>
 </span><span class="line">  <span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">DB</span><span class="o">[</span><span class="kt">A</span><span class="o">])</span><span class="k">:</span> <span class="kt">A</span>
 </span><span class="line"><span class="o">}</span>
 </span><span class="line">
@@ -613,7 +613,7 @@ SomeService對整個 Module 做存取。</p>
 <span class="line-number">15</span>
 <span class="line-number">16</span>
 <span class="line-number">17</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">def</span> <span class="n">runInTest</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">ConnProvider</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">def</span> <span class="n">runInTest</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">ConnProvider</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span>
 </span><span class="line">  <span class="n">f</span><span class="o">(</span><span class="n">sqliteTestDB</span><span class="o">)</span>
 </span><span class="line">
 </span><span class="line"><span class="k">def</span> <span class="n">runInProduction</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">f</span><span class="k">:</span> <span class="kt">ConnProvider</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">A</span> <span class="o">=</span>
@@ -662,7 +662,7 @@ SomeService對整個 Module 做存取。</p>
 <span class="line-number">16</span>
 <span class="line-number">17</span>
 <span class="line-number">18</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="k">case</span> <span class="k">class</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">C</span>, <span class="kt">A</span><span class="o">](</span><span class="n">g</span><span class="k">:</span> <span class="kt">C</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="k">case</span> <span class="k">class</span> <span class="nc">Reader</span><span class="o">[</span><span class="kt">C</span>, <span class="kt">A</span><span class="o">](</span><span class="n">g</span><span class="k">:</span> <span class="kt">C</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="o">{</span>
 </span><span class="line">
 </span><span class="line">  <span class="k">import</span> <span class="nn">Reader._</span>
 </span><span class="line">

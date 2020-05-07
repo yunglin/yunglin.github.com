@@ -133,7 +133,7 @@ Touch Event，或者是其它程式或者是系統底層的事件，如 Intent �
 <span class="line-number">26</span>
 <span class="line-number">27</span>
 <span class="line-number">28</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="cm">/**</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="cm">/**</span>
 </span><span class="line"><span class="cm"> *  AsyncTask to Load Image</span>
 </span><span class="line"><span class="cm"> */</span>
 </span><span class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DownloadImagesTask</span> <span class="kd">extends</span> <span class="n">AsyncTask</span><span class="o">&lt;</span><span class="n">Uri</span><span class="o">,</span> <span class="n">Void</span><span class="o">,</span> <span class="n">Bitmap</span><span class="o">&gt;</span> <span class="o">{</span>
@@ -146,7 +146,7 @@ Touch Event，或者是其它程式或者是系統底層的事件，如 Intent �
 </span><span class="line">
 </span><span class="line">  <span class="nd">@Override</span>
 </span><span class="line">  <span class="kd">protected</span> <span class="n">Bitmap</span> <span class="nf">doInBackground</span><span class="o">(</span><span class="n">Uri</span><span class="o">...</span> <span class="n">uri</span><span class="o">)</span> <span class="o">{</span>
-</span><span class="line">    <span class="k">return</span> <span class="nf">downloadImage</span><span class="o">(</span><span class="n">uri</span><span class="o">);</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">downloadImage</span><span class="o">(</span><span class="n">uri</span><span class="o">);</span>
 </span><span class="line">  <span class="o">}</span>
 </span><span class="line">
 </span><span class="line">  <span class="nd">@Override</span>
@@ -228,7 +228,7 @@ Touch Event，或者是其它程式或者是系統底層的事件，如 Intent �
 <span class="line-number">55</span>
 <span class="line-number">56</span>
 <span class="line-number">57</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="cm">/** Service that retrieve the ad unit allocations from external source and cache locally in SharedPreference. */</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="cm">/** Service that retrieve the ad unit allocations from external source and cache locally in SharedPreference. */</span>
 </span><span class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AdUnitAllocationService</span> <span class="kd">extends</span> <span class="n">IntentService</span> <span class="o">{</span>
 </span><span class="line">
 </span><span class="line">  <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">CACHE_EXPIRATION_PERIOD</span> <span class="o">=</span> <span class="mi">30</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">1000</span><span class="o">;</span> <span class="c1">// 30 minutes.</span>
@@ -349,7 +349,7 @@ Touch Event，或者是其它程式或者是系統底層的事件，如 Intent �
 <span class="line-number">41</span>
 <span class="line-number">42</span>
 <span class="line-number">43</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="cm">/**</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="cm">/**</span>
 </span><span class="line"><span class="cm">  * Remove old ad views and push the new one.</span>
 </span><span class="line"><span class="cm">  *</span>
 </span><span class="line"><span class="cm">  * @param subView the adview to push.</span>

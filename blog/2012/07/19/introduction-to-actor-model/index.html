@@ -155,7 +155,7 @@ L1快取，造成要從下層的快取或主計憶體上重新讀取資料。</p
 ，讓軟體工程師可以很簡單的就會一群資料做平行的運算</p>
 <figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">).</span><span class="n">par</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">2</span><span class="o">)</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="n">scala</span><span class="o">&gt;</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">).</span><span class="n">par</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="mi">2</span><span class="o">)</span>
 </span><span class="line"><span class="n">res</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">)</span>
 </span></code></pre></td></tr></table></div></figure><p>Functional Programming所需的 Lambda expression 將會在 Java8 時被實作出來，而 Parallel Collection
 也有機會在 Java8 時出現。</p>
@@ -229,7 +229,7 @@ message queue 跟 Concurrency 的程式之中。例如大家常用的 RabbitMQ �
 <span class="line-number">14</span>
 <span class="line-number">15</span>
 <span class="line-number">16</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kn">import</span> <span class="nn">akka.actor.UntypedActor</span><span class="o">;</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="kn">import</span> <span class="nn">akka.actor.UntypedActor</span><span class="o">;</span>
 </span><span class="line">
 </span><span class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Counter</span> <span class="kd">extends</span> <span class="n">UntypedActor</span> <span class="o">{</span>
 </span><span class="line">

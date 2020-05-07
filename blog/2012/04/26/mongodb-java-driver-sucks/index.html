@@ -94,7 +94,7 @@
 <span class="line-number">10</span>
 <span class="line-number">11</span>
 <span class="line-number">12</span>
-</pre></td><td class="code"><pre><code class="scala"><span class="line"><span class="nc">BSON</span><span class="o">.</span><span class="n">addEncodingHook</span><span class="o">(</span><span class="n">class</span><span class="o">[</span><span class="kt">URL</span><span class="o">],</span> <span class="k">new</span> <span class="nc">Transformer</span> <span class="o">{</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="nc">BSON</span><span class="o">.</span><span class="n">addEncodingHook</span><span class="o">(</span><span class="n">class</span><span class="o">[</span><span class="kt">URL</span><span class="o">],</span> <span class="k">new</span> <span class="nc">Transformer</span> <span class="o">{</span>
 </span><span class="line">  <span class="k">def</span> <span class="n">transform</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">AnyRef</span><span class="o">)</span><span class="k">:</span> <span class="kt">AnyRef</span> <span class="o">=</span> <span class="n">o</span> <span class="k">match</span> <span class="o">{</span>
 </span><span class="line">    <span class="k">case</span> <span class="n">u</span><span class="k">:</span> <span class="kt">URL</span> <span class="o">=&gt;</span> <span class="n">u</span><span class="o">.</span><span class="n">toExternalForm</span>
 </span><span class="line">    <span class="k">case</span> <span class="k">_</span>      <span class="k">=&gt;</span> <span class="n">o</span>
@@ -145,7 +145,7 @@ Gloabal Variable，這樣一來出了三個問題</p>
 <span class="line-number">18</span>
 <span class="line-number">19</span>
 <span class="line-number">20</span>
-</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">addDecodingHook</span><span class="o">(</span> <span class="n">Class</span> <span class="n">c</span> <span class="o">,</span> <span class="n">Transformer</span> <span class="n">t</span> <span class="o">){</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">addDecodingHook</span><span class="o">(</span> <span class="n">Class</span> <span class="n">c</span> <span class="o">,</span> <span class="n">Transformer</span> <span class="n">t</span> <span class="o">){</span>
 </span><span class="line">    <span class="n">_decodeHooks</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
 </span><span class="line">    <span class="n">List</span><span class="o">&lt;</span><span class="n">Transformer</span><span class="o">&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="n">_decodingHooks</span><span class="o">.</span><span class="na">get</span><span class="o">(</span> <span class="n">c</span> <span class="o">);</span>
 </span><span class="line">    <span class="k">if</span> <span class="o">(</span> <span class="n">l</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">){</span>
