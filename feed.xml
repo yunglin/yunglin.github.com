@@ -7,10 +7,10 @@
         <title>碎碎念</title>
         <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
 </description>
-        <link>http://localhost:4000/</link>
-        <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Thu, 07 May 2020 01:21:48 -0700</pubDate>
-        <lastBuildDate>Thu, 07 May 2020 01:21:48 -0700</lastBuildDate>
+        <link>https://blog.yunglinho.com/</link>
+        <atom:link href="https://blog.yunglinho.com/feed.xml" rel="self" type="application/rss+xml"/>
+        <pubDate>Thu, 07 May 2020 01:23:46 -0700</pubDate>
+        <lastBuildDate>Thu, 07 May 2020 01:23:46 -0700</lastBuildDate>
         <generator>Jekyll v3.6.3</generator>
         
         <item>
@@ -30,8 +30,8 @@
 &lt;p&gt;好啦，有用老頭技術的小公司可以來找我談談了，我年紀大了，跟新技術處不來了&lt;/p&gt;
 </description>
             <pubDate>Sat, 29 Feb 2020 00:00:00 -0800</pubDate>
-            <link>http://localhost:4000/blog/2020/02/29/mature-tech/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2020/02/29/mature-tech/</guid>
+            <link>https://blog.yunglinho.com/blog/2020/02/29/mature-tech/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2020/02/29/mature-tech/</guid>
             
             
         </item>
@@ -69,8 +69,8 @@
 &lt;!-- /wp:paragraph --&gt;
 </description>
             <pubDate>Fri, 25 Oct 2019 01:00:00 -0700</pubDate>
-            <link>http://localhost:4000/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</guid>
+            <link>https://blog.yunglinho.com/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</guid>
             
             
         </item>
@@ -92,14 +92,14 @@
 &lt;!-- /wp:list --&gt;
 </description>
             <pubDate>Wed, 19 Jun 2019 01:00:00 -0700</pubDate>
-            <link>http://localhost:4000/blog/2019/06/19/anti-aging/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2019/06/19/anti-aging/</guid>
+            <link>https://blog.yunglinho.com/blog/2019/06/19/anti-aging/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/06/19/anti-aging/</guid>
             
             
         </item>
         
         <item>
-            <title>typelevel cats 學習筆記</title>
+            <title>如何教導雙語小孩</title>
             <description>&lt;p&gt;推薦一本書 &lt;a href=&quot;https://www.amazon.com/gp/product/1400023343/ref=as_li_tl?ie=UTF8&amp;amp;camp=1789&amp;amp;creative=9325&amp;amp;creativeASIN=1400023343&amp;amp;linkCode=as2&amp;amp;tag=murmur-20&amp;amp;linkId=1a603b4fbc610f89405a59009c166151&quot;&gt;Raising a Bilingual Child&lt;/a&gt; ，相對於訪間口耳相傳的八卦，本書是由學者寫成，引用美國數個研究單位的研究成果，來告訴大家如何教養出雙語的兒童。&lt;/p&gt;
 
 &lt;p&gt;書中主要引用的研究資料是來自佛羅里達，因為佛州有眾多的西語系移民，家庭的社經環境各種都有，所以在統計上去掉一些其它因素的造成的誤差。&lt;/p&gt;
@@ -115,8 +115,8 @@
 &lt;p&gt;以高中及大學 GPA 來看，雙語的學生表現跟英語的學生一樣好。但是很不幸的是， SAT 的測驗中，雙語的學生會比英語的學生低 50 分，這是未來 SAT 要努力的方向，為什麼測驗沒有鑑別能力。&lt;/p&gt;
 </description>
             <pubDate>Tue, 21 May 2019 01:00:00 -0700</pubDate>
-            <link>http://localhost:4000/blog/2019/05/21/raising-a-bilingual-child/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2019/05/21/raising-a-bilingual-child/</guid>
+            <link>https://blog.yunglinho.com/blog/2019/05/21/raising-a-bilingual-child/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/05/21/raising-a-bilingual-child/</guid>
             
             
         </item>
@@ -132,8 +132,8 @@
 &lt;p&gt;為什麼要寫成這樣？我還在想….&lt;/p&gt;
 </description>
             <pubDate>Sat, 11 May 2019 01:00:00 -0700</pubDate>
-            <link>http://localhost:4000/blog/2019/05/11/typelevel-cats/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2019/05/11/typelevel-cats/</guid>
+            <link>https://blog.yunglinho.com/blog/2019/05/11/typelevel-cats/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/05/11/typelevel-cats/</guid>
             
             
         </item>
@@ -149,8 +149,8 @@
 &lt;p&gt;平台化可以達到經濟規模是正確的，但是問題的複雜度也會一直上昇，所以這些平台公司請一堆業界頂尖的人來解問題，可是業務量有可能一不小心就超過系統原始設計的上限，在新解法出來前，就只能請客戶多擔待些了。&lt;/p&gt;
 </description>
             <pubDate>Sat, 02 Mar 2019 00:00:00 -0800</pubDate>
-            <link>http://localhost:4000/blog/2019/03/02/platform-and-diminishing-returns/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2019/03/02/platform-and-diminishing-returns/</guid>
+            <link>https://blog.yunglinho.com/blog/2019/03/02/platform-and-diminishing-returns/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/03/02/platform-and-diminishing-returns/</guid>
             
             
         </item>
@@ -164,8 +164,8 @@
 &lt;p&gt;&lt;img src=&quot;/images/2019-03/quote.png&quot;  &gt;&lt;/p&gt;
 </description>
             <pubDate>Fri, 01 Mar 2019 00:00:00 -0800</pubDate>
-            <link>http://localhost:4000/blog/2019/03/01/bliz-product/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2019/03/01/bliz-product/</guid>
+            <link>https://blog.yunglinho.com/blog/2019/03/01/bliz-product/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/03/01/bliz-product/</guid>
             
             
         </item>
@@ -200,8 +200,8 @@
 &lt;p&gt;原來我在 2014 年左右就找到答案並且在飛向的程式碼中實作過，只是這幾年我自己被領英的專案壓力追著跑（每一季都同時跑五個以上專案），忙到忘掉了。&lt;/p&gt;
 </description>
             <pubDate>Mon, 25 Feb 2019 00:00:00 -0800</pubDate>
-            <link>http://localhost:4000/blog/2019/02/25/saga-pattern-with-workflow-engine/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2019/02/25/saga-pattern-with-workflow-engine/</guid>
+            <link>https://blog.yunglinho.com/blog/2019/02/25/saga-pattern-with-workflow-engine/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/02/25/saga-pattern-with-workflow-engine/</guid>
             
             
         </item>
@@ -219,8 +219,8 @@
 &lt;p&gt;然後大老闆跑出來說，你這房間在的髒亂，來跟整棟大樓的整潔比比看髒亂的程度，再來排個優先權，然後我們晚點再開會討論看看要不要納入明年的工作項目。&lt;/p&gt;
 </description>
             <pubDate>Tue, 18 Dec 2018 00:00:00 -0800</pubDate>
-            <link>http://localhost:4000/blog/2018/12/18/techdebt/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2018/12/18/techdebt/</guid>
+            <link>https://blog.yunglinho.com/blog/2018/12/18/techdebt/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2018/12/18/techdebt/</guid>
             
             
         </item>
@@ -250,8 +250,8 @@
 2 http://www.digitalmusicnews.com/permalink/2013/04/23/groovesharkbroke&lt;/p&gt;
 </description>
             <pubDate>Wed, 05 Dec 2018 00:00:00 -0800</pubDate>
-            <link>http://localhost:4000/blog/2018/12/05/groovyshark/</link>
-            <guid isPermaLink="true">http://localhost:4000/blog/2018/12/05/groovyshark/</guid>
+            <link>https://blog.yunglinho.com/blog/2018/12/05/groovyshark/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2018/12/05/groovyshark/</guid>
             
             
         </item>
