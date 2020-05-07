@@ -10,8 +10,8 @@
   <meta name="description" content="許多人從 RDBMS 跳到 NoSQL 的第一站都是 MongoDB ，所以這一篇，就是特別寫來解釋，為什麼很多人選用 MongoDB ，以及解釋你為什麼不該用 MongoDB 來換掉 RDBMS 。">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="https://blog.yunglinho.com/blog/2014/02/12/mongodb-mysql/">
-  <link rel="alternate" type="application/rss+xml" title="碎碎念" href="https://blog.yunglinho.com/feed.xml">
+  <link rel="canonical" href="http://localhost:4000/blog/2014/02/12/mongodb-mysql/">
+  <link rel="alternate" type="application/rss+xml" title="碎碎念" href="http://localhost:4000/feed.xml">
 
   
   <script type="text/javascript">
@@ -150,12 +150,12 @@ SQL ，除了 AdHoc Query 外，還可以對多個 Table 進行 Joined Query，�
 |               | billg@ms.com  |  9999      |
 </code></pre></div>
 <p>在 Document Model 可能就是用一個 Document 如</p>
-<div class="highlight"><pre><code class="language-" data-lang=""><span class="p">{</span><span class="w">
-    </span><span class="err">email:</span><span class="w"> </span><span class="nt">"billg@ms.com"</span><span class="err">,</span><span class="w">
-    </span><span class="err">likes</span><span class="p">:</span><span class="w"> </span><span class="mi">1600</span><span class="p">,</span><span class="w">
-    </span><span class="err">tweets</span><span class="p">:</span><span class="w"> </span><span class="mi">9999</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
+<div class="highlight"><pre><code class="language-" data-lang="">{
+    email: "billg@ms.com",
+    likes: 1600,
+    tweets: 9999
+}
+</code></pre></div>
 <p>在 Query 時，前者要一個 join 才可以取回關於這個 email 的所有資料，後者則是一個 lookup ，自然後者的效率較好，而且同樣可以對不同的欄位下 Query 條件。</p>
 
 <p>然而，既然要用 NoSQL 就要玩 <strong>BIG DATA</strong> ，所以我們把問題修改一下，我們從兩個來源，分別拿到十億筆
@@ -223,8 +223,8 @@ MongoDB ，在下複雜 Query 時，他的搜尋速度可以達到 MySQL 方案�
 
 
 
-  <div class="fb-like" data-href="https://blog.yunglinho.com/blog/2014/02/12/mongodb-mysql/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="https://blog.yunglinho.com/blog/2014/02/12/mongodb-mysql/" data-text="Mongodb vs MySQL/RDBMS -" data-dnt="true">Twitter</a>
+  <div class="fb-like" data-href="http://localhost:4000/blog/2014/02/12/mongodb-mysql/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2014/02/12/mongodb-mysql/" data-text="Mongodb vs MySQL/RDBMS -" data-dnt="true">Twitter</a>
 
   
   <h1>Comments</h1>

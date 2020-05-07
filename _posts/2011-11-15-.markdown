@@ -1,9 +1,0 @@
----
-layout: post
-title: "台北市政府公開資料（三）- 台北積水地圖"
-date: 2011-11-15T01:49:00-08:00
-comments: false
----
-
-<div class='post'>
-花了三個禮拜，學習怎麼開發Android程式，在沒買開發機的狀況下，在模擬器上完成了我的第一個Android App - <a href="https://market.android.com/details?id=com.bluetangstudio.android.disastermap">台北積水地圖</a><br /><br /><br /><img align="left" border="0" height="400" src="https://g1.gstatic.com/android/market/com.bluetangstudio.android.disastermap/ss-480-0-0" /><img border="0" height="400" src="https://ssl.gstatic.com/android/market/com.bluetangstudio.android.disastermap/ss-480-1-0" /><br /><br /><br/><br /><br />資料來源一樣是從台北市政府所來，原始資料檔可從<a href="http://data.taipei.gov.tw/ct.asp?xItem=3928148&ctNode=45190&mp=datataipei">『臺北市歷年積水紀錄圖』</a>下載。我把資料檔的座標系轉換(TW67 -> WSG84)後，就塞到跟前一回一樣的後端去做處理，剩下的就都是前端的工作了。<br /><br />在前端UI開發上，依以前開發的習慣，先把wireframe（假UI）畫好才動工，找了找一些畫UI的工具，最後買了<a href="http://keynotopia.com/android-prototyping-templates/">keynotopia</a>出的工具，這傢伙也是個奇人，開start-up不到<a href="http://blog.amirkhella.com/2010/09/21/the-story-of-keynotopia-how-i-launched-a-profitable-product-in-3-hours/">三小時就開始獲利</a>；在畫假UI時就發現，傳統上我們用點來代表一個物件，在畫地圖（羞～）時，並不能合理的表現許多地理圖型。<br /><br />然而，若是我們要把地理圖型直接畫在地圖上讓使用者直接點開，那麼，我們又要處理重疊的狀況，這在淹水地圖上就特別麻煩，因為常淹水的區塊會互相重疊多次，或像納利颱風，一次淹掉了一大塊的區塊，在處理點選時，我們要怎麼知道使用者點選的是那一層的資料？<br /><br />而在顯示上，要怎麼處理重疊的區塊，讓使用者知道，某個地點曾淹水多次？一個選項是用顏色來做，重疊的部份用加深的顏色來顯式；最後，我們還是回歸傳統的點座標的方式，來表示淹水的區域，等使用者點開後，才用色塊畫出實際淹水的地區。等下次改版時，等我對Android 2D再熟一些時，或許會嘗試用顏色的方式來做呈現。<br /><br /><br />接下來，我會在有空的時候，再開發一個程式，把台北市的土地分區（住一、住二、商用...）資料，跟土地的地號資料，做成個台北都更地圖，若各位有類似的需求，請<a href="mailto:yho at bluetangstudio dot com">與我聯絡</a></div>

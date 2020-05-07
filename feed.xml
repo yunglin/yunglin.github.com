@@ -4,27 +4,257 @@
         <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>{{ site.title | xml_escape }}</title>
-        <description>{{ site.description | xml_escape }}</description>
-        <link>{{ site.url }}{{ site.baseurl }}/</link>
-        <atom:link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml"/>
-        <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
-        <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
-        <generator>Jekyll v{{ jekyll.version }}</generator>
-        {% for post in site.posts limit:10 %}
+        <title>碎碎念</title>
+        <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</description>
+        <link>http://localhost:4000/</link>
+        <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+        <pubDate>Thu, 07 May 2020 01:21:48 -0700</pubDate>
+        <lastBuildDate>Thu, 07 May 2020 01:21:48 -0700</lastBuildDate>
+        <generator>Jekyll v3.6.3</generator>
+        
         <item>
-            <title>{{ post.title | xml_escape }}</title>
-            <description>{{ post.content | xml_escape }}</description>
-            <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
-            <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
-            <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
-            {% for tag in post.tags %}
-            <category>{{ tag | xml_escape }}</category>
-            {% endfor %}
-            {% for cat in post.categories %}
-            <category>{{ cat | xml_escape }}</category>
-            {% endfor %}
+            <title>技術是熟的好</title>
+            <description>&lt;p&gt;工作半年的新工作用的技術是 Actor Model ，我老是被公司的 CTO 說我是 Java 背景的老古板。 Actor Model 越用我越不覺的他有比 shared memory 好到哪裡去。&lt;/p&gt;
+
+&lt;p&gt;shared memory concurrency 像是在玩火，我玩火玩十幾年了，早就知道怎麼樣不會被火燒到。&lt;/p&gt;
+
+&lt;p&gt;Actor Model 是在玩線程，每天都在看到底同一個 actor 要開多少個要給多少線程， actor 開少了，機器再快效率也不會變好，到最後變成在玩自己，每幾天就有人被 akka 整到，玩線程玩到被吊起來。&lt;/p&gt;
+
+&lt;p&gt;程式就是這樣，用上手就好，反正到最後分高下的，大多是對工具的熟悉的。&lt;/p&gt;
+
+&lt;p&gt;最近真的體會到為什麼老少工程師會處不來了，上面的例子是一個，還有像是資料庫的選用， NoSQL推行十幾年後，現在的年輕人要用資料庫就是 NoSQL 中選一個，沒人要用 SQL ，要寫測試，還不准我用通用的 SQL 來建假資料，一定要用的難看的 slick DSL ，這世界真的反了。&lt;/p&gt;
+
+&lt;p&gt;結論就是，大多數人就是把二十多歲前接觸的世界當常態，然後用一輩子在這個時間凍結的世界內，最佳化自己的生活方式。&lt;/p&gt;
+
+&lt;p&gt;好啦，有用老頭技術的小公司可以來找我談談了，我年紀大了，跟新技術處不來了&lt;/p&gt;
+</description>
+            <pubDate>Sat, 29 Feb 2020 00:00:00 -0800</pubDate>
+            <link>http://localhost:4000/blog/2020/02/29/mature-tech/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2020/02/29/mature-tech/</guid>
+            
+            
         </item>
-        {% endfor %}
+        
+        <item>
+            <title>Synology上設定 wordpress &amp; let'sencrypt 的方法</title>
+            <description>&lt;!-- wp:paragraph --&gt;
+
+&lt;p&gt;快被 Synology 跟 Comcast 整慘了，正常運作的網站，突然有一天，因為 HTTPS Certificate 的原故連不上了，被整了好幾個小時，所以還是記下怎麼處理好的。&lt;br&gt;&lt;br&gt;在 Synology DSM 6.3 上面要正常跑 wordpress &amp;amp; nginx &amp;amp; let's encrypt 的話&lt;/p&gt;
+
+&lt;!-- /wp:paragraph --&gt;
+
+&lt;!-- wp:list --&gt;
+
+&lt;ul&gt;&lt;li&gt;先安裝 PHP 7.3 ，然後在 Web Station 中新增 PHP 7.3 ，記得要勾選 curl &amp;amp; mysqli extension&lt;/li&gt;&lt;li&gt;在 wordpress virtualhost 的設定中選用 nginx &amp;amp; php 7.3&lt;/li&gt;&lt;li&gt;然後到 Control Panel -&amp;gt; Security -&amp;gt; Certificate 的地方新增 Certificate from let's encrypt.&lt;/li&gt;&lt;/ul&gt;
+
+&lt;!-- /wp:list --&gt;
+
+&lt;!-- wp:paragraph --&gt;
+
+&lt;p&gt;如果新增失敗的話，用 ssh 登入，然後跑下面的指令&lt;/p&gt;
+
+&lt;!-- /wp:paragraph --&gt;
+
+&lt;!-- wp:quote --&gt;
+
+&lt;blockquote class=&quot;wp-block-quote&quot;&gt;&lt;p&gt;sudo /usr/syno/sbin/syno-letsencrypt new-cert -d &amp;lt;host&amp;gt; -m &amp;lt;email&amp;gt; -v&lt;/p&gt;&lt;/blockquote&gt;
+
+&lt;!-- /wp:quote --&gt;
+
+&lt;!-- wp:paragraph --&gt;
+
+&lt;p&gt;這樣子會吐出一堆 let's encrypt 給的 debug urls ，把 url 點開，就可以看是那邊出錯了。&lt;/p&gt;
+
+&lt;!-- /wp:paragraph --&gt;
+</description>
+            <pubDate>Fri, 25 Oct 2019 01:00:00 -0700</pubDate>
+            <link>http://localhost:4000/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</guid>
+            
+            
+        </item>
+        
+        <item>
+            <title>如何對抗老化</title>
+            <description>&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/75doh5hJVRI&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;!-- wp:paragraph --&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;!-- /wp:paragraph --&gt;
+
+&lt;!-- wp:list {&quot;ordered&quot;:true} --&gt;
+
+&lt;ol&gt;&lt;li&gt;何時進食比吃了什麼重要，採用日間的斷食療法&lt;/li&gt;&lt;li&gt;分子化學已經找出來斷食療法的關鍵酮&lt;/li&gt;&lt;li&gt;&lt;a href=&quot;https://nutritionreview.org/2019/05/fasting-molecule-exerts-anti-aging-effects-to-protect-vascular-system/&quot;&gt;https://nutritionreview.org/2019/05/fasting-molecule-exerts-anti-aging-effects-to-protect-vascular-system/&lt;/a&gt;&lt;/li&gt;&lt;li&gt;運動及酮療法，可以讓老鼠活更久，兩者都使用的話活的更久。&lt;/li&gt;&lt;li&gt;科學家在20年前就找到能夠讓老鼠或稻穀活更久(5~20%)的基因&lt;/li&gt;&lt;li&gt;大部份研究抗老化的科學家都有服用 nmn &lt;br&gt;&lt;a href=&quot;https://drjohnday.com/6-foods-to-reverse-aging-with-nmn/&quot;&gt;https://drjohnday.com/6-foods-to-reverse-aging-with-nmn/&lt;/a&gt;&lt;/li&gt;&lt;li&gt;作者還有服用 Resveratrol&amp;nbsp;及 1g Metformin ，後者是糖尿病用藥，但是作者沒有糖尿病&lt;/li&gt;&lt;li&gt;AMPK Sirtuins mTOR 是老化的三條路，前兩者有低風險的藥物可使用（前述的藥物）&lt;/li&gt;&lt;li&gt;洗三溫暖，冷熱交替也可以抗老化&lt;/li&gt;&lt;li&gt;低糖低碳飲食&lt;/li&gt;&lt;li&gt;少吃紅肉，紅肉含 amino acid 會觸發 mTOR&lt;/li&gt;&lt;li&gt;branch chain amino acid 對運動的表現有幫助，但作者認為長期會導至老化&lt;/li&gt;&lt;/ol&gt;
+
+&lt;!-- /wp:list --&gt;
+</description>
+            <pubDate>Wed, 19 Jun 2019 01:00:00 -0700</pubDate>
+            <link>http://localhost:4000/blog/2019/06/19/anti-aging/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/06/19/anti-aging/</guid>
+            
+            
+        </item>
+        
+        <item>
+            <title>typelevel cats 學習筆記</title>
+            <description>&lt;p&gt;推薦一本書 &lt;a href=&quot;https://www.amazon.com/gp/product/1400023343/ref=as_li_tl?ie=UTF8&amp;amp;camp=1789&amp;amp;creative=9325&amp;amp;creativeASIN=1400023343&amp;amp;linkCode=as2&amp;amp;tag=murmur-20&amp;amp;linkId=1a603b4fbc610f89405a59009c166151&quot;&gt;Raising a Bilingual Child&lt;/a&gt; ，相對於訪間口耳相傳的八卦，本書是由學者寫成，引用美國數個研究單位的研究成果，來告訴大家如何教養出雙語的兒童。&lt;/p&gt;
+
+&lt;p&gt;書中主要引用的研究資料是來自佛羅里達，因為佛州有眾多的西語系移民，家庭的社經環境各種都有，所以在統計上去掉一些其它因素的造成的誤差。&lt;/p&gt;
+
+&lt;p&gt;我讀到目前讀到比較有用的有幾點：&lt;/p&gt;
+
+&lt;p&gt;五歲以下的移民，在上 K5 前，若是只用母語，並不會影響未來的英語學習，反過來，若是在上 K5 前就開始學習雙語，只有 20% 的小孩未來還能學好母語，某一天就會轉成用英語為主。&lt;/p&gt;
+
+&lt;p&gt;母語的學習，並不會影響到英語的學習成果，既使是五歲才開始學習英文，到十一歲後，就在統計上看不出來英語學習的差易。&lt;/p&gt;
+
+&lt;p&gt;如果要學習好母語，除了日常對話外，還是要增加字彙的種類，雙語學校(immersion school)的教學就很有幫助。&lt;/p&gt;
+
+&lt;p&gt;以高中及大學 GPA 來看，雙語的學生表現跟英語的學生一樣好。但是很不幸的是， SAT 的測驗中，雙語的學生會比英語的學生低 50 分，這是未來 SAT 要努力的方向，為什麼測驗沒有鑑別能力。&lt;/p&gt;
+</description>
+            <pubDate>Tue, 21 May 2019 01:00:00 -0700</pubDate>
+            <link>http://localhost:4000/blog/2019/05/21/raising-a-bilingual-child/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/05/21/raising-a-bilingual-child/</guid>
+            
+            
+        </item>
+        
+        <item>
+            <title>typelevel cats 學習筆記</title>
+            <description>&lt;p&gt;最近在學 typelevel/cats 底下這一行程式碼，想了兩天才理解為什麼要寫成這樣，Functional Programming真的是太困難了，有點回到大一學遞迴的感覺。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-05/IO-async.png&quot;  &gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;(Either[Throwable, A]) =&amp;gt; Unit)&lt;/code&gt; 是一個 Callback function / Listener interface ， &lt;code&gt;(CB =&amp;gt; Unit)&lt;/code&gt; 表示這個 Callback function 可以在不同的 Thread 執行。&lt;/p&gt;
+
+&lt;p&gt;為什麼要寫成這樣？我還在想….&lt;/p&gt;
+</description>
+            <pubDate>Sat, 11 May 2019 01:00:00 -0700</pubDate>
+            <link>http://localhost:4000/blog/2019/05/11/typelevel-cats/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/05/11/typelevel-cats/</guid>
+            
+            
+        </item>
+        
+        <item>
+            <title>谷歌、臉書大當機</title>
+            <description>&lt;p&gt;接連兩天谷歌、臉書大當機，稱機會講一下我淺到不能再淺的淺見。&lt;/p&gt;
+
+&lt;p&gt;矽谷這邊的公司很喜歡講平台化、雲端化、大數據，把不管是企業內部還是外部，四散的資料集中管理，本來每一間私人公司都要請個 MIS，專職備份管理企業資料，等到雲端化自動化後，一個人可以管一千個企業的資料庫，可以利用經濟規模降低成本。&lt;/p&gt;
+
+&lt;p&gt;但是經濟規模可以一直無上限下去嗎？有種東西叫邊際效用遞減，等到規模大了後，自然有規模大的問題，像是領英堅持整間公司共用同一個hadoop cluster，光Gossip Protocol的口水就可以淹死你，不能再加機器，所以做了個”大象醫生”出來看有沒有人濫用資源。所有人要共用一個 git server ，結果當然是撐不下去，所以弄了個 git master-slave 的架構出來，偶爾 build system 拉到的資料不是最新版而已。&lt;/p&gt;
+
+&lt;p&gt;平台化可以達到經濟規模是正確的，但是問題的複雜度也會一直上昇，所以這些平台公司請一堆業界頂尖的人來解問題，可是業務量有可能一不小心就超過系統原始設計的上限，在新解法出來前，就只能請客戶多擔待些了。&lt;/p&gt;
+</description>
+            <pubDate>Sat, 02 Mar 2019 00:00:00 -0800</pubDate>
+            <link>http://localhost:4000/blog/2019/03/02/platform-and-diminishing-returns/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/03/02/platform-and-diminishing-returns/</guid>
+            
+            
+        </item>
+        
+        <item>
+            <title>閃電式開發</title>
+            <description>&lt;p&gt;xdite 的新書&amp;lt;閃電式開發&amp;gt;寫的真好，如果能早點出就好了，我在 2010年就走過這條錯路，東西做出來的金流串好了，然後上線就傻了，不知道客戶在那裡，一直到後來加入飛向後才知道，創業是怎麼回事，不過白花的兩年歲月是要不回來了…&lt;/p&gt;
+
+&lt;p&gt;https://github.com/xdite/blitz-product/blob/master/04.md&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-03/quote.png&quot;  &gt;&lt;/p&gt;
+</description>
+            <pubDate>Fri, 01 Mar 2019 00:00:00 -0800</pubDate>
+            <link>http://localhost:4000/blog/2019/03/01/bliz-product/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/03/01/bliz-product/</guid>
+            
+            
+        </item>
+        
+        <item>
+            <title>使用 Workflow Engine 來實作 Microservices SAGA pattern</title>
+            <description>&lt;p&gt;最近離開了領英，比較有空閒讀讀書，想想到底之前在實作上出了那些的問題，跟要怎麼處理這些問題。&lt;/p&gt;
+
+&lt;p&gt;先推薦兩本書 &lt;a href=&quot;https://amzn.to/2H2g8y3&quot;&gt;SOA Patterns&lt;/a&gt; 和 &lt;a href=&quot;https://amzn.to/2Sr593b&quot;&gt;Microservices Patterns&lt;/a&gt; ，這兩本書都有提到怎麼在微服務下處理 transaction 的方式，兩本書的方法都是 &lt;a href=&quot;https://microservices.io/patterns/data/saga.html&quot;&gt;SAGA pattern&lt;/a&gt; + CQRS + idempotent 。&lt;/p&gt;
+
+&lt;p&gt;但是如果你有實作過 SAGA Pattern 的話，就會知道使用 Message Driven 的方式在兩個微服務間溝通的話，整個程式碼的可讀性會非常的低，除了原先溝通並實做細節的兩位工程師外，大概不會有第三個人能夠理解整個交易是怎麼完成的。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-02-25/Saga_Choreography_Flow.001.jpeg&quot;  &gt;
+註：本文圖片取自 https://microservices.io/patterns/data/saga.html&lt;/p&gt;
+
+&lt;p&gt;在實作細節上，使用MDA的架構，微服務要提供sync &amp;amp; async API使用，是額外的成本，在領英，所有的微服務預設都是只有提供 sync API 的，你要請對方多開一個 async 的界面，是要求爺爺告奶奶的。&lt;/p&gt;
+
+&lt;p&gt;因此，在技術上管理上比較可行的，就是把流程的管理都拉到自己管理的微服務當中，在裡面使用 orchestrator 來管理對外乎叫的狀態記錄處理跟錯誤重送。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2019-02-25/Saga_Choreography_Flow.002.jpeg&quot;  &gt;&lt;/p&gt;
+
+&lt;p&gt;當然，這又免不了要寫一大堆 glue code 把所有的東西黏在一起，然後在資料褲裡面又要開一堆的 Table 來記錄運行的狀況，這非常的花功夫，在實作上很花時間又不好進行修改沒有彈性。&lt;/p&gt;
+
+&lt;p&gt;今天早上看到 InfoQ 的一則新聞 &lt;a href=&quot;https://www.infoq.com/news/2019/02/migrate-microservices-workflows&quot;&gt;Experiences Moving from Microservices to Workflows at Jet.com&lt;/a&gt; 突然腦洞大開，是啊 orchestrator saga 可以使用如 Apache Camel 等的 workflow engine 來實作，微服務還是只需要提供 sync API ，交由 workflow engine 來做狀態追蹤跟錯務重送，然後中間的狀態，可以透過 Camel 存在 ActiveMQ 之中，然後整個流程的定義，可以透過 Camel Java/Scala/… DSL 高階語言來編寫，整個可讀性大增。&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  from(&quot;file:src/data?noop=true&quot;)
+      .choice()
+          .when(xpath(&quot;/person/city = 'London'&quot;))
+              .to(&quot;file:target/messages/uk&quot;)
+          .otherwise()
+              .to(&quot;file:target/messages/others&quot;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;原來我在 2014 年左右就找到答案並且在飛向的程式碼中實作過，只是這幾年我自己被領英的專案壓力追著跑（每一季都同時跑五個以上專案），忙到忘掉了。&lt;/p&gt;
+</description>
+            <pubDate>Mon, 25 Feb 2019 00:00:00 -0800</pubDate>
+            <link>http://localhost:4000/blog/2019/02/25/saga-pattern-with-workflow-engine/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/02/25/saga-pattern-with-workflow-engine/</guid>
+            
+            
+        </item>
+        
+        <item>
+            <title>大公司裡面的技術債是怎麼來的？</title>
+            <description>&lt;p&gt;大公司裡面的技術債是怎麼來的？&lt;/p&gt;
+
+&lt;p&gt;就像一個房間一樣，有一個角落積了一些灰塵需要打掃，主動跟主管說要打掃，主管會問你，打掃這個跟其他的事比起來重要嗎？我們先來測量一下這角落有多髒，打掃完有什麼效果，然後再來跟其他的工作事項比比看優先權該放在多高。&lt;/p&gt;
+
+&lt;p&gt;當然結論是不重要不需要掃，然後下次換另外一個角落髒了，再來測量一次再來排一次優先權，然後放棄打掃。&lt;/p&gt;
+
+&lt;p&gt;以上過程重複數次之後，主管大叫，這房間怎麼這麼髒，我們來制定打掃計劃，把過去的角落清潔計劃全部翻出來更新一次，再來全部重排一次優先權，做個環境整潔總檢討計劃。&lt;/p&gt;
+
+&lt;p&gt;然後大老闆跑出來說，你這房間在的髒亂，來跟整棟大樓的整潔比比看髒亂的程度，再來排個優先權，然後我們晚點再開會討論看看要不要納入明年的工作項目。&lt;/p&gt;
+</description>
+            <pubDate>Tue, 18 Dec 2018 00:00:00 -0800</pubDate>
+            <link>http://localhost:4000/blog/2018/12/18/techdebt/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2018/12/18/techdebt/</guid>
+            
+            
+        </item>
+        
+        <item>
+            <title>Grooveshark shuts down after years of legal troubles</title>
+            <description>&lt;p&gt;舊文重貼，原文寫於 2015/04
+事後的發展是，&lt;a href=&quot;https://archive.is/NXkwe&quot;&gt;Grooveshark的 co-founder 於 2015/07/19 自殺&lt;/a&gt; ，只能說 startup 歹路難行，不要挑錯了產業，又投入了十年的青春導致無法自拔退出。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://archive.is/0tgEy&quot;&gt;Music streaming service Grooveshark shuts down after years of legal troubles&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;我在同類型的公司工作過幾年，老實講，Grooveshark 走到這一步，不意外。比較意外的是他能撐這麼久，&lt;a href=&quot;https://archive.is/v8wN5&quot;&gt;三年前他們 CEO 就情緒崩潰過一次&lt;/a&gt; ，沒想到還能再多撐個三年。&lt;/p&gt;
+
+&lt;p&gt;Grooveshark 成立於 2006 年，當時的市場環境已經跟 Napster 成立的 1999 大不相同，自從 DMCA 數位千喜年法案通過之後，音樂服務已經有不少都走向付售權費合法化的路上，只有 Grooveshark 一家走不同的路。&lt;/p&gt;
+
+&lt;p&gt;Grooveshark 是群大學生一起做的，所以大家自己省一省，不用跟 VC 要錢，就可以開業。&lt;/p&gt;
+
+&lt;p&gt;也許是一開始走的太順，所以他們就想要這麼一直走下去，不去跟音樂公司談授權問題。&lt;/p&gt;
+
+&lt;p&gt;當然這樣造就的結果是，每次他們一要談下一筆增資案，律師信馬上就來，增資的錢跟本就是花在律師費上面。&lt;/p&gt;
+
+&lt;p&gt;我常常在想，Grooveshark能活這麼久，說不定是五大音樂公司故意的，反正把 GS 搞倒了也沒用，還會有下一家跳出來做，還不如讓 GS 吃不飽餓不死撐在那邊，擋住潛在中想做非法音樂這塊的人，同時也警告這些人，你做非法音樂是沒錢賺的。&lt;/p&gt;
+
+&lt;p&gt;最終搞倒 GS 的，我想除了是創業團隊已經累了之外，另外就是美國工程師行情太好，小本經營的 GS 請不起人了&lt;/p&gt;
+
+&lt;p&gt;1 http://mashable.com/2013/04/22/grooveshark-radio/
+2 http://www.digitalmusicnews.com/permalink/2013/04/23/groovesharkbroke&lt;/p&gt;
+</description>
+            <pubDate>Wed, 05 Dec 2018 00:00:00 -0800</pubDate>
+            <link>http://localhost:4000/blog/2018/12/05/groovyshark/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2018/12/05/groovyshark/</guid>
+            
+            
+        </item>
+        
     </channel>
 </rss>
