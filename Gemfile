@@ -13,7 +13,7 @@ group :jekyll_plugins do
     gem 'octopress-image-tag'
     gem 'octopress-render-code'
     gem 'octopress-quote-tag'
-#    gem 'octopress-paginate'
-#    gem 'octopress-hooks'
+    gem 'octopress-paginate'
+    gem 'octopress-hooks', git: 'https://github.com/octopress/hooks.git'
     gem 'octopress-social'
 end

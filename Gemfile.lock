@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/octopress/hooks.git
+  revision: ac460266254ed23e7d656767ec346eea63b29788
+  specs:
+    octopress-hooks (2.6.2)
+      jekyll (>= 2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -39,10 +46,10 @@ GEM
       colorator
     octopress-escape-code (2.1.1)
       jekyll (~> 3.0)
-    octopress-hooks (2.6.1)
-      jekyll (>= 2.0)
     octopress-image-tag (1.1.0)
       jekyll
+    octopress-paginate (1.2.0)
+      octopress-hooks
     octopress-quote-tag (1.0.4)
       jekyll
       rubypants
@@ -68,10 +75,12 @@ DEPENDENCIES
   jekyll (= 3.1.2)
   octopress (>= 3.0.12.pre.1)
   octopress-codeblock
+  octopress-hooks!
   octopress-image-tag
+  octopress-paginate
   octopress-quote-tag
   octopress-render-code
   octopress-social
 
 BUNDLED WITH
-   1.11.2
+   1.16.1
