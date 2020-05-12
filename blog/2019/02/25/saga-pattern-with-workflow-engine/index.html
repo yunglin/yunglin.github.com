@@ -99,7 +99,7 @@
 
 <p>但是如果你有實作過 SAGA Pattern 的話，就會知道使用 Message Driven 的方式在兩個微服務間溝通的話，整個程式碼的可讀性會非常的低，除了原先溝通並實做細節的兩位工程師外，大概不會有第三個人能夠理解整個交易是怎麼完成的。</p>
 
-<p><img src="/images/2019-02-05/Saga_Choreography_Flow.001.jpeg"  >
+<p><img src="/images/2019-02-25/Saga_Choreography_Flow.001.jpeg"  >
 註：本文圖片取自 https://microservices.io/patterns/data/saga.html</p>
 
 <p>在實作細節上，使用MDA的架構，微服務要提供sync &amp; async API使用，是額外的成本，在領英，所有的微服務預設都是只有提供 sync API 的，你要請對方多開一個 async 的界面，是要求爺爺告奶奶的。</p>
