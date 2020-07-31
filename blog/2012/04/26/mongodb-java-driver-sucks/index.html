@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Problem in Mongodb&#39;s java and scala driver.</title>
-  <meta name="description" content="">
+  <meta name="description" content="MongoDB 的 Java Driver 支援透過 Transformer_ 去掛上 encodingHook 及 decodingHook，使用方式可以參考 `Salat URISerializer`_.Docutils System MessagesSystem Message: ERROR/3 (&lt;...">
 
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="https://blog.yunglinho.com/blog/2012/04/26/mongodb-java-driver-sucks/">
@@ -93,7 +93,101 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    
+    <p>MongoDB 的 Java Driver 支援透過 <a class="reference external" href="http://api.mongodb.org/java/2.5/org/bson/Transformer.html">Transformer</a> 去掛上 encodingHook 及 decodingHook，
+使用方式可以參考 <a class="reference external" href="https://github.com/novus/salat/blob/9d7988fbd212b6a1423cb2be72065ebff3570777/salat-core/src/test/scala/com/novus/salat/test/util/UriConversionHelper.scala">Salat URISerializer</a>.</p>
+<p>原本我以為透過這樣，我就可以透過自定 encoding and decoding Hook ，去動態
+的把 MongoDB 內部的資料型態，在抓取時，自動轉成我要的形態。</p>
+<p>例如透過底下的程式碼，就在呼叫 <a class="reference external" href="http://api.mongodb.org/scala/casbah/2.1.5.0/scaladoc/com/mongodb/casbah/commons/MongoDBObject.html#getAs[A](String)(Manifest[A]):Option[A]">getAs[URL](&quot;url&quot;)</a> 時，才即時的把 String 轉成 URL 。</p>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class="scala"><span class="line"><span></span><span class="nc">BSON</span><span class="o">.</span><span class="n">addEncodingHook</span><span class="o">(</span><span class="n">class</span><span class="o">[</span><span class="kt">URL</span><span class="o">],</span> <span class="k">new</span> <span class="nc">Transformer</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">def</span> <span class="n">transform</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">AnyRef</span><span class="o">)</span><span class="k">:</span> <span class="kt">AnyRef</span> <span class="o">=</span> <span class="n">o</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="n">u</span><span class="k">:</span> <span class="kt">URL</span> <span class="o">=&gt;</span> <span class="n">u</span><span class="o">.</span><span class="n">toExternalForm</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span>      <span class="k">=&gt;</span> <span class="n">o</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">})</span>
+</span><span class="line"><span class="nc">BSON</span><span class="o">.</span><span class="n">addDecodingHook</span><span class="o">(</span><span class="n">class</span><span class="o">[</span><span class="kt">URL</span><span class="o">],</span> <span class="k">new</span> <span class="nc">Transformer</span> <span class="o">{</span>
+</span><span class="line">  <span class="k">def</span> <span class="n">transform</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">AnyRef</span><span class="o">)</span><span class="k">:</span> <span class="kt">AnyRef</span> <span class="o">=</span> <span class="n">o</span> <span class="k">match</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">case</span> <span class="n">s</span><span class="k">:</span><span class="kt">String</span> <span class="o">=&gt;</span> <span class="k">new</span> <span class="nc">URL</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>
+</span><span class="line">    <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="k">throw</span> <span class="k">new</span> <span class="nc">IllegalArgumentException</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">toString</span><span class="o">)</span>
+</span><span class="line">  <span class="o">}</span>
+</span><span class="line"><span class="o">})</span>
+</span></code></pre></td></tr></table></div></figure><p>結果，事情不如我預期所想的， <cite>decodingHook</cite> 是掛在 MongoDB 儲存的資料
+型態上，而不是你所需要的資料型態上；換個方法講， <cite>decodingHook</cite> 是在
+BSON driver 把資料讀出來時，就呼叫的。</p>
+<p>實作上，如果你去細看 Salat URISerializer ，他的 <cite>decodingHook</cite> 是註冊
+在 <cite>String Type</cite> 而非 <cite>URI Type</cite> ，而實作時，是把字串加上了 &quot;<cite>URI~</cite>&quot; 來
+判斷，這個字串是否是該被 URI Serializer 轉型成 URI。</p>
+<p>如果你去看 <cite>org.bson.BSON</cite> 的實作，你會看到底下這段恐怖的程式碼，BSON
+在讀出資料時，會把對該型別的 <cite>Transformer</cite> 全跑一遍，而這個東西又是個
+Gloabal Variable，這樣一來出了三個問題</p>
+<ul class="simple">
+<li>所有 Custom Data Type 都需要被轉成 String 並加上 Prefix 才可以寫入，
+你不可以把一個 Custom Data Type 轉成 Integer ，如果你這麼做了，所有
+的 Integer ，包含本來就該是 Integer 的欄位，未來在讀出來時，全都會變成
+這個 Custom Data Type ！</li>
+<li>你的 MongoDB Driver 仰賴所有的使用者都清楚他在做什麼，也清楚別人在
+做什麼，如果有一個 Transformer 出錯了，或者是 Prefix 重覆了，那麼
+你自定的 Custom Data Type 也會出錯。</li>
+<li>你 MongoDB 中的資料，為了儲存 Data Type 於資料欄位中而被污染了！</li>
+</ul>
+<figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span></span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">addDecodingHook</span><span class="o">(</span> <span class="n">Class</span> <span class="n">c</span> <span class="o">,</span> <span class="n">Transformer</span> <span class="n">t</span> <span class="o">){</span>
+</span><span class="line">    <span class="n">_decodeHooks</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class="line">    <span class="n">List</span><span class="o">&lt;</span><span class="n">Transformer</span><span class="o">&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="n">_decodingHooks</span><span class="o">.</span><span class="na">get</span><span class="o">(</span> <span class="n">c</span> <span class="o">);</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span> <span class="n">l</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">){</span>
+</span><span class="line">        <span class="n">l</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Vector</span><span class="o">&lt;</span><span class="n">Transformer</span><span class="o">&gt;();</span>
+</span><span class="line">        <span class="n">_decodingHooks</span><span class="o">.</span><span class="na">put</span><span class="o">(</span> <span class="n">c</span> <span class="o">,</span> <span class="n">l</span> <span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">    <span class="n">l</span><span class="o">.</span><span class="na">add</span><span class="o">(</span> <span class="n">t</span> <span class="o">);</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="kd">public</span> <span class="kd">static</span> <span class="n">Object</span> <span class="nf">applyDecodingHooks</span><span class="o">(</span> <span class="n">Object</span> <span class="n">o</span> <span class="o">){</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span> <span class="o">!</span> <span class="n">_anyHooks</span><span class="o">()</span> <span class="o">||</span> <span class="n">o</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">)</span>
+</span><span class="line">        <span class="k">return</span> <span class="n">o</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">    <span class="n">List</span><span class="o">&lt;</span><span class="n">Transformer</span><span class="o">&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="n">_decodingHooks</span><span class="o">.</span><span class="na">get</span><span class="o">(</span> <span class="n">o</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">);</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span> <span class="n">l</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">)</span>
+</span><span class="line">        <span class="k">for</span> <span class="o">(</span> <span class="n">Transformer</span> <span class="n">t</span> <span class="o">:</span> <span class="n">l</span> <span class="o">)</span>
+</span><span class="line">            <span class="n">o</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="na">transform</span><span class="o">(</span> <span class="n">o</span> <span class="o">);</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">o</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure><p><a class="reference external" href="https://jira.mongodb.org/browse/SCALA-66">SCALA-66</a> 說 3.0.0 release 時，會有一個 per field, per data type 的
+type conversion機制，不過 3.0.0-M2 時還沒把這塊做進去，所以看來有得等了</p>
+<p>我是自己有參照 <a class="reference external" href="https://github.com/aboisvert/simplistic">simplistic</a> 刻一個機制，可以在 DAO 中讀進讀出物件時做轉
+換，但是在寫 Query 時，仍是有些不便。</p>
+<p>如果你有這需求的話，可以跟我連絡，我把 source code 給你。</p>
+
+
   </div>
   <!-- ... -->
 

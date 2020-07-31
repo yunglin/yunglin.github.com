@@ -106,7 +106,7 @@
 
 <p>因此，在技術上管理上比較可行的，就是把流程的管理都拉到自己管理的微服務當中，在裡面使用 orchestrator 來管理對外乎叫的狀態記錄處理跟錯誤重送。</p>
 
-<p><img src="/images/2019-02-25/Saga_Orchestration_Flow.002.jpeg"  ></p>
+<p><img src="/images/2019-02-25/Saga_Choreography_Flow.002.jpeg"  ></p>
 
 <p>當然，這又免不了要寫一大堆 glue code 把所有的東西黏在一起，然後在資料褲裡面又要開一堆的 Table 來記錄運行的狀況，這非常的花功夫，在實作上很花時間又不好進行修改沒有彈性。</p>
 
