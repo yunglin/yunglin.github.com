@@ -94,6 +94,28 @@
         
         <div>
             <h1>
+                <a class="post-title" href="/blog/2020/08/12/morden-day-buring-books/">現代版焚書坑儒</a>
+            </h1>
+            <span class="post-meta">Aug 12, 2020</span>
+            <div class="post-content">
+                <p>Kamala Harris 這禮拜被民主黨提名為副總統候選人，反對 Kamala 的人士，幫她做了個網頁 http://kamalaharris.info/ ，引用新聞媒體來說講述 Kamala 
+強迫監獄犯人去滅森林大火、嘲笑因為父母因為坐勞而無法上學的小孩、反對幫重刑犯做 DNA 檢驗、支持死刑、支持未經法院審判而爭
+收嫌疑犯的財產、支持對總統候選人 Biden 的性侵指控。</p>
+
+<p>這網頁的資料，還都是引用跟 Harris 同樣的政治派系， progressive liberal 進步左派的媒體 Huffington Post, New York Times, LA Times 的資料。</p>
+
+<p>沒想到這網站，竟然被臉書禁掉了，無法貼在臉書上，這就是民主黨支持者的真面目。</p>
+
+<p><img src="/images/2020-10/banned_by_facebook.png"  ></p>
+
+<p>https://lbry.tv/kamalaharris-info:50321811b2fdae0ce66c0f8059bea9580888dac1</p>
+
+            </div>
+
+        </div>
+        
+        <div>
+            <h1>
                 <a class="post-title" href="/blog/2020/08/04/civil-war-ii/">美國內戰</a>
             </h1>
             <span class="post-meta">Aug 4, 2020</span>
@@ -319,43 +341,6 @@
 <p>https://github.com/xdite/blitz-product/blob/master/04.md</p>
 
 <p><img src="/images/2019-03/quote.png"  ></p>
-
-            </div>
-
-        </div>
-        
-        <div>
-            <h1>
-                <a class="post-title" href="/blog/2019/02/25/saga-pattern-with-workflow-engine/">使用 Workflow Engine 來實作 Microservices SAGA pattern</a>
-            </h1>
-            <span class="post-meta">Feb 25, 2019</span>
-            <div class="post-content">
-                <p>最近離開了領英，比較有空閒讀讀書，想想到底之前在實作上出了那些的問題，跟要怎麼處理這些問題。</p>
-
-<p>先推薦兩本書 <a href="https://amzn.to/2H2g8y3">SOA Patterns</a> 和 <a href="https://amzn.to/2Sr593b">Microservices Patterns</a> ，這兩本書都有提到怎麼在微服務下處理 transaction 的方式，兩本書的方法都是 <a href="https://microservices.io/patterns/data/saga.html">SAGA pattern</a> + CQRS + idempotent 。</p>
-
-<p>但是如果你有實作過 SAGA Pattern 的話，就會知道使用 Message Driven 的方式在兩個微服務間溝通的話，整個程式碼的可讀性會非常的低，除了原先溝通並實做細節的兩位工程師外，大概不會有第三個人能夠理解整個交易是怎麼完成的。</p>
-
-<p><img src="/images/2019-02-05/Saga_Choreography_Flow.001.jpeg"  >
-註：本文圖片取自 https://microservices.io/patterns/data/saga.html</p>
-
-<p>在實作細節上，使用MDA的架構，微服務要提供sync &amp; async API使用，是額外的成本，在領英，所有的微服務預設都是只有提供 sync API 的，你要請對方多開一個 async 的界面，是要求爺爺告奶奶的。</p>
-
-<p>因此，在技術上管理上比較可行的，就是把流程的管理都拉到自己管理的微服務當中，在裡面使用 orchestrator 來管理對外乎叫的狀態記錄處理跟錯誤重送。</p>
-
-<p><img src="/images/2019-02-05/Saga_Orchestration_Flow.002.jpeg"  ></p>
-
-<p>當然，這又免不了要寫一大堆 glue code 把所有的東西黏在一起，然後在資料褲裡面又要開一堆的 Table 來記錄運行的狀況，這非常的花功夫，在實作上很花時間又不好進行修改沒有彈性。</p>
-
-<p>今天早上看到 InfoQ 的一則新聞 <a href="https://www.infoq.com/news/2019/02/migrate-microservices-workflows">Experiences Moving from Microservices to Workflows at Jet.com</a> 突然腦洞大開，是啊 orchestrator saga 可以使用如 Apache Camel 等的 workflow engine 來實作，微服務還是只需要提供 sync API ，交由 workflow engine 來做狀態追蹤跟錯務重送，然後中間的狀態，可以透過 Camel 存在 ActiveMQ 之中，然後整個流程的定義，可以透過 Camel Java/Scala/… DSL 高階語言來編寫，整個可讀性大增。</p>
-<div class="highlight"><pre><code class="language-" data-lang="">  from("file:src/data?noop=true")
-      .choice()
-          .when(xpath("/person/city = 'London'"))
-              .to("file:target/messages/uk")
-          .otherwise()
-              .to("file:target/messages/others");
-</code></pre></div>
-<p>原來我在 2014 年左右就找到答案並且在飛向的程式碼中實作過，只是這幾年我自己被領英的專案壓力追著跑（每一季都同時跑五個以上專案），忙到忘掉了。</p>
 
             </div>
 

@@ -9,9 +9,30 @@
 </description>
         <link>https://blog.yunglinho.com/</link>
         <atom:link href="https://blog.yunglinho.com/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 12 Aug 2020 19:02:51 -0700</pubDate>
-        <lastBuildDate>Wed, 12 Aug 2020 19:02:51 -0700</lastBuildDate>
+        <pubDate>Wed, 12 Aug 2020 21:23:59 -0700</pubDate>
+        <lastBuildDate>Wed, 12 Aug 2020 21:23:59 -0700</lastBuildDate>
         <generator>Jekyll v3.6.3</generator>
+        
+        <item>
+            <title>現代版焚書坑儒</title>
+            <description>&lt;p&gt;Kamala Harris 這禮拜被民主黨提名為副總統候選人，反對 Kamala 的人士，幫她做了個網頁 http://kamalaharris.info/ ，引用新聞媒體來說講述 Kamala 
+強迫監獄犯人去滅森林大火、嘲笑因為父母因為坐勞而無法上學的小孩、反對幫重刑犯做 DNA 檢驗、支持死刑、支持未經法院審判而爭
+收嫌疑犯的財產、支持對總統候選人 Biden 的性侵指控。&lt;/p&gt;
+
+&lt;p&gt;這網頁的資料，還都是引用跟 Harris 同樣的政治派系， progressive liberal 進步左派的媒體 Huffington Post, New York Times, LA Times 的資料。&lt;/p&gt;
+
+&lt;p&gt;沒想到這網站，竟然被臉書禁掉了，無法貼在臉書上，這就是民主黨支持者的真面目。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2020-10/banned_by_facebook.png&quot;  &gt;&lt;/p&gt;
+
+&lt;p&gt;https://lbry.tv/kamalaharris-info:50321811b2fdae0ce66c0f8059bea9580888dac1&lt;/p&gt;
+</description>
+            <pubDate>Wed, 12 Aug 2020 19:30:00 -0700</pubDate>
+            <link>https://blog.yunglinho.com/blog/2020/08/12/morden-day-buring-books/</link>
+            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2020/08/12/morden-day-buring-books/</guid>
+            
+            
+        </item>
         
         <item>
             <title>美國內戰</title>
@@ -232,42 +253,6 @@
             <pubDate>Fri, 01 Mar 2019 00:00:00 -0800</pubDate>
             <link>https://blog.yunglinho.com/blog/2019/03/01/bliz-product/</link>
             <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/03/01/bliz-product/</guid>
-            
-            
-        </item>
-        
-        <item>
-            <title>使用 Workflow Engine 來實作 Microservices SAGA pattern</title>
-            <description>&lt;p&gt;最近離開了領英，比較有空閒讀讀書，想想到底之前在實作上出了那些的問題，跟要怎麼處理這些問題。&lt;/p&gt;
-
-&lt;p&gt;先推薦兩本書 &lt;a href=&quot;https://amzn.to/2H2g8y3&quot;&gt;SOA Patterns&lt;/a&gt; 和 &lt;a href=&quot;https://amzn.to/2Sr593b&quot;&gt;Microservices Patterns&lt;/a&gt; ，這兩本書都有提到怎麼在微服務下處理 transaction 的方式，兩本書的方法都是 &lt;a href=&quot;https://microservices.io/patterns/data/saga.html&quot;&gt;SAGA pattern&lt;/a&gt; + CQRS + idempotent 。&lt;/p&gt;
-
-&lt;p&gt;但是如果你有實作過 SAGA Pattern 的話，就會知道使用 Message Driven 的方式在兩個微服務間溝通的話，整個程式碼的可讀性會非常的低，除了原先溝通並實做細節的兩位工程師外，大概不會有第三個人能夠理解整個交易是怎麼完成的。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/2019-02-05/Saga_Choreography_Flow.001.jpeg&quot;  &gt;
-註：本文圖片取自 https://microservices.io/patterns/data/saga.html&lt;/p&gt;
-
-&lt;p&gt;在實作細節上，使用MDA的架構，微服務要提供sync &amp;amp; async API使用，是額外的成本，在領英，所有的微服務預設都是只有提供 sync API 的，你要請對方多開一個 async 的界面，是要求爺爺告奶奶的。&lt;/p&gt;
-
-&lt;p&gt;因此，在技術上管理上比較可行的，就是把流程的管理都拉到自己管理的微服務當中，在裡面使用 orchestrator 來管理對外乎叫的狀態記錄處理跟錯誤重送。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/2019-02-05/Saga_Orchestration_Flow.002.jpeg&quot;  &gt;&lt;/p&gt;
-
-&lt;p&gt;當然，這又免不了要寫一大堆 glue code 把所有的東西黏在一起，然後在資料褲裡面又要開一堆的 Table 來記錄運行的狀況，這非常的花功夫，在實作上很花時間又不好進行修改沒有彈性。&lt;/p&gt;
-
-&lt;p&gt;今天早上看到 InfoQ 的一則新聞 &lt;a href=&quot;https://www.infoq.com/news/2019/02/migrate-microservices-workflows&quot;&gt;Experiences Moving from Microservices to Workflows at Jet.com&lt;/a&gt; 突然腦洞大開，是啊 orchestrator saga 可以使用如 Apache Camel 等的 workflow engine 來實作，微服務還是只需要提供 sync API ，交由 workflow engine 來做狀態追蹤跟錯務重送，然後中間的狀態，可以透過 Camel 存在 ActiveMQ 之中，然後整個流程的定義，可以透過 Camel Java/Scala/… DSL 高階語言來編寫，整個可讀性大增。&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-&quot; data-lang=&quot;&quot;&gt;  from(&quot;file:src/data?noop=true&quot;)
-      .choice()
-          .when(xpath(&quot;/person/city = 'London'&quot;))
-              .to(&quot;file:target/messages/uk&quot;)
-          .otherwise()
-              .to(&quot;file:target/messages/others&quot;);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;原來我在 2014 年左右就找到答案並且在飛向的程式碼中實作過，只是這幾年我自己被領英的專案壓力追著跑（每一季都同時跑五個以上專案），忙到忘掉了。&lt;/p&gt;
-</description>
-            <pubDate>Mon, 25 Feb 2019 00:00:00 -0800</pubDate>
-            <link>https://blog.yunglinho.com/blog/2019/02/25/saga-pattern-with-workflow-engine/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/02/25/saga-pattern-with-workflow-engine/</guid>
             
             
         </item>
