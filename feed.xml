@@ -7,10 +7,10 @@
         <title>碎碎念</title>
         <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
 </description>
-        <link>https://blog.yunglinho.com/</link>
-        <atom:link href="https://blog.yunglinho.com/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 05 Aug 2020 23:19:25 -0700</pubDate>
-        <lastBuildDate>Wed, 05 Aug 2020 23:19:25 -0700</lastBuildDate>
+        <link>http://localhost:4000/</link>
+        <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+        <pubDate>Wed, 12 Aug 2020 18:53:54 -0700</pubDate>
+        <lastBuildDate>Wed, 12 Aug 2020 18:53:54 -0700</lastBuildDate>
         <generator>Jekyll v3.6.3</generator>
         
         <item>
@@ -48,8 +48,8 @@
 &lt;p&gt;這兩個狀況不是我說說而已，情節一是民主黨跟共和黨內反川派推演出來的，情節二是民主黨內推動改選制推演出來的，兩者的發生的可能性都很高。&lt;/p&gt;
 </description>
             <pubDate>Tue, 04 Aug 2020 01:00:00 -0700</pubDate>
-            <link>https://blog.yunglinho.com/blog/2020/08/04/civil-war-ii/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2020/08/04/civil-war-ii/</guid>
+            <link>http://localhost:4000/blog/2020/08/04/civil-war-ii/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2020/08/04/civil-war-ii/</guid>
             
             
         </item>
@@ -73,8 +73,8 @@
 &lt;iframe src=&quot;https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Felderengineer%2Fposts%2F1798558840287255&amp;width=500&quot; width=&quot;500&quot; height=&quot;801&quot; style=&quot;border:none;overflow:hidden&quot; scrolling=&quot;no&quot; frameborder=&quot;0&quot; allowTransparency=&quot;true&quot; allow=&quot;encrypted-media&quot;&gt;&lt;/iframe&gt;
 </description>
             <pubDate>Thu, 30 Jul 2020 01:00:00 -0700</pubDate>
-            <link>https://blog.yunglinho.com/blog/2020/07/30/pateron/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2020/07/30/pateron/</guid>
+            <link>http://localhost:4000/blog/2020/07/30/pateron/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2020/07/30/pateron/</guid>
             
             
         </item>
@@ -96,8 +96,8 @@
 &lt;p&gt;好啦，有用老頭技術的小公司可以來找我談談了，我年紀大了，跟新技術處不來了&lt;/p&gt;
 </description>
             <pubDate>Sat, 29 Feb 2020 00:00:00 -0800</pubDate>
-            <link>https://blog.yunglinho.com/blog/2020/02/29/mature-tech/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2020/02/29/mature-tech/</guid>
+            <link>http://localhost:4000/blog/2020/02/29/mature-tech/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2020/02/29/mature-tech/</guid>
             
             
         </item>
@@ -135,8 +135,8 @@
 &lt;!-- /wp:paragraph --&gt;
 </description>
             <pubDate>Fri, 25 Oct 2019 01:00:00 -0700</pubDate>
-            <link>https://blog.yunglinho.com/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</guid>
+            <link>http://localhost:4000/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/</guid>
             
             
         </item>
@@ -158,8 +158,8 @@
 &lt;!-- /wp:list --&gt;
 </description>
             <pubDate>Wed, 19 Jun 2019 01:00:00 -0700</pubDate>
-            <link>https://blog.yunglinho.com/blog/2019/06/19/anti-aging/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/06/19/anti-aging/</guid>
+            <link>http://localhost:4000/blog/2019/06/19/anti-aging/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/06/19/anti-aging/</guid>
             
             
         </item>
@@ -181,8 +181,8 @@
 &lt;p&gt;以高中及大學 GPA 來看，雙語的學生表現跟英語的學生一樣好。但是很不幸的是， SAT 的測驗中，雙語的學生會比英語的學生低 50 分，這是未來 SAT 要努力的方向，為什麼測驗沒有鑑別能力。&lt;/p&gt;
 </description>
             <pubDate>Tue, 21 May 2019 01:00:00 -0700</pubDate>
-            <link>https://blog.yunglinho.com/blog/2019/05/21/raising-a-bilingual-child/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/05/21/raising-a-bilingual-child/</guid>
+            <link>http://localhost:4000/blog/2019/05/21/raising-a-bilingual-child/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/05/21/raising-a-bilingual-child/</guid>
             
             
         </item>
@@ -198,8 +198,8 @@
 &lt;p&gt;為什麼要寫成這樣？我還在想….&lt;/p&gt;
 </description>
             <pubDate>Sat, 11 May 2019 01:00:00 -0700</pubDate>
-            <link>https://blog.yunglinho.com/blog/2019/05/11/typelevel-cats/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/05/11/typelevel-cats/</guid>
+            <link>http://localhost:4000/blog/2019/05/11/typelevel-cats/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/05/11/typelevel-cats/</guid>
             
             
         </item>
@@ -215,8 +215,8 @@
 &lt;p&gt;平台化可以達到經濟規模是正確的，但是問題的複雜度也會一直上昇，所以這些平台公司請一堆業界頂尖的人來解問題，可是業務量有可能一不小心就超過系統原始設計的上限，在新解法出來前，就只能請客戶多擔待些了。&lt;/p&gt;
 </description>
             <pubDate>Sat, 02 Mar 2019 00:00:00 -0800</pubDate>
-            <link>https://blog.yunglinho.com/blog/2019/03/02/platform-and-diminishing-returns/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/03/02/platform-and-diminishing-returns/</guid>
+            <link>http://localhost:4000/blog/2019/03/02/platform-and-diminishing-returns/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/03/02/platform-and-diminishing-returns/</guid>
             
             
         </item>
@@ -230,8 +230,8 @@
 &lt;p&gt;&lt;img src=&quot;/images/2019-03/quote.png&quot;  &gt;&lt;/p&gt;
 </description>
             <pubDate>Fri, 01 Mar 2019 00:00:00 -0800</pubDate>
-            <link>https://blog.yunglinho.com/blog/2019/03/01/bliz-product/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/03/01/bliz-product/</guid>
+            <link>http://localhost:4000/blog/2019/03/01/bliz-product/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/03/01/bliz-product/</guid>
             
             
         </item>
@@ -266,8 +266,8 @@
 &lt;p&gt;原來我在 2014 年左右就找到答案並且在飛向的程式碼中實作過，只是這幾年我自己被領英的專案壓力追著跑（每一季都同時跑五個以上專案），忙到忘掉了。&lt;/p&gt;
 </description>
             <pubDate>Mon, 25 Feb 2019 00:00:00 -0800</pubDate>
-            <link>https://blog.yunglinho.com/blog/2019/02/25/saga-pattern-with-workflow-engine/</link>
-            <guid isPermaLink="true">https://blog.yunglinho.com/blog/2019/02/25/saga-pattern-with-workflow-engine/</guid>
+            <link>http://localhost:4000/blog/2019/02/25/saga-pattern-with-workflow-engine/</link>
+            <guid isPermaLink="true">http://localhost:4000/blog/2019/02/25/saga-pattern-with-workflow-engine/</guid>
             
             
         </item>

@@ -7,11 +7,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>MongoDB - Sharding</title>
-  <meta name="description" content="Sharding_ 是一個我非常討厭 MongoDB 的地方，在多台 DB 的解決方案中，免不了要用一個方式來決定那個 object 該放在那台機器上，一個解決方式就是用某個欄位來當 shard key 。Docutils System MessagesSystem Message: ERROR/3 (&lt;s...">
+  <meta name="description" content="">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="https://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key/">
-  <link rel="alternate" type="application/rss+xml" title="碎碎念" href="https://blog.yunglinho.com/feed.xml">
+  <link rel="canonical" href="http://localhost:4000/blog/2014/02/12/mongodb-shard-key/">
+  <link rel="alternate" type="application/rss+xml" title="碎碎念" href="http://localhost:4000/feed.xml">
 
   
   <script type="text/javascript">
@@ -93,23 +93,14 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p><a class="reference external" href="http://docs.mongodb.org/manual/tutorial/choose-a-shard-key/">Sharding</a> 是一個我非常討厭 MongoDB 的地方，在多台 DB 的解決方案中，免不了要用一個方式來決定那個 object 該放在那台機器上，一個解決方式就是用某個欄位來當 shard key 。</p>
-<p>在 MongoDB 中，這個 Shard Key 一決定後就不能改了，然後 MongoDB 會幫你把 object 按 shard key 的值域，平均分配在 n 台機器上。</p>
-<p>問題是，平均分派值域並不代表值會是平均非配的，例如 email ，因為姓名是集中在幾個字母上的，所以按值域分派會有 hot spot 產生，a-d 的特別多人，然後 x y z 的沒有人。</p>
-<p>在其它的 DB 中，每個 shard 機器所負責的值域是可以讓 dba 去調整的，但 MongoDB 是不行的，所以必然會產生 hot spot 而且你無法去躲開。</p>
-<p>有些人會自己去產生 UUID 來當 shard key ，在 MongoDB 2.4 中，則是加入了 hashed shard key 自動幫你把 shard key field 拿去算 hash key 出來當 shard key 用。但是，這還是免不了某些值域是 hot spot 的問題。</p>
-<p>既使 MongoDB 能夠平均分派儲存的值域，但是最終我們要看的是，怎麼樣平均分派 read/write operation 。</p>
-<p>因為在讀取時，也會發生因為某些原因，讓使用者對某些 object 的存取較其它物件多出 n 倍，所以每個 shard 所負責的值域一定要是 tunable ，要不然遲早一定會出問題。</p>
-<p>所以，扔了 MongoDB 吧</p>
-
-
+    
   </div>
   <!-- ... -->
 
 
 
-  <div class="fb-like" data-href="https://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="https://blog.yunglinho.com/blog/2014/02/12/mongodb-shard-key/" data-text="MongoDB - Sharding -" data-dnt="true">Twitter</a>
+  <div class="fb-like" data-href="http://localhost:4000/blog/2014/02/12/mongodb-shard-key/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2014/02/12/mongodb-shard-key/" data-text="MongoDB - Sharding -" data-dnt="true">Twitter</a>
 
   
   <h1>Comments</h1>
