@@ -1,0 +1,72 @@
+gems:
+    - octopress-paginate
+    - octopress-quote-tag
+    - octopress-image-tag
+    - octopress-hooks
+#    - octopress-solarized
+#    - octopress-social
+# Welcome to Jekyll!
+#
+# This config file is meant for settings that affect your whole blog, values
+# which you are expected to set up once and rarely need to edit after that.
+# For technical reasons, this file is *NOT* reloaded automatically when you use
+# 'jekyll serve'. If you change this file, please restart the server process.
+
+# Site settings
+title: 碎碎念
+email: yunglin at gmail.com
+description: > # this means to ignore newlines until "baseurl:"
+  Write an awesome description for your new site here. You can edit this
+  line in _config.yml. It will appear in your document head meta (for
+  Google search results) and in your feed.xml site description.
+domain: blog.yunglinho.com
+url: "https://blog.yunglinho.com" # the base hostname & protocol for your site
+baseurl: "" # the subpath of your site, e.g. /blog
+
+# twitter_username: yunglinho
+github_username:  yunglin
+
+permalink: /blog/:year/:month/:day/:title/
+
+subscribe_rss: http://feeds.feedburner.com/yunglinho
+
+# Build settings
+markdown: redcarpet
+
+# Disqus Comments
+disqus_shortname: yunglin
+
+# Google Analytics
+google_analytics_tracking_id: UA-11857878-6
+
+# Facebook Like
+facebook:
+  profile_id: 10139526                       # For follow button or profile link
+  share:      true         # Also add a share button
+  layout:     standard      # Choices: standard, box_count, button_count, button
+
+twitter:
+#  username:    yunglinho         # Add your Twitter handle
+#  tweet_count: true              # Show number of shares on Twitter
+
+# statcounter
+#statcounter: true
+
+## jekyll-archives
+jekyll-archives:
+  enabled: all
+  layouts:
+    year: archive-year
+    month: archive-month
+    day: archive-day
+    tag: archive-tag
+    category: archive-tag
+  permalinks:
+    year: '/:year/'
+    month: '/:year/:month/'
+    day: '/:year/:month/:day/'
+    tag: '/tag/:name/'
+    category: '/category/:name/'
+
+#paginator
+paginate: true
