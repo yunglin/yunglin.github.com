@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Data Modeling With Jackson Json and Scala</title>
+  <meta name="description" content="我用Scala有一年半左右，第一次看brianhsu介紹 case class ，就對 Scala 的簡潔著迷，當然，經過了一年半後，許多的面紗揭開後，Scala在與Java函式庫整合的小問題就跑出來了，接下來，我會寫寫怎麼用Jackson Json及Scala來設計一個Json WebService API的M...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/">
+  <link rel="alternate" type="application/rss+xml" title="碎碎念" href="http://localhost:4000/feed.xml">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+</head>
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">碎碎念</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/archives/">Archives</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Data Modeling With Jackson Json and Scala</h1>
+    <p class="post-meta"><time datetime="2011-11-15T01:59:00-08:00" itemprop="datePublished">Nov 15, 2011</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <div class="post">
+我用Scala有一年半左右，第一次看<a href="http://bone.twbbs.org.tw/blog/">brianhsu</a>介紹 case class ，就對 Scala 的簡潔著迷，當然，經過了一年半後，許多的面紗揭開後，Scala在與Java函式庫整合的小問題就跑出來了，接下來，我會寫寫怎麼用Jackson Json及Scala來設計一個Json WebService API的Model Objects.<br /><br /><h3>case class</h3><br />Scala的case class在經過Scala compiler轉換後，就會生成一個POJO，例如這樣一個簡單的case class<br /><pre class="brush: scala">case class Disaster(event: String)</pre><br />會被轉換成如下的Java Code<br /><pre class="brush: java">public class Disaster<br />    implements ScalaObject, Product, Serializable<br />{<br />    public String event()<br />    {<br />        return event;<br />    }<br />    public int hashCode()<br />    {<br />        return ScalaRunTime$.MODULE$._hashCode(this);<br />    }<br />    public String toString()<br />    {<br />        return ScalaRunTime$.MODULE$._toString(this);<br />    }<br />    public boolean equals(Object obj)<br />    {<br />        //removed<br />    }<br />    public Disaster(String event)<br />    {<br />        this.event = event;<br />        super();<br />        scala.Product.class.$init$(this);<br />    }<br />    private final String event;<br />}<br /></pre><br />這個POJO跟一般POJO的不同處在於<br /><ol><li>immutable object，沒有辦法去更改這物件的屬性</li><li>getter的命名不是Java通用的 getXxxx() 而是 xxxx()</li></ol><br />這在一般使用上，不是問題，反而是優點，然而，當於 Java binding framework 如 Jackson Json 或 JAXB 要做整合時，就變成問題了，原因在於，多數的 java binding frameworks 在將資料轉回Java Object時，多是呼叫沒代參數的default constructor，然後再呼叫setter(s)把物件的屬性傳進去。<br /><br />另一個問題則是，多數的java binding frameworks在偵側那些屬性是serializable時，要麻是用java annotation一個個屬性去標，要不然就是用 refection 去找 getXxxx() <br /><br />而好死不死的plain scala case class沒有辦法滿足上面兩個條件，因此，我們要想辦法繞過這兩個問題。第二個問題比較好解，只要在屬性上標上 @scala.reflect.BeanProperty ，Scala compiler就會自動幫你把你的屬性加上 getXxxx() 及 setXxxx(...)。<br /><br /><pre class="brush: scala">case class Disaster(@BeanProperty event: String)</pre><br />第一的問題，在Jackson Json的解法是用 @JsonCreator 去指定不代變數default constructor的替代品，然而，在這邊我們須要把每一個屬性的名稱，用 @JsonProperty("xxx") 標在 constructor 的參數上，這是因為，Java compiler在編譯時，會把 parameter 的名稱擦去，如 public Disaster(String event) 在經過編譯後的 bytecode 中只剩下 public Disaster(String p1)，因此我們須要用java annotation來強制幫參數取個名稱，這樣，當Jackson在把 Json String 轉成Object時，才知道該把那個json object的屬性對到java object的那個屬性之上。<br /><br /><pre class="brush: scala">case class Disaster @JsonCreator()(<br />    @BeanProperty @JsonProperty("event") event: String<br />)<br /></pre><br /><br /><hr /><br />當我們的Scala case class已經是Jackson Json Serializable後，我們要怎麼樣把scala case class object轉成json string再轉回來呢，請看底下的例子。<br /><br /><pre class="brush: scala">val disaster = new Disaster("88 typhoon")<br />val mapper = new org.codehaus.jackson.map.ObjectMapper()<br /><br />val json = mapper.writeValueAsString(disaster)<br />assert(json === """{"event": "88typhon"}"""}<br />  <br />val copy = mapper.readValue[Disaster](json, classOf[[Disaster])<br />assert(copy === disaster)<br /></pre><br />這邊我們會碰上Scala較Java語法上比較沒有那麼漂亮的地方，在Java裡，若是函式支援generic <t>且又有個Class<t>的參數，那麼，我們不用把<t>傳兩次進去這個函式，如<br /></t></t></t><br /><pre class="brush: java">Disaster copy = mapper.readValue(json, Disaster.class)<br /></pre><br />因此在Scala的這邊，我會寫個JsonSerializer來把 scala 這邊的語法弄漂亮些 <br /><br /><pre class="brush: scala">object JsonSerializer {<br />  private val mapper = new ObjectMapper<br /><br />  def fromJson[T &lt;: AnyRef](jsonString: String)(implicit m: Manifest[T]): T = {<br />    mapper.readValue(jsonString, m.erasure).asInstanceOf[T];<br />  }<br />}<br />// readValue the scala way.<br />val disaster = JsonSerializer.fromJson[Disaster](json)<br /></pre><br />最後，<code>@JsonCreator</code>不一定是要標在constructor上面，他也可以標在static method上面，這樣一來，可以讓你做到scala constructor無法做到的一些處理<br /><br /><pre class="brush: scala">case class Disaster(<br />    @BeanProperty event: String, <br />    location: Option[GeoPoint]) {<br />  <br />  /** helper method for jackson json */<br />  def getLocation = location.getOrElse(null)<br />}<br /><br />object Disaster {<br /><br />  @JsonCreator<br />  def newInstance(<br />    @Property("event") event: String,<br />    @Property("location") location: GeoPoint): Disaster = {<br />    <br />    val locationOption = if (location == null) {<br />       None<br />    } else {<br />       Some(location)<br />    } <br />    return new Disaster(event, locationOption)<br />  }<br />}<br /></pre>下一回，我們會看，如何讓Jackson Json能夠對多型的物件做處理</div>
+
+  </div>
+  <!-- ... -->
+
+
+
+  <div class="fb-like" data-href="http://localhost:4000/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2011/11/15/data-modeling-with-jackson-json-and-scala/" data-text="Data Modeling With Jackson Json and Scala -" data-dnt="true">Twitter</a>
+
+  
+  <h1>Comments</h1>
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+          var disqus_shortname = 'yunglin';
+          (function() {
+                  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  <!-- ... -->
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">碎碎念</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>碎碎念</li>
+          <li><a href="mailto:yunglin at gmail.com">yunglin at gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/yunglin"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">yunglin</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p class="rss-subscribe">subscribe <a href="https://feeds.feedburner.com/yunglinho">via RSS</a></p>
+      </div>
+
+
+    </div>
+
+  </div>
+
+</footer>
+
+    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </body>
+
+</html>

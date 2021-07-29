@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Mongodb - Schemaless</title>
+  <meta name="description" content="我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://localhost:4000/blog/2014/02/12/mongodb-schemaless/">
+  <link rel="alternate" type="application/rss+xml" title="碎碎念" href="http://localhost:4000/feed.xml">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-11857878-6']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+
+</head>
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">碎碎念</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/archives/">Archives</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Mongodb - Schemaless</h1>
+    <p class="post-meta"><time datetime="2014-02-12T15:08:00-08:00" itemprop="datePublished">Feb 12, 2014</time></p>
+  </header>
+
+  <div class="post-content" itemprop="articleBody">
+    <p>我覺得大家對 MongoDB 誤解最大的地方就是 schemaless ， schemaless 應該是個大問題才對，不知道為什麼世人都跟 billg 一樣，把問題當做優點來看。</p>
+
+<h2 id="schemaless-的優點">Schemaless 的優點</h2>
+
+<p>Schemaless 不是沒有優點的，在搭配上動態語言時， Schemaless 是個很好用的功能，不用設定 mapping configuration ，直接就可以打 <code class="highlighter-rouge">item?.some_collections[0]?.city</code> 就這樣一路對一個物件逛下去，不用為了新增一個欄位就要去改 mapping configuration 然後跑 db migration。</p>
+
+<p>然而，這個特點，只有用在有 safe navigation 的動態語言上，才能享受到這些好處，要不然還是處處都要寫 null check ，要不然就會因為讀到前一版的 item 缺少某個欄位，而噴出了 NullPointerException。</p>
+
+<h2 id="schemaless-與靜態語言">Schemaless 與靜態語言</h2>
+
+<p>在靜態語言中使用 Schemaless DB 時，schemaless 的好處就消失怠盡了，像是我們公司是用 <a href="https://github.com/mongodb/morphia">Morphia</a> 來寫 Model &amp; DAO 的，若是要新增一個欄位，免不了是要去更新 Model class 然後重新 compile &amp; deploy 才能加上一個欄位的。</p>
+
+<p>相較於使用 Schemaful DB ，我們省下的，只有跑 DB Migration 的時間，當然，若是你有個超大的 DB ，那這省下的 off-line maintenance downtime 也可是很驚人的，但是，並不是所有的 db migration 都是要把整個系統下線才能跑的，大多數的 db migration 都是會把系統設計成(對DB)向後相容的，所以不用把整個系統啦下線就可以跑。</p>
+
+<blockquote>
+  <p>對DB向後相容的 Application / 向前相容的 Schema ：這邊指的是，先不要更新 Application ，先把 DB Migration 跑完，把資料庫的資料跟Schema更新完後，才把新版的 Application 上線。所以在某段時間內，是舊版的 Application 對著新版的 Schema 在跑的。</p>
+</blockquote>
+
+<h2 id="schemaless-的問題">Schemaless 的問題</h2>
+
+<p>許多大系統用 Schemaless DB 的原因是因為不想因為跑 DB Migration 把整個系統下線，所以就用 Schemaless 的系統來避開這問題。</p>
+
+<p>但是我想說的是，這誤會可大了，就像前面講的在 Schemaful DB 中，向前相容的 Schema 變動，是不用把系統下線就可以跑的，只有向前不相容的，才要跑 Offline DB Migration 或 Online Data Conversion.</p>
+
+<blockquote>
+  <p>Online Data Conversion 指的是，因為前後 Schema 不相容，所以開一個新的 Table 給新版本的物件用，每次讀取一個物件時，先去檢查是否已存在新的 Table 中，若沒有，則是從舊的 Table 讀出來，把格式更新，再存到新的 Table 中。</p>
+
+  <p>如此一來，就不用下線也可以把前後格式不相容的的 DB 更新。</p>
+</blockquote>
+
+<p>前文所說的 db migration &amp; online data conversion 就是 schemaless DB 的大問題，除非你是 <strong>神</strong> ，Model 一次就設計好，可以用一輩子，要不然不跑 db migration ，在你的 DB 中，必然會存在著 V1, V2,V3…Vn 版本的物件。</p>
+
+<p>不跑 db migration ，那就表示你要維護可以對 V1, V2, V3….Vn 存取的 Model class ，你可能有一個 db item 一整年沒被讀取到，但是一年後突然用到，你要怎樣保證還讀的回來呢？？</p>
+
+<p>最常見的做法就是，不去 <strong>大幅度</strong> 更新 Model ，削足適屨，既使你知道更新 Model 會讓你未來程式更好寫，但是因為不能去更新 Model ，那就只好去調整程式邏輯，癟腳的用不合適的 Model 來做新工作。</p>
+
+<p>而既使你想跑 db migration ，但是因為 schemaless db 跟本不打算支援 db migration ，所以不會內建任何工具來幫助你，你只能很苦命的自己刻 online data conversion 的工具了。</p>
+
+<h2 id="後記">後記</h2>
+
+<p>如果你對 DB Migration 的幾種方式有興趣的話，我建議你花一小時，把 Martin Fowler 與 Pramod Sadalage 的 <a href="http://www.se-radio.net/2012/06/episode-186-martin-fowler-and-pramod-sadalage-on-agile-database-development/">Agile Database Development</a> 聽完</p>
+
+
+  </div>
+  <!-- ... -->
+
+
+
+  <div class="fb-like" data-href="http://localhost:4000/blog/2014/02/12/mongodb-schemaless/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
+  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2014/02/12/mongodb-schemaless/" data-text="Mongodb - Schemaless -" data-dnt="true">Twitter</a>
+
+  
+  <h1>Comments</h1>
+  <div id="disqus_thread"></div>
+  <script type="text/javascript">
+          var disqus_shortname = 'yunglin';
+          (function() {
+                  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+          })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+
+
+  <!-- ... -->
+
+</article>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">碎碎念</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>碎碎念</li>
+          <li><a href="mailto:yunglin at gmail.com">yunglin at gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/yunglin"><span class="icon icon--github"><svg viewBox="0 0 16 16"><path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/></svg>
+</span><span class="username">yunglin</span></a>
+
+          </li>
+          
+
+          
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p class="rss-subscribe">subscribe <a href="https://feeds.feedburner.com/yunglinho">via RSS</a></p>
+      </div>
+
+
+    </div>
+
+  </div>
+
+</footer>
+
+    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </body>
+
+</html>
