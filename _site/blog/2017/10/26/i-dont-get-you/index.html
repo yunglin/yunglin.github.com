@@ -59,6 +59,22 @@
         
           
         
+          
+          <a class="page-link" href="/page2/">Posts - page 2</a>
+          
+        
+          
+          <a class="page-link" href="/page3/">Posts - page 3</a>
+          
+        
+          
+          <a class="page-link" href="/page4/">Posts - page 4</a>
+          
+        
+          
+          <a class="page-link" href="/page5/">Posts - page 5</a>
+          
+        
       </div>
     </nav>
 
@@ -82,34 +98,27 @@
 <p>Hibernate 把我一個很簡單的 JPAQL 改寫成一個建立 temp table 再用 sub query 去查尋，本來好好一個用主鍵去改資料只要 5 msec 的查詢，變成要 30sec 才跑得完，慢了六千倍…</p>
 
 <p>JPAQL</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>UPDATE ImportJob
+<div class="highlight"><pre><code class="language-" data-lang="">UPDATE ImportJob
 SET rows = rows + :increase
 WHERE import_job_id = :jobId
 AND completed = 0
-</code></pre></div></div>
-
+</code></pre></div>
 <p>SQL</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>insert into HT_import_job
+<div class="highlight"><pre><code class="language-" data-lang="">insert into HT_import_job
 select importjob0_.import_job_id as import_job_id
 from import_job importjob0_
 where importjob0_.import_job_id=? and importjob0_.completed=0;
 
 update import_job set rows=rows+?
 where (import_job_id) IN (select import_job_id from HT_import_job);
-</code></pre></div></div>
-
-<p>我還是承認我不懂 Hibernate 好了….</p>
+</code></pre></div>
+<p>我還是承認我不懂 Hibernate 好了....</p>
 
   </div>
   <!-- ... -->
 
 
-
-  <div class="fb-like" data-href="http://localhost:4000/blog/2017/10/26/i-dont-get-you/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2017/10/26/i-dont-get-you/" data-text="我搞不懂你啊 Hibernate -" data-dnt="true">Twitter</a>
-
+  <br/>
   
   <h1>Comments</h1>
   <div id="disqus_thread"></div>
@@ -171,8 +180,6 @@ where (import_job_id) IN (select import_job_id from HT_import_job);
 
 </footer>
 
-    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 
 </html>

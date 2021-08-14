@@ -59,6 +59,22 @@
         
           
         
+          
+          <a class="page-link" href="/page2/">Posts - page 2</a>
+          
+        
+          
+          <a class="page-link" href="/page3/">Posts - page 3</a>
+          
+        
+          
+          <a class="page-link" href="/page4/">Posts - page 4</a>
+          
+        
+          
+          <a class="page-link" href="/page5/">Posts - page 5</a>
+          
+        
       </div>
     </nav>
 
@@ -83,8 +99,7 @@
 <p>在 DDD 的概念中，一個模組 <strong>Domain</strong> / <strong>Bounded Context</strong>  應該是一個獨立的觀念，一個大型程式，應該是由許多 <strong>Bounded Context</strong> 組合而成，整個程式的架構應該僅量保持這些的純淨性，<strong>Bounded Context</strong> 的互用，要把上下行的關係定義清楚，程式碼間不應該在一個區塊中引入多個 <strong>Bounded Context</strong>。</p>
 
 <p>在整實作上，如何合檢視一個 class 是否有妥善的處理引用入的 <strong>Domain</strong> ，最簡單也最好用的方式就是看檔頭 <strong>import</strong> 的地方</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import com.codahale.metrics.Meter
+<div class="highlight"><pre><code class="language-" data-lang="">import com.codahale.metrics.Meter
 
 import org.apache.commons.lang.StringUtils
 import org.jboss.netty.handler.timeout.TimeoutException
@@ -101,32 +116,30 @@ import scala.concurrent.Await
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.concurrent.duration._
-</code></pre></div></div>
-
+</code></pre></div>
 <p>過去我排 import 的慣用法是按 <strong>有授權疑慮</strong> 的順序去排</p>
 
 <ul>
-  <li>com.* 的在最上面</li>
-  <li>org, net 排第二</li>
-  <li>接著是排自己公司的東西，按 common, base, app 的順序去排，common 跟 based 是放 utilities &amp; framework ， app 就是放一個專案的東西了</li>
-  <li>最後scala &amp; java 的東西</li>
+<li>com.* 的在最上面</li>
+<li>org, net 排第二</li>
+<li> 接著是排自己公司的東西，按 common, base, app 的順序去排，common 跟 based 是放 utilities &amp; framework ， app 就是放一個專案的東西了</li>
+<li>最後scala &amp; java 的東西</li>
 </ul>
 
 <p>這樣排的好處是， code review 一眼看過去，就可以知道用了那些版權有疑慮的東西，而且 import 時，不會把 java &amp; scala 內建的東西蓋過去，同時也知道這支程式碼用了多少其它的東西</p>
 
-<p>然而，這個機制，在 <strong>Scala’s Type Inference</strong> 的影響下，變的很不可靠。</p>
+<p>然而，這個機制，在 <strong>Scala&#39;s Type Inference</strong> 的影響下，變的很不可靠。</p>
 
 <p><strong>Type Inference</strong> 是初學 Scala 時，覺得很方便的一個功能，能夠在寫程式時，少打很多的字，例如：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   // 在沒有 Type Inference 下， statement 的左右兩邊都要宣告型態
+<div class="highlight"><pre><code class="language-" data-lang="">   // 在沒有 Type Inference 下， statement 的左右兩邊都要宣告型態
    val location: Location = new Location("Taipei")
 
    // 左邊的這邊其實是可以省下的
    val location = new Location("Taipei")
-   
+
    // 左右兩邊都沒有 *Location* 的存在，但是卻是被引入在這邊了 
    val location = locationService.lookup("Taipei")
-</code></pre></div></div>
+</code></pre></div>
 <p>這看似方便的功能，卻有著非常深遠且負面的影響，在上面的例子中 <em>Location</em>  這類別，雖然在 import 時沒有出現過，但是卻是在 Reviewer 意料之外中，被帶入到了這程式碼中。</p>
 
 <p>當然，在上面的例子中，<em>Location</em> &amp; <em>LocationService</em> 是一套的觀念，所以沒有真的引入意料之外的 <em>Domain</em> 進來，但是如果今天程式碼寫的不好，是有個 <em>ApplicationContextHolder.getCalendarService</em> 的話，那就不一樣了。</p>
@@ -139,10 +152,7 @@ import scala.concurrent.duration._
   <!-- ... -->
 
 
-
-  <div class="fb-like" data-href="http://localhost:4000/blog/2015/04/23/type-inference-and-code-review/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2015/04/23/type-inference-and-code-review/" data-text="Type Inference 在實務上碰上的問題 -" data-dnt="true">Twitter</a>
-
+  <br/>
   
   <h1>Comments</h1>
   <div id="disqus_thread"></div>
@@ -204,8 +214,6 @@ import scala.concurrent.duration._
 
 </footer>
 
-    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 
 </html>

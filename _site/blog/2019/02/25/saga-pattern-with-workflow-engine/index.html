@@ -59,6 +59,22 @@
         
           
         
+          
+          <a class="page-link" href="/page2/">Posts - page 2</a>
+          
+        
+          
+          <a class="page-link" href="/page3/">Posts - page 3</a>
+          
+        
+          
+          <a class="page-link" href="/page4/">Posts - page 4</a>
+          
+        
+          
+          <a class="page-link" href="/page5/">Posts - page 5</a>
+          
+        
       </div>
     </nav>
 
@@ -83,37 +99,32 @@
 
 <p>但是如果你有實作過 SAGA Pattern 的話，就會知道使用 Message Driven 的方式在兩個微服務間溝通的話，整個程式碼的可讀性會非常的低，除了原先溝通並實做細節的兩位工程師外，大概不會有第三個人能夠理解整個交易是怎麼完成的。</p>
 
-<p><img src="/images/2019-02-05/Saga_Choreography_Flow.001.jpeg" />
+<p><img src="/images/2019-02-05/Saga_Choreography_Flow.001.jpeg"  >
 註：本文圖片取自 https://microservices.io/patterns/data/saga.html</p>
 
 <p>在實作細節上，使用MDA的架構，微服務要提供sync &amp; async API使用，是額外的成本，在領英，所有的微服務預設都是只有提供 sync API 的，你要請對方多開一個 async 的界面，是要求爺爺告奶奶的。</p>
 
 <p>因此，在技術上管理上比較可行的，就是把流程的管理都拉到自己管理的微服務當中，在裡面使用 orchestrator 來管理對外乎叫的狀態記錄處理跟錯誤重送。</p>
 
-<p><img src="/images/2019-02-05/Saga_Orchestration_Flow.002.jpeg" /></p>
+<p><img src="/images/2019-02-05/Saga_Orchestration_Flow.002.jpeg"  ></p>
 
 <p>當然，這又免不了要寫一大堆 glue code 把所有的東西黏在一起，然後在資料褲裡面又要開一堆的 Table 來記錄運行的狀況，這非常的花功夫，在實作上很花時間又不好進行修改沒有彈性。</p>
 
 <p>今天早上看到 InfoQ 的一則新聞 <a href="https://www.infoq.com/news/2019/02/migrate-microservices-workflows">Experiences Moving from Microservices to Workflows at Jet.com</a> 突然腦洞大開，是啊 orchestrator saga 可以使用如 Apache Camel 等的 workflow engine 來實作，微服務還是只需要提供 sync API ，交由 workflow engine 來做狀態追蹤跟錯務重送，然後中間的狀態，可以透過 Camel 存在 ActiveMQ 之中，然後整個流程的定義，可以透過 Camel Java/Scala/… DSL 高階語言來編寫，整個可讀性大增。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  from("file:src/data?noop=true")
+<div class="highlight"><pre><code class="language-" data-lang="">  from("file:src/data?noop=true")
       .choice()
           .when(xpath("/person/city = 'London'"))
               .to("file:target/messages/uk")
           .otherwise()
               .to("file:target/messages/others");
-</code></pre></div></div>
-
+</code></pre></div>
 <p>原來我在 2014 年左右就找到答案並且在飛向的程式碼中實作過，只是這幾年我自己被領英的專案壓力追著跑（每一季都同時跑五個以上專案），忙到忘掉了。</p>
 
   </div>
   <!-- ... -->
 
 
-
-  <div class="fb-like" data-href="http://localhost:4000/blog/2019/02/25/saga-pattern-with-workflow-engine/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2019/02/25/saga-pattern-with-workflow-engine/" data-text="使用 Workflow Engine 來實作 Microservices SAGA pattern -" data-dnt="true">Twitter</a>
-
+  <br/>
   
   <h1>Comments</h1>
   <div id="disqus_thread"></div>
@@ -175,8 +186,6 @@
 
 </footer>
 
-    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 
 </html>

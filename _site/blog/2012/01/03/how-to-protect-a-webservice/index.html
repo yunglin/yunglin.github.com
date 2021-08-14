@@ -59,6 +59,22 @@
         
           
         
+          
+          <a class="page-link" href="/page2/">Posts - page 2</a>
+          
+        
+          
+          <a class="page-link" href="/page3/">Posts - page 3</a>
+          
+        
+          
+          <a class="page-link" href="/page4/">Posts - page 4</a>
+          
+        
+          
+          <a class="page-link" href="/page5/">Posts - page 5</a>
+          
+        
       </div>
     </nav>
 
@@ -77,17 +93,14 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <div class="post">
+    <div class='post'>
 最近做了不少Restful WebService的案子，也用了不少外部的WebService API，看到許多的系統，在安全性上，有許多的漏洞，因此想寫篇文章來說說，到底要怎樣保護好你的WebService，必竟，<a href="http://plainpass.com/">台灣主流網站</a>的<a href="http://www.ithome.com.tw/itadm/article.php?c=71134">安全性</a>已經夠糟了，不用再多幾個有問題的API來把環境弄更糟。<br /><br />大家用Web API，最常碰到的保護機制是 ApiKey ，但是，請不要以為 ApiKey 有什麼保護做用，HTTP Request的東西都是明碼，你傳什麼，網路上流過的機器都可以看的一清二楚，假設你做的 client 端程式是用 ApiKey 來保護 client &lt;-&gt; server 間的通訊的話，要破的人，只要在 client 所在的區網內，安裝 packet sniffer 就可以拿到 client 內包的 ApiKey 了。 <br /><br />ApiKey通常是WebService Provider拿來統計流量用的，不要以為他有什麼安全機制存在。<br /><br />再來，有些 Web API 要求你要登入，才可以使用他們的 API ，如 chargify or <a href="http://code.google.com/googleapps/faq.html#gmailatomfeed">GMail</a>，這些服務所使用的機制是HTTP Basic Authentication ；但是非常不幸的是，HTTP Basic Authentication只不過變形的ApiKey，Basic Auth的運作方式是把 username:password 用 base64 編碼後，放在 HTTP Request Header 當成密碼傳到 server 端，因此，一樣可以被 sniffer 直接偷出來用。<br /><br />當然，你會問，我們不是有用 HTTPS 來把封包加密了嗎？然而，除非你把 certificate 預載在 client 端，要不然 client &lt;-&gt; server 第一次的通訊是危險的，會受到 <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man in the middle attack</a> ，直接從中間把雙方收送的 certificate 換掉。<br /><br /><br />較安全的做法是，使用HTTPS Client Authentication，在包 client 就把 client 端該用的 server-signed certificate 包進 client 端裡面；這樣一來，少了透過 internet 交換 certificate 的機制，能夠確保 certificate 不會被偷換掉。<br /><br />另外，使用 Client Authentication 的好處是，只有 server 端認可的 client 可以使用 API ，縱始是第三方拿到了username, password, apikey，還是沒有辦法使用你的服務。<br /><br />至於有那些大廠，用了不安全的方式來保護他們的 web service api 呢？<a href="http://support.unblock-us.com/customer/portal/articles/291570-supported-and-unsupported-sites"> unblock-us 這邊</a>有幾個名單<br /><br /><br /><blockquote>unblock-us 是怎麼破解幾大影音網站的 geo-location check 的呢？<br /><br />一般的解決方案是用 VPN，但是影音串流不適合透過 VPN 來做 proxy。<br /><br />就我的猜測 unblock-us 等用的解決方案應該是這樣，在 DNS 那層把 server 端的 ip 反解成他們自己的機器，當 client 端送 request 給 http://api.poorguy.com, unblock-us 會先檢查這個 call 的用途，如果是做 geo-location 反解的，就送個假的回應給 client 端，如果是其他的方式，就轉送到正常的機器。<br /><br />等 client 端把這些處理做完後，要做影音串流的 rstp://stream.poorguy.com 又是傳回正常的 ip ，所以這樣用到的流量最小。<br /><br />這樣等於是直接的違反人家的授權去 hack API，這種服務可以活的很久嗎？？我不清楚<br /><br />不過從這一點也可以看到，各大廠做 operation 的能力優劣，像我的前雇主 <a href="http://rhapsody.com">rhapsody</a>就有利用 client authentication 在各式各樣的 client 端上。所以讓我想在台灣用都沒得用 :(  <br /></blockquote><br /><br />公商服務時間：<br /><br />小弟的公司，目前有時間接設計 WebService API 的案子，若是有合作機會的，<a href="mailto:yunglin@gmail.com">請與我連絡</a>。</div>
 
   </div>
   <!-- ... -->
 
 
-
-  <div class="fb-like" data-href="http://localhost:4000/blog/2012/01/03/how-to-protect-a-webservice/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2012/01/03/how-to-protect-a-webservice/" data-text="How to Protect A WebService. -" data-dnt="true">Twitter</a>
-
+  <br/>
   
   <h1>Comments</h1>
   <div id="disqus_thread"></div>
@@ -149,8 +162,6 @@
 
 </footer>
 
-    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 
 </html>

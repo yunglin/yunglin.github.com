@@ -59,6 +59,22 @@
         
           
         
+          
+          <a class="page-link" href="/page2/">Posts - page 2</a>
+          
+        
+          
+          <a class="page-link" href="/page3/">Posts - page 3</a>
+          
+        
+          
+          <a class="page-link" href="/page4/">Posts - page 4</a>
+          
+        
+          
+          <a class="page-link" href="/page5/">Posts - page 5</a>
+          
+        
       </div>
     </nav>
 
@@ -83,23 +99,19 @@
 
 <p>四月時忙完跟 Tivo 的合作案，把系統的負荷量測到及調整到可以服務 500萬線上用戶的量後，另一個團隊又開發了新的 social 網站。</p>
 
-<p>那是 facebook 才上線三年，或者說才對外公開服務的第一年，當所有人都還不知道什麼是社交功能時，rhapsody就已經開發出來社交功能，可以互相推薦音樂清單、可以 follow 別人、還可以自定 avatar</p>
+<p>那是 facebook 才上線三年，或者說才對外公開服務的第一年，當所有人都還不知道什麼是社交功能時，rhapsody就已經開發出來社交功能，可以互相推薦音樂清單、可以 follow 別人、還可以自定 avatar </p>
 
 <p>在上線前，我問了我的主管的主管，需不需要對 social web 的上線做測試，當時大主管是說不用。沒想到一上線，這 social web 非常的熱門，一下子就有數萬個用戶從標準的頁面轉換到 social 版去，似乎，一個新的 killer app 就要產生了。</p>
 
 <p>然而才上線兩三天，網站的速度就慢了下來，後來才知道，原來 social web 濫用了我們的一個 GET api ，我們的 GET api 允許一次抓多個 object ，結果 social web 一次一個 request 就抓了 500 object ，一個 object 4k 就好，一次就抓 2MB ，在加上 object serialization 中間所花的記憶體空間，一個 request 就要佔 6MB 以上，一下就把那個年代的 server 打垮了。</p>
 
-<p>就這樣，這個 social web 就下線整修，但不知為什麼，就此沒有再上線過了….</p>
-
+<p>就這樣，這個 social web 就下線整修，但不知為什麼，就此沒有再上線過了....</p>
 
   </div>
   <!-- ... -->
 
 
-
-  <div class="fb-like" data-href="http://localhost:4000/blog/2014/02/19/on-load-testing/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2014/02/19/on-load-testing/" data-text="從壓力測試回想到一些老故事 -" data-dnt="true">Twitter</a>
-
+  <br/>
   
   <h1>Comments</h1>
   <div id="disqus_thread"></div>
@@ -161,8 +173,6 @@
 
 </footer>
 
-    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 
 </html>

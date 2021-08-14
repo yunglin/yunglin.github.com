@@ -59,6 +59,22 @@
         
           
         
+          
+          <a class="page-link" href="/page2/">Posts - page 2</a>
+          
+        
+          
+          <a class="page-link" href="/page3/">Posts - page 3</a>
+          
+        
+          
+          <a class="page-link" href="/page4/">Posts - page 4</a>
+          
+        
+          
+          <a class="page-link" href="/page5/">Posts - page 5</a>
+          
+        
       </div>
     </nav>
 
@@ -77,17 +93,14 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <div class="post">
+    <div class='post'>
 Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而，Scala在實作這功能時，是會加入一個<br /><pre class="brush: java">public volatile int bitmap$0;</pre><br />若是這欄位沒有被從生成的 json 中替除的話，那麼，讀回來的 scala object 中，所有的lazy val，都會仍是 null ，不會被初始化。<br /><br />這個問題，只有做好unit-testing可以避免，因為這個欄位是 public 的，所以不需要setter or constructor， Jackson 就可以直接把值設定進去，只用unit-test仔細檢查生成的，確定沒有預料之外的欄位被寫入到 json 中，才可以免去後來在 runtime 發生不可預料的問題。<br /><br />至於怎麼去除這欄位呢，只要在class上標上<code>@JsonIgnoreProperties({"bitmap$0"})</code>即可</div>
 
   </div>
   <!-- ... -->
 
 
-
-  <div class="fb-like" data-href="http://localhost:4000/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2011/11/15/data-modeling-with-jackson-json-and-scala-lazy-val/" data-text="Data Modeling With Jackson Json and Scala - lazy val -" data-dnt="true">Twitter</a>
-
+  <br/>
   
   <h1>Comments</h1>
   <div id="disqus_thread"></div>
@@ -149,8 +162,6 @@ Scala中有個好用的功能是 lazy val - lazy initialized variable ，然而�
 
 </footer>
 
-    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 
 </html>

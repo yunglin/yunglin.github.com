@@ -59,6 +59,22 @@
         
           
         
+          
+          <a class="page-link" href="/page2/">Posts - page 2</a>
+          
+        
+          
+          <a class="page-link" href="/page3/">Posts - page 3</a>
+          
+        
+          
+          <a class="page-link" href="/page4/">Posts - page 4</a>
+          
+        
+          
+          <a class="page-link" href="/page5/">Posts - page 5</a>
+          
+        
       </div>
     </nav>
 
@@ -77,17 +93,14 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <div class="post">
+    <div class='post'>
 台北市政府把一些地圖資訊，用<a href="http://en.wikipedia.org/wiki/Shapefile">shapefile</a>的格式放出來了，玩了兩天，總算把這檔案開了起來。為了造福後人，就把過程寫下來了<br /><br />1. 安裝<a href="http://www.qgis.org/wiki/Download#MacOS_X">QGIS</a><br />2. 下載<a href="http://data.taipei.gov.tw/ct.asp?xItem=3448999&amp;ctNode=45112&amp;mp=datataipei">里界圖</a>，並解壓縮<br /><br />開起QGIS，從選單上選 Layer -&gt; Add Vector Layer -&gt; Encoding = BIG5, Dataset = 解開的檔案<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s1600/no-label.png" imageanchor="1" style=""><img border="0" src="http://1.bp.blogspot.com/-OU1ZuT3T6P8/TmcRETJKafI/AAAAAAAAC8k/-QqWQeQcvpU/s400/no-label.png" /></a></div><br /><br />一開始開啟的檔案，並沒有把文字資料一起顯示出來，所以，接著我們要把這資料打開來。從Layers中點選『台北市里界圖』並選Labels，Display labels勾起來，然後Field選PTVAME，然後按OK<br /><br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s1600/layer_properties.png" imageanchor="1" style=""><img border="0" src="http://3.bp.blogspot.com/-C_vwcFUcH1M/TmcQvpLv-yI/AAAAAAAAC8U/uow5wLYTHG4/s400/layer_properties.png" /></a></div><br />這樣，文字資料就跑出來了<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s1600/with_label.png" imageanchor="1" style=""><img border="0" src="http://2.bp.blogspot.com/-to2qzBkT504/TmcQv1-VxXI/AAAAAAAAC8c/pkmcBEVUNOw/s400/with_label.png" /></a></div><br /><br />接下來的兩週，我會把Geometric search的功能，加到我公司的<a href="http://www.searchcloudapp.com">產品</a>中，讓你直接能後匯入多邊型的地理資料，並且能夠做一些簡單的搜尋功能</div>
 
   </div>
   <!-- ... -->
 
 
-
-  <div class="fb-like" data-href="http://localhost:4000/blog/2011/09/06/mac-osx/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2011/09/06/mac-osx/" data-text="如何在Mac OSX上，讀取台北市政府放出來的地圖資料 -" data-dnt="true">Twitter</a>
-
+  <br/>
   
   <h1>Comments</h1>
   <div id="disqus_thread"></div>
@@ -149,8 +162,6 @@
 
 </footer>
 
-    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 
 </html>

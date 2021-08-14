@@ -59,6 +59,22 @@
         
           
         
+          
+          <a class="page-link" href="/page2/">Posts - page 2</a>
+          
+        
+          
+          <a class="page-link" href="/page3/">Posts - page 3</a>
+          
+        
+          
+          <a class="page-link" href="/page4/">Posts - page 4</a>
+          
+        
+          
+          <a class="page-link" href="/page5/">Posts - page 5</a>
+          
+        
       </div>
     </nav>
 
@@ -78,33 +94,40 @@
 
   <div class="post-content" itemprop="articleBody">
     <!-- wp:paragraph -->
-<p>快被 Synology 跟 Comcast 整慘了，正常運作的網站，突然有一天，因為 HTTPS Certificate 的原故連不上了，被整了好幾個小時，所以還是記下怎麼處理好的。<br /><br />在 Synology DSM 6.3 上面要正常跑 wordpress &amp; nginx &amp; let's encrypt 的話</p>
+
+<p>快被 Synology 跟 Comcast 整慘了，正常運作的網站，突然有一天，因為 HTTPS Certificate 的原故連不上了，被整了好幾個小時，所以還是記下怎麼處理好的。<br><br>在 Synology DSM 6.3 上面要正常跑 wordpress &amp; nginx &amp; let's encrypt 的話</p>
+
 <!-- /wp:paragraph -->
 
 <!-- wp:list -->
+
 <ul><li>先安裝 PHP 7.3 ，然後在 Web Station 中新增 PHP 7.3 ，記得要勾選 curl &amp; mysqli extension</li><li>在 wordpress virtualhost 的設定中選用 nginx &amp; php 7.3</li><li>然後到 Control Panel -&gt; Security -&gt; Certificate 的地方新增 Certificate from let's encrypt.</li></ul>
+
 <!-- /wp:list -->
 
 <!-- wp:paragraph -->
+
 <p>如果新增失敗的話，用 ssh 登入，然後跑下面的指令</p>
+
 <!-- /wp:paragraph -->
 
 <!-- wp:quote -->
+
 <blockquote class="wp-block-quote"><p>sudo /usr/syno/sbin/syno-letsencrypt new-cert -d &lt;host&gt; -m &lt;email&gt; -v</p></blockquote>
+
 <!-- /wp:quote -->
 
 <!-- wp:paragraph -->
+
 <p>這樣子會吐出一堆 let's encrypt 給的 debug urls ，把 url 點開，就可以看是那邊出錯了。</p>
+
 <!-- /wp:paragraph -->
 
   </div>
   <!-- ... -->
 
 
-
-  <div class="fb-like" data-href="http://localhost:4000/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/" data-layout="standard" data-action="like" data-show-faces="false" data-colorscheme="light" data-kid-directed-site="false" data-share="true"></div> <br/>
-  <a href="https://twitter.com/share" class="twitter-share-button" data-count="none" data-url="http://localhost:4000/blog/2019/10/25/enable-letsencrypt-on-wordpress-and-synology/" data-text="Synology上設定 wordpress & let'sencrypt 的方法 -" data-dnt="true">Twitter</a>
-
+  <br/>
   
   <h1>Comments</h1>
   <div id="disqus_thread"></div>
@@ -166,8 +189,6 @@
 
 </footer>
 
-    <div id="fb-root"></div> <script>(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0"; fjs.parentNode.insertBefore(js, fjs); }(document, 'script', 'facebook-jssdk'));</script>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
   </body>
 
 </html>
