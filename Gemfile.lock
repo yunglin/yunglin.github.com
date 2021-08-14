@@ -1,10 +1,3 @@
-GIT
-  remote: https://github.com/octopress/hooks.git
-  revision: ac460266254ed23e7d656767ec346eea63b29788
-  specs:
-    octopress-hooks (2.6.2)
-      jekyll (>= 2.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -35,76 +28,54 @@ GEM
       pathutil (~> 0.9)
       rouge (>= 1.7, < 4)
       safe_yaml (~> 1.0)
+    jekyll-feed (0.15.1)
+      jekyll (>= 3.7, < 5.0)
     jekyll-sass-converter (1.5.2)
       sass (~> 3.4)
+    jekyll-seo-tag (2.7.1)
+      jekyll (>= 3.8, < 5.0)
     jekyll-watch (2.2.1)
       listen (~> 3.0)
     kramdown (2.3.1)
       rexml
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     liquid (4.0.3)
     listen (3.6.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     mercenary (0.3.6)
-    octopress (3.0.12.pre.1)
-      jekyll (>= 2.0)
-      mercenary (~> 0.3.2)
-      octopress-deploy
-      octopress-escape-code (~> 2.0)
-      octopress-hooks (~> 2.0)
-      redcarpet (~> 3.0)
-      titlecase
-    octopress-code-highlighter (4.3.0)
-      jekyll (~> 3.0)
-    octopress-codeblock (1.0.5)
-      octopress-code-highlighter (~> 4.2)
-    octopress-deploy (1.3.0)
-      colorator
-    octopress-escape-code (2.1.1)
-      jekyll (~> 3.0)
-    octopress-image-tag (1.1.0)
-      jekyll
-    octopress-paginate (1.2.0)
-      octopress-hooks
-    octopress-quote-tag (1.0.4)
-      jekyll
-      rubypants
-    octopress-render-code (1.0.4)
-      octopress-code-highlighter (~> 4.2)
-    octopress-social (1.4.5)
-      jekyll (>= 2.0)
+    minima (2.5.1)
+      jekyll (>= 3.5, < 5.0)
+      jekyll-feed (~> 0.9)
+      jekyll-seo-tag (~> 2.1)
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
     public_suffix (4.0.6)
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redcarpet (3.5.1)
     rexml (3.2.5)
     rouge (3.26.0)
-    rubypants (0.7.1)
     safe_yaml (1.0.5)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    titlecase (0.1.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   RbST
-  jekyll (= 3.9.1)
-  octopress (>= 3.0.12.pre.1)
-  octopress-codeblock
-  octopress-hooks!
-  octopress-image-tag
-  octopress-paginate
-  octopress-quote-tag
-  octopress-render-code
-  octopress-social
+  jekyll (~> 3.9.1)
+  jekyll-feed (~> 0.6)
+  kramdown-parser-gfm
+  minima (~> 2.0)
+  tzinfo (~> 1.2)
+  tzinfo-data
+  wdm (~> 0.1.0)
 
 BUNDLED WITH
    1.16.1
