@@ -12,6 +12,6 @@ Kamala Harris 這禮拜被民主黨提名為副總統候選人，反對 Kamala �
 
 沒想到這網站，竟然被臉書禁掉了，無法貼在臉書上，這就是民主黨支持者的真面目。
 
-{% img /images/2020-10/banned_by_facebook.png %}
+![img](/images/2020-10/banned_by_facebook.png)
 
 https://lbry.tv/kamalaharris-info:50321811b2fdae0ce66c0f8059bea9580888dac1

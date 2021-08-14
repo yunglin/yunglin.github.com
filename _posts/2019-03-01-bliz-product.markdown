@@ -8,4 +8,4 @@ xdite 的新書<閃電式開發>寫的真好，如果能早點出就好了，我
 
 https://github.com/xdite/blitz-product/blob/master/04.md
 
-{% img /images/2019-03/quote.png %}
+![img](/images/2019-03/quote.png)

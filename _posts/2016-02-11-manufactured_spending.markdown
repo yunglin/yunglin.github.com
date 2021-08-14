@@ -10,7 +10,7 @@ date: 2016-02-11T00:14:23-08:00
 
 https://ftuniversity.com/
 
-{% img /images/2016-02-11/ftu.png %}
+![img](/images/2016-02-11/ftu.png)
 
 真的是行行出狀元啊
 

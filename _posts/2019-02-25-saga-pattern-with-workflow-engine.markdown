@@ -10,14 +10,14 @@ date: 2019-02-25T00:00:00-08:00
 
 但是如果你有實作過 SAGA Pattern 的話，就會知道使用 Message Driven 的方式在兩個微服務間溝通的話，整個程式碼的可讀性會非常的低，除了原先溝通並實做細節的兩位工程師外，大概不會有第三個人能夠理解整個交易是怎麼完成的。
 
-{% img /images/2019-02-05/Saga_Choreography_Flow.001.jpeg %}
+![img](/images/2019-02-05/Saga_Choreography_Flow.001.jpeg)
 註：本文圖片取自 https://microservices.io/patterns/data/saga.html
 
 在實作細節上，使用MDA的架構，微服務要提供sync & async API使用，是額外的成本，在領英，所有的微服務預設都是只有提供 sync API 的，你要請對方多開一個 async 的界面，是要求爺爺告奶奶的。
 
 因此，在技術上管理上比較可行的，就是把流程的管理都拉到自己管理的微服務當中，在裡面使用 orchestrator 來管理對外乎叫的狀態記錄處理跟錯誤重送。
 
-{% img /images/2019-02-05/Saga_Orchestration_Flow.002.jpeg %}
+![img](/images/2019-02-05/Saga_Orchestration_Flow.002.jpeg)
 
 當然，這又免不了要寫一大堆 glue code 把所有的東西黏在一起，然後在資料褲裡面又要開一堆的 Table 來記錄運行的狀況，這非常的花功夫，在實作上很花時間又不好進行修改沒有彈性。
 

@@ -11,5 +11,5 @@ Google 中文化看來做的很遭，今天同事跟我說 TSLA 收盤大漲，�
 不知道這一錯錯了多少年了，我順手把 Bug Report 送給 Google 就不知道要多久才會改了
 i
 
-{% img /images/2016-02-10/google_finance.png %}
+![img](/images/2016-02-10/google_finance.png)
 

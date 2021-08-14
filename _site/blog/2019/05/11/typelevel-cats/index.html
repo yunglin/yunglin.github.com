@@ -95,7 +95,7 @@
   <div class="post-content" itemprop="articleBody">
     <p>最近在學 typelevel/cats 底下這一行程式碼，想了兩天才理解為什麼要寫成這樣，Functional Programming真的是太困難了，有點回到大一學遞迴的感覺。</p>
 
-<p><img src="/images/2019-05/IO-async.png"  ></p>
+<p><img src="/images/2019-05/IO-async.png" alt="img"></p>
 
 <p><code>(Either[Throwable, A]) =&gt; Unit)</code> 是一個 Callback function / Listener interface ， <code>(CB =&gt; Unit)</code> 表示這個 Callback function 可以在不同的 Thread 執行。</p>
 
