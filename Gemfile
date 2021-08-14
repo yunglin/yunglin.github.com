@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
-gem "github-pages", "~> 179", group: :jekyll_plugins
-gem 'jekyll', '3.6.2'
+# gem "github-pages", "~> 179", group: :jekyll_plugins
+gem 'jekyll', '3.9.1'
 gem 'wdm', '>= 0.1.0' if Gem.win_platform?
 gem 'RbST' 
 group :jekyll_plugins do
-    gem 'octopress', '>= 3.0.12.pre.1'
-    gem 'octopress-codeblock'
+     gem 'octopress', '>= 3.0.12.pre.1'
+     gem 'octopress-codeblock'
 #    gem 'octopress-codefence'
 #    gem 'octopress-solarized'
 #    gem 'octopress-ink'
