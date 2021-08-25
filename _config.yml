@@ -31,6 +31,7 @@ markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
+  - jekyll-paginate
 
 # Disqus Comments
 disqus_shortname: yunglin
@@ -67,4 +68,5 @@ jekyll-archives:
     category: '/category/:name/'
 
 #paginator
-paginate: true
+paginate: 5
+paginate_path: "/blog/page:num/"
