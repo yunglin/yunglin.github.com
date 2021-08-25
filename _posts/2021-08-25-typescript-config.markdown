@@ -35,7 +35,7 @@ date: 2021-08-24T20:30:00-08:00
       database.port: 5678  
    ```
 
-前兩者的缺點很明顯，從 Scala [typeconfig](https://github.com/lightbend/config) (使用 HOCON) 的轉過來我，自然無法接受前三種格式。
+前兩者的缺點很明顯，從 Scala [typesafe config](https://github.com/lightbend/config) (使用 HOCON) 的轉過來我，自然無法接受前三種格式。
 
 .env 的缺點是只支援 key=value 的格式，所有東西都是平的，沒有階層的觀念，也不支援矩陣等複雜一點的資料型態。
 
