@@ -1,93 +1,61 @@
 ---
 layout: post
-title: "[Typescript] Configuration"
-date: 2021-08-24T20:30:00-08:00
+title: "悼自由美國之死"
+date: 2021-08-24T22:30:00-08:00
 ---
 
-最近開始使用 Typescript 跟 Nodejs 在新公司的新專案上面，碰上的問題之一就是，該怎麼寫設定檔。
+在二三十年前，在我小的時候，常聽到自由美國、自由美國，似乎美國就是自由的象徵。
 
-寫設定檔不外乎幾種方式 
- * .env
-   ```
-   key=value
-   ```
- * JSON
-   ```json
-   {
-       "env": "test",
-       "database": {
-           "host": "db.example.com"
-       }
-   }
-   ```
- * YAML
-   ```yaml
-   env: test
-   # comment
-   database:
-     host: "db.example.com"
-   ```
- * [HOCON](https://github.com/lightbend/config/blob/master/HOCON.md)
-   ```
-   env: test
-   database:
-     host: "..."
-      database.port: 5678  
-   ```
+後來，我來到美國後，才知道，美國這塊土地上，住著兩種不同思想的人，一種是崇尚個人主義的冒險家，另一種則是崇尚集體主義的社會主義者。兩種截然不同的人，一直衝突跟對抗。
 
-前兩者的缺點很明顯，從 Scala [typesafe config](https://github.com/lightbend/config) (使用 HOCON) 的轉過來我，自然無法接受前三種格式。
+我個人是偏向前者的，我常跟人說，美國能夠偉大，站在全世界前面，一直領導的一個重大原因是聯邦制度，美國是一個超大的 A/B Test ，五十個州，州民的差異很小，很適合來做實驗的對照組。一個新的社會問題出現，各州採取不一樣的政冊，十年之後，可以收集到許多的資料，來比較各種政策的差異好壞，然後做出選擇推到全國去。
 
-.env 的缺點是只支援 key=value 的格式，所有東西都是平的，沒有階層的觀念，也不支援矩陣 ```a,b,c``` 等複雜一點的資料型態。
+相較於台灣，就有點像是在尋找明君尋找超人了，一個新的問題出現，我們就在找一個超人，能夠在問題的初期，就看穿問題，找出答暗。但真有這種超人的存在嗎？還是說，因為也沒有了替代方案的資料，大家也只能默默的接受，這就是(區域內)的最佳解了。
 
-json 的缺點是，雖然支源了複雜一點的資料型態，但是不能寫註解，跟本不能用啊，專案多人共同進行，怎麼知道為什麼某個欄位在不同的環境為什麼要用不同的值。
+許多人不懂，以為我反疫苗、反口罩。其實，這只是我實踐我政治觀念的手法而已。我反對的是「強制疫苗施打」「強制全民戴口罩」的政策，我反對的是全民找超人，反對把 A/B Test 的機制給消滅掉。
 
-yaml 跟 HOCON 沒有上述的缺點，甚至還可以寫 schema 檔，來做格式驗證，但是不知道為什麼在 nodejs 這邊不怎麼流行。
+在政治學上有個學理叫 [Overton Window](https://en.wikipedia.org/wiki/Overton_window)，講的是言論自由的空間，言論自由是一個光譜，從極左到極右，中間有一個區塊，是眾人能夠接受的言論。目前在美國，這個區塊越來越小，也越來越偏左。
 
-後來想一想，在 *Typescript* 這邊，似乎不用什麼複雜的方案，直接用 Ts 的內建功能就夠了
+![Overton](/images/2021-08/Overton_Window.png)
 
-```typescript
-/*
- * This approach supports:
- *  - complex types
- *  - schema validation through type checking.
- *  - comments
- *  - dynamic reloading !!
- */
-export type Config = {
-    env: "dev" | "stg" | "prod" | "test",
-    db: DBConfig
-}
+Overton Window 的縮小並不是好事，因為它代表了我們面對未知事情時，自我縮限了探索解決方案的空間。有時候，答案往往不是在眾人能夠接受的範圍出現。舉個極端一點的例子，在愛因斯坦相對論出現之前，牛頓力學才是眾多學者能夠接受的共識解。如果我們的研究只能在眾人同意的範圍間進行，那麼不止是相對論，可能現在我們都還在談地平說。
 
-export type DBConfig = {
-    host: string,
-    username: string,
-    password: string,
-    database: string
-}
+![Overton](/images/2021-08/Overton_Window_2.png)
 
-export const devConfig: Config = {
-    env: "dev",
-    db: {
-        host: process.env.DB_HOST || "localhost",
-        username: process.env.DB_USERNAME || "user",
-        password: process.env.DB_PASSWORD ||  "p@ssword",
-        database: process.env.DB_DATABASE || "db"
-    }
-}
+那如何要把 Overton Window 放大呢？那就是要多談在眾人可以接受的領預之外的事務，擴大邊際，搜索不同的可能。
 
-export function getConfig(env: string = process.env.NODE_ENV || "test"): Config {
-    switch (env) {
-        case 'test':
-            return devConfig;
-        case 'dev':
-            return devConfig;
-        case 'stg':
-            return stagingConfig;
-        case 'prod':
-            return prodConfig;
-        default:
-            throw new Error(`unsupported environment ${env}`)
-    }
-}
-```
-這個方式可以直接寫程式控制設定檔，而且還支援動態載入，修改設定檔，可以透過 nodemon ，不用手動重開 node ，可以自動重新載入新的設定檔，提高工程師的生產力。
+那麼為什麼我要反對「強制戴口罩」政策呢？因為如果全國都施行一樣的政策，那麼我們怎麼知道「戴口罩」有多有效呢？
+
+還好有[喬治亞州的研究資料](https://archive.is/69D2g)，喬治亞州在過去 18 個月來，予許各學區自己做決定，因此收集到許多不同防疫方式的比較資料，對於學童戴不戴口罩的問題，戴口罩較不戴有減少 20% 的染病數，但是在統計上並沒有顯注的意義，這個差距可能是其它更多不同的因素等導制。
+
+至於「強制施打疫苗」，更是絕不該進行了，強制打下去，所有的長期影響，在沒有對照組的狀況下，未來將看不出來疫苗是否有造成其它疾病的發生率增加。
+
+另外，在我另一篇文章提到過，我不認為 FDA 的臨床試驗機制有正常執行。
+
+![feynman](/images/2021-08/feynman.jpg)
+> 科學家信賴的是科學研究的過程，不信仰應服宗教般的口號。
+>
+> 關於疫苗，我們要看的是 FDA 臨床試驗的機制是怎樣跑的。在 18 個月中，透過三期的小量人口實驗，看看對人體有沒有短期的影響，在藥物上市之後，大幅度人體實驗後，要再長期追蹤他的影響。
+>
+> 許多的新藥，就在第三期失敗，也有許多在上市多年後，才發現有長期的影響。
+>
+> 關於新冠疫苗，這次的 FDA 臨床試驗機制有正常執行嗎？以現在壓迫反對言論的狀況下，我不覺得 FDA 臨床試驗機制有正常執行。
+>
+> 如果費曼先生還在世，我想，他會跟 [Dr R.Malone](https://odysee.com/@BretWeinstein:f/how-to-save-the-world,-in-three-easy:0) 一樣，出來呼預重視不良反應的數據。
+
+一個簡單的檢驗方式是，請「強制施打疫苗的支持者」告訴我，目前因為疫苗的不良反應而死亡的數字有多少？這個數字絕不會是零，但美國目前因為 Overton Window 的縮限，跟本不敢有單位去碰這些敏感的案例。
+
+連不良反應的案例都不敢去檢驗，不敢去收集數據，怎麼能說 FDA 臨床試驗機制有正常執行呢？
+
+
+最後，談到我個人對疫情的看法。
+
+綜觀人類歷史，對抗病毒就是這樣了，在三年內，每個人都會染病，病毒會帶走一部分抵抗力弱的人，剩下來病毒的影響力就變弱，淡出歷史的舞台。
+
+除非科技有突破（目前看來失敗了），那就是看個體免疫力有多強了。如果只是躲在家中，少接觸各種細菌病毒，反而免疫力是會下降的。
+
+至於口罩教派跟疫苗教派的信徒，還是停止被政治人物當成工具吧，口罩是否能消滅疫情，看台灣跟日本就知道了，當一個政策有 95~99% 的人遵守都還沒有效，那就是沒效。在美國吵這個問題，只是政治人物拿來操作而以，讓選民集合起來鬥爭另一群人，來爭取政治人物的選票。
+
+至於疫苗是否有效，就當他真的有六個月的效力好了，但是頂級期刊 Nature 都講了，[Corona Virus 是人畜共通疾病，已經在野鹿上大量的找到抗體](https://archive.is/eBreK)，[Corona Virus 將與人類共存](https://archive.is/qEzI8)。如果病毒的變化不能避免，病毒在有施打疫苗的人群中異變的更快，那疫苗的做用是什麼？還是說疫苗教派的要連野生動物都抓來打疫苗？
+
+最終，我覺得還是要走回宗教或哲學，大家明瞭，生命就是這麼脆弱，大自然就是這麼嚴苛。
